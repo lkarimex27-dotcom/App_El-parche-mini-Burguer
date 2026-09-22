@@ -28,12 +28,8 @@ class DashboardScreen extends StatelessWidget {
     final usuario = AppScope.usuario(context);
     final pedidos = AppScope.pedidos(context).pedidos;
 
-    final porAprobar = pedidos.where(requiereAprobacion).toList();
-    final enCurso = pedidos
-        .where((p) =>
-            p.status == OrderStatus.preparacion ||
-            p.status == OrderStatus.aprobado)
-        .length;
+    final porAprobar = pedidos.where((p) => p.requiereAprobacion).toList();
+    final enCurso = pedidos.where((p) => !p.estaCerrado).length;
 
     return Container(
       color: AppColors.crema,

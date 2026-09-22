@@ -65,7 +65,7 @@ void main() {
   testWidgets('los indicadores salen de los pedidos sembrados',
       (tester) async {
     final pedidos = pedidosDeEjemplo();
-    final porAprobar = pedidos.where(requiereAprobacion).toList();
+    final porAprobar = pedidos.where((p) => p.requiereAprobacion).toList();
 
     await tester.pumpWidget(_panel(Rol.administrador));
     await tester.pumpAndSettle();

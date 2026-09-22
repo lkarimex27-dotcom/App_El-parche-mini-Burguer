@@ -10,15 +10,6 @@ import '../../models/product.dart';
 /// pantallas no cambian: todas leen solo de estas funciones.
 /// ─────────────────────────────────────────────────────────────────
 
-/// Un pedido por encima de este monto necesita que el administrador lo
-/// apruebe antes de generar la orden de producción.
-const int kMontoAprobacion = 150000;
-
-/// Mientras no exista el estado "pendiente", un pedido caro que todavía
-/// está en preparación es el que espera aprobación.
-bool requiereAprobacion(Order pedido) =>
-    pedido.total > kMontoAprobacion && pedido.status == OrderStatus.preparacion;
-
 // ───────────────────────────── Ventas ─────────────────────────────
 
 /// Ventas de los últimos 7 días, de lunes a domingo.
@@ -107,6 +98,7 @@ Order _pedido({
   required List<OrderLine> lineas,
   required OrderStatus status,
   required Duration hace,
+  String cliente = '',
   String metodoPago = 'Nequi',
   String? direccion,
   String? comprobante,
@@ -121,6 +113,7 @@ Order _pedido({
     subtotal: subtotal,
     domicilio: direccion == null ? 0 : 4000,
     metodoPago: metodoPago,
+    cliente: cliente,
     direccion: direccion,
     comprobante: comprobante,
     note: note,
@@ -131,10 +124,11 @@ Order _pedido({
 /// BORRAR cuando el backend entregue pedidos reales: basta con dejar de
 /// pasárselos a OrdersModel en lib/main.dart.
 List<Order> pedidosDeEjemplo() => [
-      // Caro y en preparación: es el que pide aprobación del administrador.
+      // Caro: es el que espera la aprobación del administrador.
       _pedido(
         id: '1054',
-        status: OrderStatus.preparacion,
+        cliente: 'Laura Mejía',
+        status: OrderStatus.pendiente,
         hace: const Duration(minutes: 12),
         direccion: 'Cra 45 #12-30, apto 302',
         comprobante: 'comprobante_1054.jpg',
@@ -145,6 +139,7 @@ List<Order> pedidosDeEjemplo() => [
       ),
       _pedido(
         id: '1053',
+        cliente: 'Camilo Restrepo',
         status: OrderStatus.preparacion,
         hace: const Duration(minutes: 28),
         direccion: 'Calle 10 #5-20',
@@ -157,6 +152,7 @@ List<Order> pedidosDeEjemplo() => [
       ),
       _pedido(
         id: '1052',
+        cliente: 'Daniela Ortiz',
         status: OrderStatus.listo,
         hace: const Duration(hours: 1, minutes: 5),
         metodoPago: 'Bancolombia',
@@ -167,7 +163,8 @@ List<Order> pedidosDeEjemplo() => [
       ),
       _pedido(
         id: '1051',
-        status: OrderStatus.aprobado,
+        cliente: 'Julián Vélez',
+        status: OrderStatus.entregado,
         hace: const Duration(hours: 3),
         direccion: 'Cra 38 #22-14',
         lineas: [
@@ -177,6 +174,7 @@ List<Order> pedidosDeEjemplo() => [
       ),
       _pedido(
         id: '1050',
+        cliente: 'Sara Quintero',
         status: OrderStatus.rechazado,
         hace: const Duration(days: 1, hours: 2),
         metodoPago: 'Nequi',

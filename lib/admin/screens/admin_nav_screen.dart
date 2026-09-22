@@ -5,6 +5,7 @@ import '../../theme/app_text_styles.dart';
 import '../../widgets/app_header.dart';
 import '../models/permisos.dart';
 import '../widgets/admin_states.dart';
+import 'admin_pedidos_screen.dart';
 import 'dashboard_screen.dart';
 import 'mas_screen.dart';
 
@@ -117,7 +118,9 @@ class _AdminNavScreenState extends State<AdminNavScreen> {
         return DashboardScreen(
           onAbrirModulo: (m) => _abrirModulo(visibles, m),
         );
-      // Pedidos, Producción e Inventario llegan en las siguientes etapas.
+      case ModuloAdmin.pedidos:
+        return const AdminPedidosScreen();
+      // Producción e Inventario llegan en las siguientes etapas.
       default:
         return _EnConstruccion(modulo: modulo);
     }

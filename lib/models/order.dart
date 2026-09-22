@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import 'extras.dart';
 
-enum OrderStatus { rechazado, aprobado, preparacion, listo, cancelado }
+enum OrderStatus { pendiente, rechazado, aprobado, preparacion, listo, entregado, cancelado }
 
 extension OrderStatusUi on OrderStatus {
   String get label {
     switch (this) {
+      case OrderStatus.pendiente:
+        return 'Pendiente';
       case OrderStatus.rechazado:
         return 'Rechazado';
       case OrderStatus.aprobado:
@@ -15,6 +17,8 @@ extension OrderStatusUi on OrderStatus {
         return 'En preparación';
       case OrderStatus.listo:
         return 'Listo para recoger';
+      case OrderStatus.entregado:
+        return 'Entregado';
       case OrderStatus.cancelado:
         return 'Cancelado';
     }
@@ -22,6 +26,8 @@ extension OrderStatusUi on OrderStatus {
 
   IconData get icon {
     switch (this) {
+      case OrderStatus.pendiente:
+        return Icons.pending_actions_rounded;
       case OrderStatus.rechazado:
         return Icons.close_rounded;
       case OrderStatus.aprobado:
@@ -30,6 +36,8 @@ extension OrderStatusUi on OrderStatus {
         return Icons.access_time_rounded;
       case OrderStatus.listo:
         return Icons.shopping_bag_rounded;
+      case OrderStatus.entregado:
+        return Icons.done_all_rounded;
       case OrderStatus.cancelado:
         return Icons.block_rounded;
     }
@@ -42,7 +50,9 @@ extension OrderStatusUi on OrderStatus {
         return AppColors.tomate;
       case OrderStatus.aprobado:
       case OrderStatus.listo:
+      case OrderStatus.entregado:
         return AppColors.verde;
+      case OrderStatus.pendiente:
       case OrderStatus.preparacion:
         return const Color(0xFFB96A1E);
     }
@@ -55,7 +65,9 @@ extension OrderStatusUi on OrderStatus {
         return const Color(0xFFF7E2DE);
       case OrderStatus.aprobado:
       case OrderStatus.listo:
+      case OrderStatus.entregado:
         return const Color(0xFFE1EEE9);
+      case OrderStatus.pendiente:
       case OrderStatus.preparacion:
         return const Color(0xFFFBEBD8);
     }
@@ -102,13 +114,33 @@ class OrderLine {
   int get total => precioUnitario * cantidad;
 }
 
+/// Un paso en la vida del pedido: quedó pendiente, lo aprobaron, salió…
+/// Sirve para mostrar el historial en el panel administrativo.
+class OrderEvento {
+  final DateTime fecha;
+  final String texto;
+  final OrderStatus? estado;
+
+  const OrderEvento({required this.fecha, required this.texto, this.estado});
+}
+
+/// Monto desde el cual un pedido necesita que el administrador lo apruebe
+/// antes de pasar a producción.
+const int kMontoAprobacion = 150000;
+
 class Order {
   final String id;
   final DateTime fecha;
-  final OrderStatus status;
+
+  /// Cambia cuando el negocio avanza el pedido (por eso no es final).
+  OrderStatus status;
+
   final List<OrderLine> lineas;
   final int subtotal;
   final int domicilio;
+
+  /// Nombre de quien hizo el pedido.
+  final String cliente;
 
   /// 'Nequi' o 'Bancolombia'.
   final String metodoPago;
@@ -120,9 +152,12 @@ class Order {
   final String? comprobante;
 
   /// Motivo cuando el pedido fue rechazado o cancelado.
-  final String? note;
+  String? note;
 
-  const Order({
+  /// Lo que le ha pasado al pedido, del más viejo al más nuevo.
+  final List<OrderEvento> historial;
+
+  Order({
     required this.id,
     required this.fecha,
     required this.status,
@@ -130,12 +165,32 @@ class Order {
     required this.subtotal,
     required this.domicilio,
     required this.metodoPago,
+    this.cliente = '',
     this.direccion,
     this.comprobante,
     this.note,
-  });
+    List<OrderEvento>? historial,
+  }) : historial = historial ??
+            [
+              OrderEvento(
+                fecha: fecha,
+                texto: 'Pedido recibido',
+                estado: status,
+              ),
+            ];
 
   int get total => subtotal + domicilio;
+
+  /// Los pedidos grandes esperan el visto bueno del administrador antes
+  /// de generar la orden de producción.
+  bool get requiereAprobacion =>
+      status == OrderStatus.pendiente && total > kMontoAprobacion;
+
+  /// Un pedido que ya se cerró (bien o mal) no admite más cambios.
+  bool get estaCerrado =>
+      status == OrderStatus.entregado ||
+      status == OrderStatus.rechazado ||
+      status == OrderStatus.cancelado;
 
   /// Cuántos productos lleva el pedido en total.
   int get itemCount => lineas.fold(0, (suma, l) => suma + l.cantidad);

@@ -152,6 +152,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     AppScope.pedidosSinEscuchar(context).crearDesdeCarrito(
       carrito: carrito,
       metodoPago: _metodo == _MetodoPago.nequi ? 'Nequi' : 'Bancolombia',
+      cliente: usuario.nombre,
       direccion: usuario.direccionPrincipal?.detalle,
       comprobante: _comprobanteNombre,
     );

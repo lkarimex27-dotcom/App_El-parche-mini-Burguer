@@ -33,10 +33,29 @@ class OrdersModel extends ChangeNotifier {
     return null;
   }
 
+  /// Mueve el pedido a otro estado y lo anota en su historial.
+  /// [nota] guarda el motivo cuando se rechaza o se cancela.
+  void cambiarEstado(Order pedido, OrderStatus nuevo, {String? nota}) {
+    if (pedido.status == nuevo) return;
+
+    final motivo = nota?.trim() ?? '';
+    pedido.status = nuevo;
+    if (motivo.isNotEmpty) pedido.note = motivo;
+    pedido.historial.add(
+      OrderEvento(
+        fecha: DateTime.now(),
+        texto: motivo.isEmpty ? nuevo.label : '${nuevo.label} · $motivo',
+        estado: nuevo,
+      ),
+    );
+    notifyListeners();
+  }
+
   /// Pasa el carrito a pedido. Devuelve el pedido creado.
   Order crearDesdeCarrito({
     required CartModel carrito,
     required String metodoPago,
+    String cliente = '',
     String? direccion,
     String? comprobante,
   }) {
@@ -60,12 +79,16 @@ class OrdersModel extends ChangeNotifier {
     final pedido = Order(
       id: '${++_consecutivo}',
       fecha: DateTime.now(),
-      // Entra en revisión: el negocio confirma el comprobante.
-      status: OrderStatus.preparacion,
+      // Los pedidos grandes esperan aprobación; el resto entra derecho
+      // a preparación.
+      status: carrito.total > kMontoAprobacion
+          ? OrderStatus.pendiente
+          : OrderStatus.preparacion,
       lineas: List.unmodifiable(lineas),
       subtotal: carrito.subtotal,
       domicilio: carrito.domicilio,
       metodoPago: metodoPago,
+      cliente: cliente,
       direccion: direccion,
       comprobante: comprobante,
     );
