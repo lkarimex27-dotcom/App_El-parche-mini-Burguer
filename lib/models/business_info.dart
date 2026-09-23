@@ -25,16 +25,16 @@ class BusinessInfo {
   // reales del negocio y los enlaces de WhatsApp e Instagram de la
   // pantalla "Contactar" quedan apuntando solos al sitio correcto.
 
-  static const String telefono = '300 123 4567';
+  static const String telefono = '3206332670';
 
   /// Número de WhatsApp como se muestra en pantalla.
-  static const String whatsapp = '300 123 4567';
+  static const String whatsapp = '3206332670';
 
   /// Indicativo del país, sin el "+". Colombia = 57.
   static const String indicativoPais = '57';
 
   /// Usuario de Instagram, sin la arroba.
-  static const String instagramUsuario = 'elparchedelaminiburger';
+  static const String instagramUsuario = 'elparchedelasminiburguers';
 
   static const String facebook = 'El parche de la mini burger';
 

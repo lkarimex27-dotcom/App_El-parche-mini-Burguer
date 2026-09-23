@@ -15,6 +15,8 @@ dependencies:
   file_picker: ^13.1.0
   font_awesome_flutter: ^11.0.0
   url_launcher: ^6.3.2
+  sensors_plus: ^7.1.0
+  flutter_native_splash: ^2.4.8
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +28,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/menu/
 
 # Ícono de la app en el celular. Se genera con:
 #   dart run flutter_launcher_icons
@@ -45,3 +48,14 @@ flutter_launcher_icons:
   windows:
     generate: true
     icon_size: 256
+
+# Splash nativo: lo que se ve mientras Flutter arranca, antes de que
+# SplashScreen tome el control. Se genera con:
+#   dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#FAF3E0"
+  image: assets/icon/app_icon_foreground.png
+  android_12:
+    color: "#FAF3E0"
+    image: assets/icon/app_icon_foreground.png
+    icon_background_color: "#FAF3E0"

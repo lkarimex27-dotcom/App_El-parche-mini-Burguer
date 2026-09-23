@@ -126,7 +126,7 @@ class _TarjetaBebidaState extends State<_TarjetaBebida> {
                     const SizedBox(height: 2),
                     Text('\$${bebida.price}',
                         style: AppTextStyles.heading(
-                            size: 13, color: AppColors.tomate)),
+                            size: 13, color: AppColors.mostaza)),
                   ],
                 ),
               ),

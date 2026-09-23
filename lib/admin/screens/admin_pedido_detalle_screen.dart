@@ -448,11 +448,7 @@ class _PasoHistorial extends StatelessWidget {
     );
   }
 
-  String _hora(DateTime f) {
-    final h12 = f.hour % 12 == 0 ? 12 : f.hour % 12;
-    final minutos = f.minute.toString().padLeft(2, '0');
-    return '${f.day.toString().padLeft(2, '0')}/'
-        '${f.month.toString().padLeft(2, '0')} · '
-        '$h12:$minutos ${f.hour < 12 ? 'a.m.' : 'p.m.'}';
-  }
+  String _hora(DateTime f) =>
+      '${f.day.toString().padLeft(2, '0')}/'
+      '${f.month.toString().padLeft(2, '0')} · ${horaEnPalabras(f)}';
 }

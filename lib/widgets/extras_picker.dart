@@ -69,7 +69,7 @@ class ExtrasWrap extends StatelessWidget {
                     '+\$${extra.precio}',
                     style: AppTextStyles.heading(
                       size: 10.5,
-                      color: activo ? Colors.white : AppColors.tomate,
+                      color: activo ? Colors.white : AppColors.mostaza,
                     ),
                   ),
                 ],

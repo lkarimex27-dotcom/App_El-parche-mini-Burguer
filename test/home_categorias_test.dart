@@ -108,9 +108,24 @@ void main() {
     // Los nombres de archivo llevan espacios ("arepa rellena.jpg"), así que
     // un dedazo no se nota hasta que la tarjeta sale en blanco.
     for (final p in demoProducts) {
-      if (p.imageAsset.isEmpty) continue;
       expect(File(p.imageAsset).existsSync(), isTrue,
           reason: '${p.name} apunta a ${p.imageAsset} y no está');
+    }
+  });
+
+  test('ningún producto se queda sin foto, ni siquiera las bebidas', () {
+    for (final p in demoProducts) {
+      expect(p.imageAsset, isNotEmpty, reason: '${p.name} sin foto');
+    }
+  });
+
+  test('dos productos nunca comparten la misma foto', () {
+    // Si se repiten, el menú se ve como si fuera el mismo plato varias veces.
+    final vistas = <String, String>{};
+    for (final p in demoProducts) {
+      expect(vistas.containsKey(p.imageAsset), isFalse,
+          reason: '${p.name} repite la foto de ${vistas[p.imageAsset]}');
+      vistas[p.imageAsset] = p.name;
     }
   });
 

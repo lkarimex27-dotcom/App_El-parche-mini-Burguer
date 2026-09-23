@@ -136,7 +136,7 @@ class ProductCard extends StatelessWidget {
                       Flexible(
                         child: Text(
                           '\$${product.price}',
-                          style: AppTextStyles.heading(size: 12, color: AppColors.tomate),
+                          style: AppTextStyles.heading(size: 12, color: AppColors.mostaza),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

@@ -66,7 +66,7 @@ class VariantePicker extends StatelessWidget {
                       diferencia == 0 ? '\$${o.precio}' : '+\$$diferencia',
                       style: AppTextStyles.heading(
                         size: 12,
-                        color: diferencia == 0 ? AppColors.muted : AppColors.tomate,
+                        color: diferencia == 0 ? AppColors.muted : AppColors.mostaza,
                       ),
                     ),
                   ],

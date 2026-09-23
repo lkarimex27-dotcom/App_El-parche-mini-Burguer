@@ -298,7 +298,7 @@ class _LineaCarrito extends StatelessWidget {
               _QtyButton(icon: Icons.add, onTap: () => carrito.cambiarCantidad(linea, 1)),
               const Spacer(),
               Text('\$${linea.total}',
-                  style: AppTextStyles.heading(size: 15, color: AppColors.tomate)),
+                  style: AppTextStyles.heading(size: 15, color: AppColors.carbon)),
             ],
           ),
         ],
@@ -455,7 +455,7 @@ class _Resumen extends StatelessWidget {
             children: [
               Text('Total', style: AppTextStyles.heading(size: 14)),
               Text('\$${carrito.total}',
-                  style: AppTextStyles.heading(size: 16, color: AppColors.tomate)),
+                  style: AppTextStyles.heading(size: 16, color: AppColors.mostaza)),
             ],
           ),
         ],

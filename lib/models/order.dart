@@ -128,6 +128,24 @@ class OrderEvento {
 /// antes de pasar a producción.
 const int kMontoAprobacion = 150000;
 
+/// El camino normal de un pedido, en orden. Rechazado y cancelado no están
+/// porque no son una fase más: son un corte en cualquier punto del camino.
+const List<OrderStatus> kFasesPedido = [
+  OrderStatus.pendiente,
+  OrderStatus.aprobado,
+  OrderStatus.preparacion,
+  OrderStatus.listo,
+  OrderStatus.entregado,
+];
+
+/// "7:40 p.m.". Una sola versión para que la hora se lea igual en el detalle
+/// del cliente, en la lista de pedidos y en el panel.
+String horaEnPalabras(DateTime f) {
+  final h12 = f.hour % 12 == 0 ? 12 : f.hour % 12;
+  final minutos = f.minute.toString().padLeft(2, '0');
+  return '$h12:$minutos ${f.hour < 12 ? 'a.m.' : 'p.m.'}';
+}
+
 class Order {
   final String id;
   final DateTime fecha;
@@ -192,6 +210,28 @@ class Order {
       status == OrderStatus.rechazado ||
       status == OrderStatus.cancelado;
 
+  /// Hasta qué punto de [kFasesPedido] llegó. Un pedido rechazado o
+  /// cancelado se quedó donde estaba cuando lo cortaron, así que la fase sale
+  /// del último paso bueno que quedó en el historial.
+  int get faseActual {
+    final indice = kFasesPedido.indexOf(status);
+    if (indice >= 0) return indice;
+    for (final evento in historial.reversed) {
+      if (evento.estado == null) continue;
+      final i = kFasesPedido.indexOf(evento.estado!);
+      if (i >= 0) return i;
+    }
+    return 0;
+  }
+
+  /// Cuándo pasó por esa fase, o null si todavía no llega.
+  DateTime? fechaDeFase(OrderStatus fase) {
+    for (final evento in historial) {
+      if (evento.estado == fase) return evento.fecha;
+    }
+    return null;
+  }
+
   /// Cuántos productos lleva el pedido en total.
   int get itemCount => lineas.fold(0, (suma, l) => suma + l.cantidad);
 
@@ -222,11 +262,6 @@ class Order {
           '${fecha.month.toString().padLeft(2, '0')}';
     }
 
-    final h24 = fecha.hour;
-    final h12 = h24 % 12 == 0 ? 12 : h24 % 12;
-    final minutos = fecha.minute.toString().padLeft(2, '0');
-    final franja = h24 < 12 ? 'a.m.' : 'p.m.';
-
-    return '$cuando, $h12:$minutos $franja';
+    return '$cuando, ${horaEnPalabras(fecha)}';
   }
 }

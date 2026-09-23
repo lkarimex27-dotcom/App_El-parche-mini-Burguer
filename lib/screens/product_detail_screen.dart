@@ -90,7 +90,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   Text(
                     '\$${producto.price}',
                     style:
-                        AppTextStyles.heading(size: 20, color: AppColors.tomate),
+                        AppTextStyles.heading(size: 20, color: AppColors.mostaza),
                   ),
                   if (producto.description.isNotEmpty) ...[
                     const SizedBox(height: 10),

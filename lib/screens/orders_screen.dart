@@ -187,7 +187,7 @@ class _TarjetaPedido extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text('\$${order.total}',
-                    style: AppTextStyles.heading(size: 13, color: AppColors.tomate)),
+                    style: AppTextStyles.heading(size: 13, color: AppColors.mostaza)),
               ],
             ),
             const SizedBox(height: 10),

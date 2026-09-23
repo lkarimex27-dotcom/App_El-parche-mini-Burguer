@@ -5,6 +5,7 @@ import '../models/product.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/app_image.dart';
+import '../widgets/order_progress.dart';
 import '../widgets/order_status_badge.dart';
 
 /// Detalle completo del pedido: cada producto con sus salsas, adiciones y
@@ -58,6 +59,8 @@ class OrderDetailScreen extends StatelessWidget {
                   style: AppTextStyles.body(size: 11.5, color: order.status.color)),
             ),
           ],
+          const SizedBox(height: 14),
+          OrderProgress(order: order),
           const SizedBox(height: 16),
 
           Text('Lo que pediste', style: AppTextStyles.heading(size: 13)),
@@ -80,7 +83,7 @@ class OrderDetailScreen extends StatelessWidget {
                 children: [
                   Text('Total', style: AppTextStyles.heading(size: 13.5)),
                   Text('\$${order.total}',
-                      style: AppTextStyles.heading(size: 15, color: AppColors.tomate)),
+                      style: AppTextStyles.heading(size: 15, color: AppColors.mostaza)),
                 ],
               ),
             ],
@@ -156,7 +159,7 @@ class _LineaPedido extends StatelessWidget {
                 ),
               ),
               Text('\$${linea.total}',
-                  style: AppTextStyles.heading(size: 13, color: AppColors.tomate)),
+                  style: AppTextStyles.heading(size: 13, color: AppColors.carbon)),
             ],
           ),
           const Padding(
