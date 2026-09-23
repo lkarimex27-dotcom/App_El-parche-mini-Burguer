@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parche_mini_burger/models/product.dart';
@@ -99,6 +101,30 @@ void main() {
   test('ninguna categoría queda vacía', () {
     for (final c in kCategorias) {
       expect(productosDeCategoria(c.nombre), isNotEmpty, reason: c.nombre);
+    }
+  });
+
+  test('la foto de cada producto existe en assets', () {
+    // Los nombres de archivo llevan espacios ("arepa rellena.jpg"), así que
+    // un dedazo no se nota hasta que la tarjeta sale en blanco.
+    for (final p in demoProducts) {
+      if (p.imageAsset.isEmpty) continue;
+      expect(File(p.imageAsset).existsSync(), isTrue,
+          reason: '${p.name} apunta a ${p.imageAsset} y no está');
+    }
+  });
+
+  test('la portada de la categoría usa una foto real si la hay', () {
+    for (final c in kCategorias) {
+      final portada = portadaDeCategoria(c.nombre);
+      expect(portada, isNotNull, reason: c.nombre);
+
+      final conFoto =
+          productosDeCategoria(c.nombre).where((p) => p.imageAsset.isNotEmpty);
+      if (conFoto.isNotEmpty) {
+        expect(portada!.imageAsset, isNotEmpty,
+            reason: '${c.nombre} tiene fotos pero la portada salió sin foto');
+      }
     }
   });
 }

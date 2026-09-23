@@ -29,10 +29,20 @@ class OrderDetailScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              OrderStatusBadge(status: order.status),
-              const Spacer(),
-              Text(order.fechaTexto,
-                  style: AppTextStyles.body(size: 11.5, color: AppColors.muted)),
+              Flexible(child: OrderStatusBadge(status: order.status)),
+              const SizedBox(width: 10),
+              // La hora cambia de ancho según el día ("9:05 a.m." vs
+              // "12:05 p.m."), así que se deja encoger en vez de desbordar.
+              Flexible(
+                child: Text(
+                  order.fechaTexto,
+                  textAlign: TextAlign.right,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style:
+                      AppTextStyles.body(size: 11.5, color: AppColors.muted),
+                ),
+              ),
             ],
           ),
           if (order.note != null) ...[

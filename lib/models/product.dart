@@ -116,28 +116,14 @@ class Product {
 // producto. Los que no tienen foto adecuada van con imageUrl vacío: la
 // tarjeta muestra el ícono de su categoría hasta que llegue la foto real
 // del negocio a assets/images/<id>.jpg.
-const _burgerClasica =
-    'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=700&q=80';
 const _burgerDoble =
     'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=700&q=80';
-const _burgerPollo =
-    'https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=700&q=80';
-const _burgerTocineta =
-    'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=700&q=80';
 const _burgerSencilla =
     'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=700&q=80';
 const _miniBurgers =
     'https://images.unsplash.com/photo-1521305916504-4a1121188589?w=700&q=80';
-const _perroDoble =
-    'https://images.unsplash.com/photo-1612392061787-2d078b3e573c?w=700&q=80';
-const _perroCargado =
-    'https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=700&q=80';
-const _perroConQueso =
-    'https://images.unsplash.com/photo-1541214113241-21578d2d9b62?w=700&q=80';
 const _papasFritas =
     'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=700&q=80';
-const _chuzoConPapas =
-    'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=700&q=80';
 
 const String _salsasAlGusto = 'Salsas al gusto';
 const String _ensalada = 'Ensalada: repollo o lechuga';
@@ -150,7 +136,7 @@ const List<Product> demoProducts = [
     id: 'mini_burguer',
     name: 'Mini Burguer',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/mini_burguer.jpg',
+    imageAsset: '',
     imageUrl: _miniBurgers,
     price: 12500,
     description: 'La mini de siempre. Puedes pedirla con queso o con tocineta.',
@@ -168,7 +154,7 @@ const List<Product> demoProducts = [
     id: 'hamburguesa_sencilla',
     name: 'Hamburguesa Sencilla',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/hamburguesa_sencilla.jpg',
+    imageAsset: '',
     imageUrl: _burgerSencilla,
     price: 14500,
     description: 'Pan, ensalada, ripio de papa y carne.',
@@ -178,8 +164,8 @@ const List<Product> demoProducts = [
     id: 'hamburguesa_tradicional_o',
     name: 'Hamburguesa Tradicional (queso o tocineta)',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/hamburguesa_tradicional_o.jpg',
-    imageUrl: _burgerClasica,
+    imageAsset: 'assets/images/tradicional.jpg',
+    imageUrl: '',
     price: 15500,
     description: 'La tradicional con queso o con tocineta, tú eliges.',
     ingredientes: [
@@ -202,8 +188,8 @@ const List<Product> demoProducts = [
     id: 'hamburguesa_tradicional_y',
     name: 'Hamburguesa Tradicional (queso y tocineta)',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/hamburguesa_tradicional_y.jpg',
-    imageUrl: _burgerTocineta,
+    imageAsset: 'assets/images/tradicional.jpg',
+    imageUrl: '',
     price: 16000,
     description: 'La tradicional con queso y tocineta.',
     ingredientes: [
@@ -220,7 +206,7 @@ const List<Product> demoProducts = [
     id: 'hamburguesa_doble',
     name: 'Hamburguesa Doble',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/hamburguesa_doble.jpg',
+    imageAsset: '',
     imageUrl: _burgerDoble,
     price: 18500,
     description: 'Doble carne, doble queso y doble tocineta.',
@@ -239,7 +225,7 @@ const List<Product> demoProducts = [
     id: 'hamburguesa_triple',
     name: 'Hamburguesa Triple',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/hamburguesa_triple.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 20500,
     description: 'Triple carne, triple queso y triple tocineta.',
@@ -257,7 +243,7 @@ const List<Product> demoProducts = [
     id: 'hamburguesa_atun_queso',
     name: 'Hamburguesa de Atún y Queso',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/hamburguesa_atun_queso.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 17500,
     description: 'Con atún y queso.',
@@ -274,8 +260,8 @@ const List<Product> demoProducts = [
     id: 'hamburguesa_pollo',
     name: 'Hamburguesa de Pollo',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/hamburguesa_pollo.jpg',
-    imageUrl: _burgerPollo,
+    imageAsset: 'assets/images/burguer de pollo.jpg',
+    imageUrl: '',
     price: 17500,
     description: 'Carne de pollo con queso y tocineta.',
     ingredientes: [
@@ -291,7 +277,7 @@ const List<Product> demoProducts = [
     id: 'hamburguesa_mixta',
     name: 'Hamburguesa Mixta',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/hamburguesa_mixta.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 20000,
     description: 'Pechuga y carne de hamburguesa juntas.',
@@ -311,7 +297,7 @@ const List<Product> demoProducts = [
     id: 'hamburguesa_premium_casa',
     name: 'Hamburguesa Premium Casa',
     category: 'Hamburguesas',
-    imageAsset: 'assets/images/hamburguesa_premium_casa.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 21000,
     description: 'Carne artesanal con huevo entero.',
@@ -334,7 +320,7 @@ const List<Product> demoProducts = [
     id: 'arepa_burger_sencilla',
     name: 'Arepa Burger Sencilla',
     category: 'Arepas',
-    imageAsset: 'assets/images/arepa_burger_sencilla.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 14000,
     description: 'Arepa tela con carne de hamburguesa, queso y tocineta.',
@@ -350,7 +336,7 @@ const List<Product> demoProducts = [
     id: 'arepa_burger_especial',
     name: 'Arepa Burger Especial',
     category: 'Arepas',
-    imageAsset: 'assets/images/arepa_burger_especial.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 15000,
     description: 'La arepa burger con ensalada y ripio.',
@@ -368,7 +354,7 @@ const List<Product> demoProducts = [
     id: 'arepa_desmechada',
     name: 'Arepa Desmechada',
     category: 'Arepas',
-    imageAsset: 'assets/images/arepa_desmechada.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 18000,
     description: 'Carne desmechada mixta de pollo, res y cerdo.',
@@ -385,7 +371,7 @@ const List<Product> demoProducts = [
     id: 'arepa_gourmet',
     name: 'Arepa Gourmet',
     category: 'Arepas',
-    imageAsset: 'assets/images/arepa_gourmet.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 18000,
     description: 'Trocitos de pollo, cerdo, jamón y maicitos.',
@@ -403,7 +389,7 @@ const List<Product> demoProducts = [
     id: 'arepa_mixta_rellena',
     name: 'Arepa Mixta (Rellena)',
     category: 'Arepas',
-    imageAsset: 'assets/images/arepa_mixta_rellena.jpg',
+    imageAsset: 'assets/images/arepa rellena.jpg',
     imageUrl: '',
     price: 18000,
     description: 'Arepa rellena de carne mixta desmechada.',
@@ -421,8 +407,8 @@ const List<Product> demoProducts = [
     id: 'chuzo_pollo_cerdo',
     name: 'Chuzo de Pollo o Cerdo',
     category: 'Chuzos',
-    imageAsset: 'assets/images/chuzo_pollo_cerdo.jpg',
-    imageUrl: _chuzoConPapas,
+    imageAsset: 'assets/images/chuzo de pollo.jpg',
+    imageUrl: '',
     price: 19000,
     description: 'Con ensalada, papas a la francesa y arepa con queso.',
     ingredientes: [
@@ -445,7 +431,7 @@ const List<Product> demoProducts = [
     id: 'patacon_mixto',
     name: 'Patacón Mixto',
     category: 'Patacones',
-    imageAsset: 'assets/images/patacon_mixto.jpg',
+    imageAsset: 'assets/images/patacon.jpg',
     imageUrl: '',
     price: 18000,
     description: 'Pollo, cerdo y res con tocineta y queso.',
@@ -462,7 +448,7 @@ const List<Product> demoProducts = [
     id: 'patacon_ranchero',
     name: 'Patacón Ranchero',
     category: 'Patacones',
-    imageAsset: 'assets/images/patacon_ranchero.jpg',
+    imageAsset: 'assets/images/patacon ranchero.jpg',
     imageUrl: '',
     price: 18000,
     description: 'Pollo, cerdo y res con salchicha ranchera.',
@@ -481,7 +467,7 @@ const List<Product> demoProducts = [
     id: 'perra_pequena',
     name: 'Perra Pequeña',
     category: 'Perras',
-    imageAsset: 'assets/images/perra_pequena.jpg',
+    imageAsset: 'assets/images/perra.jpg',
     imageUrl: '',
     price: 14500,
     description: 'Queso, tocineta, ensalada y ripio.',
@@ -498,7 +484,7 @@ const List<Product> demoProducts = [
     id: 'gran_perra',
     name: 'Gran Perra',
     category: 'Perras',
-    imageAsset: 'assets/images/gran_perra.jpg',
+    imageAsset: 'assets/images/perra.jpg',
     imageUrl: '',
     price: 15500,
     description: 'Queso, tocineta, ensalada y ripio.',
@@ -515,7 +501,7 @@ const List<Product> demoProducts = [
     id: 'super_perra',
     name: 'Súper Perra',
     category: 'Perras',
-    imageAsset: 'assets/images/super_perra.jpg',
+    imageAsset: 'assets/images/perra.jpg',
     imageUrl: '',
     price: 17500,
     description: 'Con doble tocineta.',
@@ -535,7 +521,7 @@ const List<Product> demoProducts = [
     id: 'mini_perrito_y',
     name: 'Mini Perrito (queso y tocineta)',
     category: 'Perros',
-    imageAsset: 'assets/images/mini_perrito_y.jpg',
+    imageAsset: 'assets/images/perro.jpg',
     imageUrl: '',
     price: 13000,
     description: 'Mini perrito con queso y tocineta.',
@@ -552,7 +538,7 @@ const List<Product> demoProducts = [
     id: 'mini_perrito_o',
     name: 'Mini Perrito (queso o tocineta)',
     category: 'Perros',
-    imageAsset: 'assets/images/mini_perrito_o.jpg',
+    imageAsset: 'assets/images/perro.jpg',
     imageUrl: '',
     price: 12500,
     description:
@@ -568,8 +554,8 @@ const List<Product> demoProducts = [
     id: 'perro_mediano_y',
     name: 'Perro Mediano (queso y tocineta)',
     category: 'Perros',
-    imageAsset: 'assets/images/perro_mediano_y.jpg',
-    imageUrl: _perroDoble,
+    imageAsset: 'assets/images/perro.jpg',
+    imageUrl: '',
     price: 14500,
     description: 'Perro mediano con queso y tocineta. Incluye salsas al gusto.',
   ),
@@ -577,7 +563,7 @@ const List<Product> demoProducts = [
     id: 'perro_mediano_o',
     name: 'Perro Mediano (queso o tocineta)',
     category: 'Perros',
-    imageAsset: 'assets/images/perro_mediano_o.jpg',
+    imageAsset: 'assets/images/perro.jpg',
     imageUrl: '',
     price: 14000,
     description:
@@ -593,8 +579,8 @@ const List<Product> demoProducts = [
     id: 'gran_perro_y',
     name: 'Gran Perro (queso y tocineta)',
     category: 'Perros',
-    imageAsset: 'assets/images/gran_perro_y.jpg',
-    imageUrl: _perroConQueso,
+    imageAsset: 'assets/images/perro.jpg',
+    imageUrl: '',
     price: 15500,
     description: 'Gran perro con queso y tocineta. Incluye salsas al gusto.',
     destacado: true,
@@ -603,7 +589,7 @@ const List<Product> demoProducts = [
     id: 'gran_perro_o',
     name: 'Gran Perro (queso o tocineta)',
     category: 'Perros',
-    imageAsset: 'assets/images/gran_perro_o.jpg',
+    imageAsset: 'assets/images/perro.jpg',
     imageUrl: '',
     price: 15000,
     description:
@@ -619,8 +605,8 @@ const List<Product> demoProducts = [
     id: 'super_perro_y',
     name: 'Súper Perro (queso y tocineta)',
     category: 'Perros',
-    imageAsset: 'assets/images/super_perro_y.jpg',
-    imageUrl: _perroCargado,
+    imageAsset: 'assets/images/perro.jpg',
+    imageUrl: '',
     price: 17500,
     description: 'Súper perro con queso y tocineta. Incluye salsas al gusto.',
   ),
@@ -630,7 +616,7 @@ const List<Product> demoProducts = [
     id: 'salchipapa_mega_tradicional',
     name: 'Mega Tradicional',
     category: 'Salchipapas',
-    imageAsset: 'assets/images/salchipapa_mega_tradicional.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 20000,
     description: 'Con carne de hamburguesa picada y nugget de pollo.',
@@ -649,7 +635,7 @@ const List<Product> demoProducts = [
     id: 'salchipapa_especial',
     name: 'Especial',
     category: 'Salchipapas',
-    imageAsset: 'assets/images/salchipapa_especial.jpg',
+    imageAsset: 'assets/images/salchipapas especial.png',
     imageUrl: '',
     price: 16000,
     description: 'Con queso, tocineta y nugget de pollo.',
@@ -666,7 +652,7 @@ const List<Product> demoProducts = [
     id: 'salchipapa_sencilla',
     name: 'Sencilla',
     category: 'Salchipapas',
-    imageAsset: 'assets/images/salchipapa_sencilla.jpg',
+    imageAsset: '',
     imageUrl: _papasFritas,
     price: 13000,
     description: 'Papas, salchicha, huevo de codorniz y nugget de pollo.',
@@ -681,7 +667,7 @@ const List<Product> demoProducts = [
     id: 'salchipapa_especial_gourmet',
     name: 'Especial Gourmet',
     category: 'Salchipapas',
-    imageAsset: 'assets/images/salchipapa_especial_gourmet.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 20500,
     description: 'Tamaño personal. Con queso o con tocineta, tú eliges.',
@@ -706,7 +692,7 @@ const List<Product> demoProducts = [
     id: 'salchipapa_mega_gourmet',
     name: 'Mega Gourmet',
     category: 'Salchipapas',
-    imageAsset: 'assets/images/salchipapa_mega_gourmet.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 23000,
     description: 'La gourmet grande, con queso o con tocineta.',
@@ -731,7 +717,7 @@ const List<Product> demoProducts = [
     id: 'salchipapa_mega_gourmet_qy',
     name: 'Mega Gourmet (queso y tocineta)',
     category: 'Salchipapas',
-    imageAsset: 'assets/images/salchipapa_mega_gourmet_qy.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 27000,
     description: 'La mega gourmet con queso y tocineta.',
@@ -751,7 +737,7 @@ const List<Product> demoProducts = [
     id: 'salchipapa_super_gourmet',
     name: 'Súper Gourmet',
     category: 'Salchipapas',
-    imageAsset: 'assets/images/salchipapa_super_gourmet.jpg',
+    imageAsset: 'assets/images/super gourmet.jpg',
     imageUrl: '',
     price: 33000,
     description: 'La Mega Gourmet más carne desmechada mixta.',
@@ -769,7 +755,7 @@ const List<Product> demoProducts = [
     id: 'gaseosa_pequena',
     name: 'Gaseosa pequeña',
     category: 'Bebidas',
-    imageAsset: 'assets/images/gaseosa_pequena.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 2600,
     description: 'Gaseosa pequeña.',
@@ -786,7 +772,7 @@ const List<Product> demoProducts = [
     id: 'mr_tea',
     name: 'Mr Tea',
     category: 'Bebidas',
-    imageAsset: 'assets/images/mr_tea.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 3500,
     description: 'Té Mr Tea.',
@@ -800,7 +786,7 @@ const List<Product> demoProducts = [
     id: 'gaseosa_flexi_400',
     name: 'Gaseosa Flexi 400 ml',
     category: 'Bebidas',
-    imageAsset: 'assets/images/gaseosa_flexi_400.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 4000,
     description: 'Presentación de 400 ml.',
@@ -822,7 +808,7 @@ const List<Product> demoProducts = [
     id: 'gaseosa_postobon_1_5',
     name: 'Gaseosa Postobón 1.5 L',
     category: 'Bebidas',
-    imageAsset: 'assets/images/gaseosa_postobon_1_5.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 6000,
     description: 'Presentación de 1.5 litros.',
@@ -842,7 +828,7 @@ const List<Product> demoProducts = [
     id: 'gaseosa_2_litros',
     name: 'Gaseosa 2 litros',
     category: 'Bebidas',
-    imageAsset: 'assets/images/gaseosa_2_litros.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 7500,
     description: 'Presentación de 2 litros.',
@@ -861,7 +847,7 @@ const List<Product> demoProducts = [
     id: 'coca_cola_1_5',
     name: 'Coca-Cola 1.5 L',
     category: 'Bebidas',
-    imageAsset: 'assets/images/coca_cola_1_5.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 7500,
     description: 'Presentación de 1.5 litros.',
@@ -872,7 +858,7 @@ const List<Product> demoProducts = [
     id: 'hit_litro',
     name: 'Hit de litro',
     category: 'Bebidas',
-    imageAsset: 'assets/images/hit_litro.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 6000,
     description: 'Marca Postobón.',
@@ -883,7 +869,7 @@ const List<Product> demoProducts = [
     id: 'econolitro_postobon',
     name: 'Econolitro Postobón',
     category: 'Bebidas',
-    imageAsset: 'assets/images/econolitro_postobon.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 4500,
     description: 'Econolitro Postobón.',
@@ -894,7 +880,7 @@ const List<Product> demoProducts = [
     id: 'econolitro_coca_cola',
     name: 'Econolitro Coca-Cola',
     category: 'Bebidas',
-    imageAsset: 'assets/images/econolitro_coca_cola.jpg',
+    imageAsset: '',
     imageUrl: '',
     price: 6000,
     description: 'Econolitro Coca-Cola.',
@@ -929,10 +915,13 @@ List<Product> get productosDestacados =>
 /// Primer producto de una categoría — se usa como foto de portada de la
 /// categoría en el selector, así no hay que cargar imágenes aparte.
 Product? portadaDeCategoria(String categoria) {
-  for (final p in demoProducts) {
-    if (p.category == categoria) return p;
+  final deLaCategoria = productosDeCategoria(categoria);
+  if (deLaCategoria.isEmpty) return null;
+  // Primero uno con foto propia del negocio; si ninguno tiene, el primero.
+  for (final p in deLaCategoria) {
+    if (p.imageAsset.isNotEmpty) return p;
   }
-  return null;
+  return deLaCategoria.first;
 }
 
 /// Busca un producto por id (útil para el carrito y los pedidos).

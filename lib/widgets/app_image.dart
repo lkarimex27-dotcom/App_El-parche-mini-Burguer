@@ -32,6 +32,14 @@ class AppImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Sin foto propia se pasa derecho al respaldo: Image.asset('') revienta.
+    if (assetPath.isEmpty) {
+      final respaldo = _buildNetwork();
+      return borderRadius == null
+          ? respaldo
+          : ClipRRect(borderRadius: borderRadius!, child: respaldo);
+    }
+
     final Widget image = Image.asset(
       assetPath,
       width: width,

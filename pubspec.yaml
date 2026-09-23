@@ -20,8 +20,28 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
+
+# Ícono de la app en el celular. Se genera con:
+#   dart run flutter_launcher_icons
+# a partir de assets/icon/, que sale del logo del negocio.
+flutter_launcher_icons:
+  image_path: "assets/icon/app_icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  # Android 8+: el logo solo, sin plancha de color detrás.
+  adaptive_icon_background: "assets/icon/app_icon_background.png"
+  adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"
+  web:
+    generate: true
+    background_color: "#FAF3E0"
+    theme_color: "#B68C1C"
+  windows:
+    generate: true
+    icon_size: 256

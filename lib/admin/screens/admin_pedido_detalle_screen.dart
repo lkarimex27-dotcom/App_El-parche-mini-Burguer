@@ -46,10 +46,17 @@ class AdminPedidoDetalleScreen extends StatelessWidget {
                 Row(
                   children: [
                     Flexible(child: OrderStatusBadge(status: pedido.status)),
-                    const Spacer(),
-                    Text(pedido.fechaTexto,
+                    const SizedBox(width: 10),
+                    Flexible(
+                      child: Text(
+                        pedido.fechaTexto,
+                        textAlign: TextAlign.right,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.body(
-                            size: 11.5, color: AppColors.muted)),
+                            size: 11.5, color: AppColors.muted),
+                      ),
+                    ),
                   ],
                 ),
                 if (pedido.note != null) ...[
