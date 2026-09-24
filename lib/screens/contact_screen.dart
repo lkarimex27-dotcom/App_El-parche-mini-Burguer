@@ -5,6 +5,7 @@ import '../services/enlaces.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/app_logo.dart';
+import '../widgets/mapa_negocio.dart';
 import '../widgets/primary_button.dart';
 
 /// "Contactar al negocio". Usa la misma paleta, tipografía, tarjetas y
@@ -98,6 +99,8 @@ class ContactScreen extends StatelessWidget {
 
           const SizedBox(height: 18),
           Text('Dónde estamos', style: AppTextStyles.heading(size: 13)),
+          const SizedBox(height: 10),
+          const MapaNegocio(),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(16),

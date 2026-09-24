@@ -14,6 +14,7 @@ import '../widgets/admin_card.dart';
 import '../widgets/admin_states.dart';
 import '../widgets/metric_card.dart';
 import '../widgets/ventas_chart.dart';
+import '../../models/precio.dart';
 
 /// Pantalla principal del panel: lo que el administrador necesita ver de
 /// una, sin entrar a ningún módulo.
@@ -50,7 +51,8 @@ class DashboardScreen extends StatelessWidget {
                 for (final insumo in insumosBajos)
                   _Alerta(
                     icono: Icons.warning_amber_rounded,
-                    color: insumo.esCritico ? AppColors.tomate : AppColors.ambar,
+                    color:
+                        insumo.esCritico ? AppColors.tomate : AppColors.ambar,
                     texto: '${insumo.nombre} por debajo del stock mínimo '
                         '(${insumo.stock} de ${insumo.minimo} ${insumo.unidad})',
                     onTap: () => onAbrirModulo?.call(ModuloAdmin.inventario),
@@ -59,7 +61,8 @@ class DashboardScreen extends StatelessWidget {
                   _Alerta(
                     icono: Icons.pending_actions_rounded,
                     color: AppColors.mostaza,
-                    texto: 'Pedido #${pedido.id} por \$${pedido.total} '
+                    texto:
+                        'Pedido #${pedido.id} por ${formatoPesos(pedido.total)} '
                         'requiere aprobación',
                     onTap: () => onAbrirModulo?.call(ModuloAdmin.pedidos),
                   ),
@@ -77,7 +80,7 @@ class DashboardScreen extends StatelessWidget {
                     Expanded(
                       child: MetricCard(
                         etiqueta: 'Ventas hoy',
-                        valor: '\$$ventasHoy',
+                        valor: formatoPesos(ventasHoy),
                         icono: Icons.payments_outlined,
                         onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
                       ),
@@ -119,7 +122,8 @@ class DashboardScreen extends StatelessWidget {
                         icono: Icons.inventory_2_outlined,
                         color: AppColors.tomate,
                         detalle: 'insumos',
-                        onTap: () => onAbrirModulo?.call(ModuloAdmin.inventario),
+                        onTap: () =>
+                            onAbrirModulo?.call(ModuloAdmin.inventario),
                       ),
                     ),
                   ],
@@ -279,8 +283,8 @@ class DashboardScreen extends StatelessWidget {
 }
 
 String _millones(int valor) => valor >= 1000000
-    ? '\$${(valor / 1000000).toStringAsFixed(2)}M'
-    : '\$${(valor / 1000).round()}k';
+    ? '\$\${(valor / 1000000).toStringAsFixed(2)}M'
+    : '\$\${(valor / 1000).round()}k';
 
 class _Alerta extends StatelessWidget {
   final IconData icono;
@@ -325,7 +329,8 @@ class _Acceso extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _Acceso({required this.icono, required this.label, required this.onTap});
+  const _Acceso(
+      {required this.icono, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -420,15 +425,16 @@ class _FilaPedido extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text('#${pedido.id} · ${pedido.fechaTexto}',
-                    style: AppTextStyles.body(size: 11, color: AppColors.muted)),
+                    style:
+                        AppTextStyles.body(size: 11, color: AppColors.muted)),
                 const SizedBox(height: 6),
                 OrderStatusBadge(status: pedido.status),
               ],
             ),
           ),
           const SizedBox(width: 10),
-          Text('\$${pedido.total}',
-              style: AppTextStyles.heading(size: 14, color: AppColors.tomate)),
+          Text(formatoPesos(pedido.total),
+                  style: AppTextStyles.heading(size: 14, color: AppColors.verde)),
         ],
       ),
     );

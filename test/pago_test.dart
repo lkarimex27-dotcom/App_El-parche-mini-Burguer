@@ -5,6 +5,7 @@ import 'package:parche_mini_burger/screens/payment_screen.dart';
 import 'package:parche_mini_burger/screens/product_detail_screen.dart';
 import 'package:parche_mini_burger/state/app_scope.dart';
 import 'package:parche_mini_burger/widgets/primary_button.dart';
+import 'package:parche_mini_burger/models/precio.dart';
 
 void main() {
   setUp(() {
@@ -66,9 +67,9 @@ void main() {
     expect(find.text('Pedir mitad y mitad'), findsNothing);
 
     // El precio del producto sí se ve, y el botón cobra eso.
-    expect(find.text('\$${demoProducts.first.price}'), findsWidgets);
+    expect(find.text(formatoPesos(demoProducts.first.price)), findsWidgets);
     expect(
-      find.text('Agregar al carrito · \$${demoProducts.first.price}'),
+      find.text('Agregar al carrito · ${formatoPesos(demoProducts.first.price)}'),
       findsOneWidget,
     );
   });

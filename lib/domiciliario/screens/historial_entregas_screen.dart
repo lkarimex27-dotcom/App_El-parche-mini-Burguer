@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/order.dart';
+import '../../models/precio.dart';
 import '../../state/app_scope.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
@@ -136,7 +137,7 @@ class _EntregaHistorica extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('\$${pedido.total}',
+                Text(formatoPesos(pedido.total),
                     style: AppTextStyles.heading(
                         size: 12.5, color: AppColors.tomate)),
                 const SizedBox(height: 5),
