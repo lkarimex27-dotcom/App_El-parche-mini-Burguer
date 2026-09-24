@@ -14,6 +14,7 @@ import '../widgets/admin_card.dart';
 import '../widgets/admin_states.dart';
 import '../widgets/metric_card.dart';
 import '../widgets/ventas_chart.dart';
+import '../../models/precio.dart';
 
 /// Pantalla principal del panel: lo que el administrador necesita ver de
 /// una, sin entrar a ningún módulo.
@@ -68,7 +69,8 @@ class DashboardScreen extends StatelessWidget {
                   _Alerta(
                     icono: Icons.pending_actions_rounded,
                     color: AppColors.mostaza,
-                    texto: 'Pedido #${pedido.id} por \$${pedido.total} '
+                    texto:
+                        'Pedido #${pedido.id} por ${formatoPesos(pedido.total)} '
                         'requiere aprobación',
                     onTap: () => onAbrirModulo?.call(ModuloAdmin.pedidos),
                   ),
@@ -86,7 +88,7 @@ class DashboardScreen extends StatelessWidget {
                     Expanded(
                       child: MetricCard(
                         etiqueta: 'Ventas hoy',
-                        valor: '\$$ventasHoy',
+                        valor: formatoPesos(ventasHoy),
                         icono: Icons.payments_outlined,
                         onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
                       ),
@@ -477,8 +479,8 @@ class _FilaPedido extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Text('\$${pedido.total}',
-              style: AppTextStyles.heading(size: 14, color: AppColors.tomate)),
+          Text(formatoPesos(pedido.total),
+                  style: AppTextStyles.heading(size: 14, color: AppColors.verde)),
         ],
       ),
     );

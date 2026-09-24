@@ -91,64 +91,90 @@ class _Paso extends StatelessWidget {
     final alcanzado = cumplido || actual;
     final colorPaso = alcanzado ? color : AppColors.borde;
 
+    // Como en las apps de envíos: el paso en el que va el pedido se ve
+    // nítido y los demás quedan desvanecidos, para que de un vistazo se
+    // sepa dónde está sin tener que leer todo.
+    final opacidad = actual ? 1.0 : (cumplido ? 0.55 : 0.35);
+    final diametro = actual ? 32.0 : 24.0;
+
     return IntrinsicHeight(
       // El paso crece con su texto: un alto fijo se queda corto en cuanto
       // el cliente usa la letra grande del sistema.
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Column(
-            children: [
-              Container(
-                width: 26,
-                height: 26,
-                decoration: BoxDecoration(
-                  color: alcanzado ? colorPaso : Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: colorPaso, width: 1.6),
-                ),
-                child: Icon(
-                  cumplido ? Icons.check_rounded : icono,
-                  size: 14,
-                  color: alcanzado ? Colors.white : AppColors.muted,
-                ),
-              ),
-              if (!esUltimo)
-                Expanded(
-                  child: Container(
-                    width: 2,
-                    // La línea se pinta del color del paso de arriba solo si
-                    // ya se cumplió: así se ve hasta dónde avanzó.
-                    color: cumplido ? color : AppColors.borde,
+          Opacity(
+            opacity: opacidad,
+            child: Column(
+              children: [
+                Container(
+                  width: diametro,
+                  height: diametro,
+                  decoration: BoxDecoration(
+                    color: alcanzado ? colorPaso : Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: colorPaso, width: 1.6),
+                    // Un halo detrás del paso actual, para que salte a la
+                    // vista incluso mirando el celular de reojo.
+                    boxShadow: actual
+                        ? [
+                            BoxShadow(
+                              color: color.withValues(alpha: 0.35),
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Icon(
+                    cumplido ? Icons.check_rounded : icono,
+                    size: actual ? 17 : 13,
+                    color: alcanzado ? Colors.white : AppColors.muted,
                   ),
                 ),
-            ],
+                if (!esUltimo)
+                  Expanded(
+                    child: Container(
+                      width: 2,
+                      // La línea se pinta del color del paso de arriba solo
+                      // si ya se cumplió: así se ve hasta dónde avanzó.
+                      color: cumplido ? color : AppColors.borde,
+                    ),
+                  ),
+              ],
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Padding(
-              // Lo de abajo es el aire entre un paso y el siguiente.
-              padding: EdgeInsets.only(top: 3, bottom: esUltimo ? 0 : 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    titulo,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.heading(
-                      size: 12,
-                      color: alcanzado ? AppColors.carbon : AppColors.muted,
-                      weight: actual ? FontWeight.w700 : FontWeight.w600,
-                    ),
-                  ),
-                  if (hora != null)
+            child: Opacity(
+              opacity: opacidad,
+              child: Padding(
+                // Lo de abajo es el aire entre un paso y el siguiente.
+                padding: EdgeInsets.only(
+                  top: actual ? 6 : 2,
+                  bottom: esUltimo ? 0 : 16,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      horaEnPalabras(hora!),
-                      style: AppTextStyles.body(
-                          size: 10.5, color: AppColors.muted),
+                      titulo,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.heading(
+                        size: actual ? 13.5 : 11.5,
+                        color: actual ? color : AppColors.carbon,
+                        weight: actual ? FontWeight.w700 : FontWeight.w600,
+                      ),
                     ),
-                ],
+                    if (hora != null)
+                      Text(
+                        horaEnPalabras(hora!),
+                        style: AppTextStyles.body(
+                            size: 10.5, color: AppColors.muted),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -157,7 +183,7 @@ class _Paso extends StatelessWidget {
             Align(
               alignment: Alignment.topCenter,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(100),

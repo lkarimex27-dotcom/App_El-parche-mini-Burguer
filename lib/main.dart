@@ -5,7 +5,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'state/app_scope.dart';
 import 'state/orders_model.dart';
 import 'theme/app_colors.dart';
-import 'screens/splash_screen.dart';
+ import 'screens/splash_screen.dart';
 
 void main() {
   // El splash nativo se queda en pantalla hasta que SplashScreen termina

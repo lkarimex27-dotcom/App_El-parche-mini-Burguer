@@ -7,6 +7,7 @@ import '../theme/app_text_styles.dart';
 import '../widgets/app_image.dart';
 import '../widgets/order_status_badge.dart';
 import 'order_detail_screen.dart';
+import '../models/precio.dart';
 
 /// Pestaña "Mis pedidos" del bottom nav.
 class OrdersScreen extends StatelessWidget {
@@ -46,7 +47,8 @@ class OrdersHistoryPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.carbon),
-        title: Text('Historial de pedidos', style: AppTextStyles.heading(size: 15)),
+        title: Text('Historial de pedidos',
+            style: AppTextStyles.heading(size: 15)),
       ),
       body: const OrdersList(),
     );
@@ -69,7 +71,8 @@ class OrdersList extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.receipt_long_outlined, size: 46, color: AppColors.borde),
+              const Icon(Icons.receipt_long_outlined,
+                  size: 46, color: AppColors.borde),
               const SizedBox(height: 12),
               Text('Todavía no tienes pedidos',
                   style: AppTextStyles.heading(size: 14)),
@@ -84,7 +87,8 @@ class OrdersList extends StatelessWidget {
                 TextButton(
                   onPressed: onVerMenu,
                   child: Text('Ver el menú',
-                      style: AppTextStyles.heading(size: 12.5, color: AppColors.mostaza)),
+                      style: AppTextStyles.heading(
+                          size: 12.5, color: AppColors.mostaza)),
                 ),
               ],
             ],
@@ -186,8 +190,8 @@ class _TarjetaPedido extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text('\$${order.total}',
-                    style: AppTextStyles.heading(size: 13, color: AppColors.mostaza)),
+                Text(formatoPesos(order.total),
+                  style: AppTextStyles.heading(size: 13, color: AppColors.verde)),
               ],
             ),
             const SizedBox(height: 10),
@@ -196,7 +200,8 @@ class _TarjetaPedido extends StatelessWidget {
                 Flexible(child: OrderStatusBadge(status: order.status)),
                 const Spacer(),
                 Text('Pedido #${order.id}',
-                    style: AppTextStyles.body(size: 10, color: AppColors.muted)),
+                    style:
+                        AppTextStyles.body(size: 10, color: AppColors.muted)),
                 const Icon(Icons.chevron_right_rounded,
                     size: 18, color: AppColors.muted),
               ],

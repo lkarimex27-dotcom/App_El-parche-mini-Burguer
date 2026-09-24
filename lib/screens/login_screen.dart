@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../admin/screens/admin_nav_screen.dart';
+import '../domiciliario/screens/domiciliario_nav_screen.dart';
 import '../models/business_info.dart';
 import '../models/rol.dart';
 import '../state/app_scope.dart';
@@ -64,6 +65,12 @@ class _LoginScreenState extends State<LoginScreen> {
   /// Según el rol: el cliente va a la app de siempre, el resto al panel.
   void _abrirApp() {
     final rol = AppScope.usuarioSinEscuchar(context).rol;
+    if (rol.esDomiciliario) {
+      Navigator.of(context).pushReplacement(
+        rutaConFundido(const DomiciliarioNavScreen()),
+      );
+      return;
+    }
     Navigator.of(context).pushReplacement(
       rutaConFundido(
         rol.esDelPanel ? const AdminNavScreen() : const MainNavScreen(),

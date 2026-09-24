@@ -7,6 +7,7 @@ import 'package:parche_mini_burger/screens/cart_screen.dart';
 import 'package:parche_mini_burger/screens/main_nav_screen.dart';
 import 'package:parche_mini_burger/state/app_scope.dart';
 import 'package:parche_mini_burger/state/cart_model.dart';
+import 'package:parche_mini_burger/models/precio.dart';
 
 Product get _clasica => demoProducts.firstWhere((p) => p.id == 'hamburguesa_doble');
 Extra get _tocineta => kAdiciones.firstWhere((e) => e.id == 'ad_tocineta');
@@ -105,14 +106,14 @@ void main() {
       await tester.pump();
 
       expect(find.text('1'), findsOneWidget);
-      expect(find.text('\$${_clasica.price}'), findsWidgets);
+      expect(find.text(formatoPesos(_clasica.price)), findsWidgets);
 
       await tester.tap(find.byIcon(Icons.add).first);
       await tester.pump();
 
       expect(carrito.cantidadTotal, 2);
       expect(find.text('2'), findsOneWidget);
-      expect(find.text('\$${_clasica.price * 2}'), findsWidgets);
+      expect(find.text(formatoPesos(_clasica.price * 2)), findsWidgets);
 
       await tester.tap(find.byIcon(Icons.remove).first);
       await tester.pump();

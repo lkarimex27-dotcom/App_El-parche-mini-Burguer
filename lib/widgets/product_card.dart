@@ -4,6 +4,7 @@ import '../state/app_scope.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import 'app_image.dart';
+import '../models/precio.dart';
 
 /// Tarjeta de producto con la foto como protagonista.
 /// Se adapta al alto que le dé el padre (carrusel del Inicio o grilla del Menú).
@@ -77,14 +78,16 @@ class ProductCard extends StatelessWidget {
                       top: 8,
                       left: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
                           color: AppColors.tomate,
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Text(
                           'Top',
-                          style: AppTextStyles.heading(size: 9.5, color: Colors.white),
+                          style: AppTextStyles.heading(
+                              size: 9.5, color: Colors.white),
                         ),
                       ),
                     ),
@@ -103,7 +106,8 @@ class ProductCard extends StatelessWidget {
                         child: Icon(
                           esFavorito ? Icons.favorite : Icons.favorite_border,
                           size: 15,
-                          color: esFavorito ? AppColors.tomate : AppColors.muted,
+                          color:
+                              esFavorito ? AppColors.tomate : AppColors.muted,
                         ),
                       ),
                     ),
@@ -118,15 +122,18 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Text(
                     product.name,
-                    style: AppTextStyles.heading(size: 12.5, weight: FontWeight.w700),
+                    style: AppTextStyles.heading(
+                        size: 12.5, weight: FontWeight.w700),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
                     product.description,
+                    // Dos líneas: con una sola, la descripción se corta antes
+                    // de alcanzar a antojar a nadie.
                     style: AppTextStyles.body(size: 10, color: AppColors.muted),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
@@ -135,8 +142,9 @@ class ProductCard extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          '\$${product.price}',
-                          style: AppTextStyles.heading(size: 12, color: AppColors.mostaza),
+                          formatoPesos(product.price),
+                          style: AppTextStyles.heading(
+                              size: 12, color: AppColors.verde),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -151,7 +159,8 @@ class ProductCard extends StatelessWidget {
                             color: AppColors.mostaza,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(Icons.add, color: Colors.white, size: 18),
+                          child: const Icon(Icons.add,
+                              color: Colors.white, size: 18),
                         ),
                       ),
                     ],

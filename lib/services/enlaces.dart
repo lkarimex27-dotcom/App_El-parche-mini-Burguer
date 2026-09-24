@@ -32,9 +32,26 @@ class Enlaces {
 
   /// Marca el teléfono del negocio.
   static Future<void> llamar(BuildContext context) async {
-    final abierto = await _abrir('tel:${BusinessInfo.telefono.replaceAll(' ', '')}');
+    await llamarNumero(context, BusinessInfo.telefono);
+  }
+
+  static Future<void> llamarNumero(
+      BuildContext context, String telefono) async {
+    final limpio = telefono.replaceAll(RegExp(r'[^0-9+]'), '');
+    final abierto = await _abrir('tel:$limpio');
     if (!abierto && context.mounted) {
-      _avisarNoSePudo(context, 'el teléfono', BusinessInfo.telefono);
+      _avisarNoSePudo(context, 'el teléfono', telefono);
+    }
+  }
+
+  static Future<void> abrirMaps(BuildContext context, String direccion) async {
+    final uri = Uri.https('www.google.com', '/maps/search/', {
+      'api': '1',
+      'query': direccion,
+    });
+    final abierto = await _abrir(uri.toString());
+    if (!abierto && context.mounted) {
+      _avisarNoSePudo(context, 'Maps', direccion);
     }
   }
 
@@ -59,7 +76,8 @@ class Enlaces {
           backgroundColor: AppColors.tomate,
           behavior: SnackBarBehavior.floating,
           margin: const EdgeInsets.all(14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           content: Text(
             'No pudimos abrir $que. Escríbenos a $dato',
             style: AppTextStyles.body(size: 12.5, color: Colors.white),

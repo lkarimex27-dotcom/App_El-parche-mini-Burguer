@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import '../domiciliario/models/domiciliario_model.dart';
 import 'cart_model.dart';
 import 'orders_model.dart';
 import 'user_model.dart';
