@@ -18,9 +18,7 @@ enum ModuloAdmin {
   devoluciones,
   usuarios,
   roles,
-  indicadores,
   perfil,
-  configuracion,
 }
 
 extension ModuloAdminUi on ModuloAdmin {
@@ -56,12 +54,8 @@ extension ModuloAdminUi on ModuloAdmin {
         return 'Usuarios';
       case ModuloAdmin.roles:
         return 'Roles y permisos';
-      case ModuloAdmin.indicadores:
-        return 'Indicadores';
       case ModuloAdmin.perfil:
         return 'Mi perfil';
-      case ModuloAdmin.configuracion:
-        return 'Configuración';
     }
   }
 
@@ -97,12 +91,8 @@ extension ModuloAdminUi on ModuloAdmin {
         return Icons.manage_accounts_outlined;
       case ModuloAdmin.roles:
         return Icons.admin_panel_settings_outlined;
-      case ModuloAdmin.indicadores:
-        return Icons.insights_outlined;
       case ModuloAdmin.perfil:
         return Icons.person_outline_rounded;
-      case ModuloAdmin.configuracion:
-        return Icons.settings_outlined;
     }
   }
 }
@@ -129,40 +119,50 @@ extension PermisoUi on Permiso {
   }
 }
 
-const Set<Permiso> _todos = {
+const Set<Permiso> _soloVer = {Permiso.ver};
+const Set<Permiso> _verYCambiarEstado = {
   Permiso.ver,
-  Permiso.crear,
-  Permiso.editar,
-  Permiso.eliminar,
   Permiso.cambiarEstado,
-  Permiso.anular,
 };
 
-const Set<Permiso> _soloVer = {Permiso.ver};
+bool moduloAdmiteCreacion(ModuloAdmin modulo) {
+  switch (modulo) {
+    case ModuloAdmin.proveedores:
+    case ModuloAdmin.compras:
+    case ModuloAdmin.produccion:
+    case ModuloAdmin.pedidos:
+    case ModuloAdmin.devoluciones:
+      return true;
+    default:
+      return false;
+  }
+}
 
 /// Qué puede hacer cada rol en cada módulo. Cuando haya backend, esto es
 /// lo que llegaría de la API: la interfaz ya lee solo de aquí.
 final Map<Rol, Map<ModuloAdmin, Set<Permiso>>> permisosPorRol = {
-  // El administrador tiene todo.
   Rol.administrador: {
-    for (final m in ModuloAdmin.values) m: _todos,
+    for (final m in ModuloAdmin.values)
+      m: {
+        if (moduloAdmiteCreacion(m)) Permiso.crear,
+        Permiso.ver,
+        if (m != ModuloAdmin.perfil) Permiso.editar,
+        if (m == ModuloAdmin.proveedores) Permiso.anular,
+        if (m != ModuloAdmin.dashboard) Permiso.cambiarEstado,
+      },
   },
-  Rol.vendedor: {
+  // El repartidor usa la vista de entregas, no el panel administrativo.
+  Rol.repartidor: {},
+  Rol.empleado: {
     ModuloAdmin.dashboard: _soloVer,
-    ModuloAdmin.pedidos: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
-    ModuloAdmin.productos: _soloVer,
-    ModuloAdmin.clientes: {Permiso.ver, Permiso.crear, Permiso.editar},
-    ModuloAdmin.ventas: {Permiso.ver, Permiso.crear},
-    ModuloAdmin.devoluciones: {Permiso.ver, Permiso.crear},
-    ModuloAdmin.perfil: {Permiso.ver, Permiso.editar},
-  },
-  Rol.cocinero: {
-    ModuloAdmin.dashboard: _soloVer,
-    ModuloAdmin.produccion: {Permiso.ver, Permiso.cambiarEstado},
-    ModuloAdmin.inventario: _soloVer,
-    ModuloAdmin.fichasTecnicas: _soloVer,
-    ModuloAdmin.perdidas: {Permiso.ver, Permiso.crear},
-    ModuloAdmin.perfil: {Permiso.ver, Permiso.editar},
+    ModuloAdmin.produccion: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
+    ModuloAdmin.inventario: _verYCambiarEstado,
+    ModuloAdmin.fichasTecnicas: _verYCambiarEstado,
+    ModuloAdmin.perfil: {
+      Permiso.ver,
+      Permiso.editar,
+      Permiso.cambiarEstado,
+    },
   },
   // El cliente no entra al panel.
   Rol.cliente: {},

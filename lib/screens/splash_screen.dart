@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kDebugMode, kIsWeb, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -145,9 +146,9 @@ class _SplashScreenState extends State<SplashScreen>
   static const double _tLogoDentro = 0.85;
   static const double _tLogoArriba = 0.93;
 
-  /// Proporción real de assets/images/logo 1.png (380 × 227). El logo NO es
+  /// Proporción real de assets/images/logo empresa.png (647 × 386). El logo NO es
   /// cuadrado: de aquí sale el alto, y con él el centro del polvo.
-  static const double _proporcionLogo = 227 / 380;
+  static const double _proporcionLogo = 386 / 647;
 
   late final AnimationController _controller;
   late final Animation<double> _puntoOpacidad;
@@ -179,7 +180,8 @@ class _SplashScreenState extends State<SplashScreen>
   final GlobalKey _bloqueTexto = GlobalKey();
 
   // Arrastre del logo y su rebote elástico al soltar.
-  final ValueNotifier<Offset> _arrastreLogo = ValueNotifier<Offset>(Offset.zero);
+  final ValueNotifier<Offset> _arrastreLogo =
+      ValueNotifier<Offset>(Offset.zero);
   late final AnimationController _resorte;
   Animation<Offset>? _resorteAnim;
 
@@ -216,7 +218,8 @@ class _SplashScreenState extends State<SplashScreen>
     _logoEscala = Tween<double>(begin: 0.6, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(_tRevelado, _tLogoDentro, curve: Curves.bounceOut),
+        curve:
+            const Interval(_tRevelado, _tLogoDentro, curve: Curves.bounceOut),
       ),
     );
     _logoCaida = CurvedAnimation(
@@ -225,7 +228,8 @@ class _SplashScreenState extends State<SplashScreen>
     );
     _logoSube = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(_tLogoDentro, _tLogoArriba, curve: Curves.easeInOut),
+      curve:
+          const Interval(_tLogoDentro, _tLogoArriba, curve: Curves.easeInOut),
     );
     _abajoOpacidad = CurvedAnimation(
       parent: _controller,
@@ -276,6 +280,13 @@ class _SplashScreenState extends State<SplashScreen>
   /// sensors_plus no existe en web ni en escritorio, y en pruebas el plugin
   /// tampoco está: si falla, el splash se ve igual, solo sin parallax.
   void _escucharSensor() {
+    if (kIsWeb ||
+        defaultTargetPlatform == TargetPlatform.windows ||
+        defaultTargetPlatform == TargetPlatform.linux ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      return;
+    }
+
     try {
       _sensor = accelerometerEventStream(
         samplingPeriod: SensorInterval.uiInterval,
@@ -602,7 +613,7 @@ class _SplashScreenState extends State<SplashScreen>
               fit: StackFit.expand,
               children: [
                 const AppImage(
-                  'assets/images/splash_bg.jpg',
+                  '',
                   fallbackUrl: BusinessInfo.fotoAmbiente,
                   fit: BoxFit.cover,
                 ),
@@ -765,8 +776,7 @@ class _SplashScreenState extends State<SplashScreen>
                 key: _bloqueTexto,
                 duration: const Duration(milliseconds: 260),
                 curve: Curves.easeOut,
-                transform:
-                    Matrix4.translationValues(apartar.dx, apartar.dy, 0),
+                transform: Matrix4.translationValues(apartar.dx, apartar.dy, 0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

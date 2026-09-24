@@ -101,17 +101,21 @@ class UserModel extends ChangeNotifier {
   }
 
   /// TEMPORAL: mientras no hay backend, el rol sale del correo para poder
-  /// entrar al panel (admin@…, vendedor@…, cocinero@…; cualquier otro es
+  /// entrar al panel (admin@…, repartidor@…, empleado@…; cualquier otro es
   /// cliente). Cuando la API devuelva el rol del usuario, se borra esto.
   static Rol _rolDemoDesdeCorreo(String email) {
     switch (email.split('@').first.toLowerCase()) {
       case 'admin':
       case 'administrador':
         return Rol.administrador;
+      case 'repartidor':
       case 'vendedor':
-        return Rol.vendedor;
+        return Rol.repartidor;
+      case 'empleado':
       case 'cocinero':
-        return Rol.cocinero;
+        return Rol.empleado;
+      case 'domiciliario':
+        return Rol.repartidor;
       default:
         return Rol.cliente;
     }
@@ -176,7 +180,8 @@ class UserModel extends ChangeNotifier {
     return _direcciones.isEmpty ? null : _direcciones.first;
   }
 
-  bool esPrincipal(Direccion direccion) => direccion.id == _direccionPrincipalId;
+  bool esPrincipal(Direccion direccion) =>
+      direccion.id == _direccionPrincipalId;
 
   void agregarDireccion({
     required String alias,
@@ -204,7 +209,8 @@ class UserModel extends ChangeNotifier {
   void eliminarDireccion(Direccion direccion) {
     _direcciones.removeWhere((d) => d.id == direccion.id);
     if (_direccionPrincipalId == direccion.id) {
-      _direccionPrincipalId = _direcciones.isEmpty ? null : _direcciones.first.id;
+      _direccionPrincipalId =
+          _direcciones.isEmpty ? null : _direcciones.first.id;
     }
     notifyListeners();
   }

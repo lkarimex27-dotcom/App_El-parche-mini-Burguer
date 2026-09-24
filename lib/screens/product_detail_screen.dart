@@ -6,6 +6,7 @@ import '../theme/app_text_styles.dart';
 import '../widgets/app_form_field.dart';
 import '../widgets/app_image.dart';
 import '../widgets/primary_button.dart';
+import '../models/precio.dart';
 
 /// Ficha del producto: lo básico y nada más — foto, nombre, precio,
 /// descripción, cantidad y agregar. Las salsas, adiciones y bebidas se
@@ -68,7 +69,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                       const Spacer(),
                       _CircleButton(
-                        icon: esFavorito ? Icons.favorite : Icons.favorite_border,
+                        icon:
+                            esFavorito ? Icons.favorite : Icons.favorite_border,
                         color: esFavorito ? AppColors.tomate : AppColors.carbon,
                         onTap: () => usuario.alternarFavorito(producto),
                       ),
@@ -78,7 +80,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ],
           ),
-
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
@@ -88,15 +89,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   Text(producto.name, style: AppTextStyles.heading(size: 18)),
                   const SizedBox(height: 6),
                   Text(
-                    '\$${producto.price}',
-                    style:
-                        AppTextStyles.heading(size: 20, color: AppColors.mostaza),
+                    formatoPesos(producto.price),
+                    style: AppTextStyles.heading(
+                        size: 20, color: AppColors.verde),
                   ),
                   if (producto.description.isNotEmpty) ...[
                     const SizedBox(height: 10),
                     Text(
                       producto.description,
-                      style: AppTextStyles.body(size: 13, color: AppColors.muted),
+                      style:
+                          AppTextStyles.body(size: 13, color: AppColors.muted),
                     ),
                   ],
                   const SizedBox(height: 24),
@@ -106,16 +108,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       const Spacer(),
                       _StepperCantidad(
                         cantidad: _cantidad,
-                        onMenos: () =>
-                            setState(() => _cantidad = (_cantidad - 1).clamp(1, 20)),
-                        onMas: () =>
-                            setState(() => _cantidad = (_cantidad + 1).clamp(1, 20)),
+                        onMenos: () => setState(
+                            () => _cantidad = (_cantidad - 1).clamp(1, 20)),
+                        onMas: () => setState(
+                            () => _cantidad = (_cantidad + 1).clamp(1, 20)),
                       ),
                     ],
                   ),
                   const SizedBox(height: 22),
                   PrimaryButton(
-                    label: 'Agregar al carrito · \$$_total',
+                    label: 'Agregar al carrito · ${formatoPesos(_total)}',
                     onPressed: _agregarAlCarrito,
                   ),
                   const SizedBox(height: 10),
@@ -123,8 +125,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     child: Text(
                       'Las salsas, adiciones y bebidas las eliges en el carrito',
                       textAlign: TextAlign.center,
-                      style:
-                          AppTextStyles.body(size: 10.5, color: AppColors.muted),
+                      style: AppTextStyles.body(
+                          size: 10.5, color: AppColors.muted),
                     ),
                   ),
                 ],

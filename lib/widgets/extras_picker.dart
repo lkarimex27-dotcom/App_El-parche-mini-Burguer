@@ -3,6 +3,7 @@ import '../models/extras.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import 'primary_button.dart';
+import '../models/precio.dart';
 
 /// Chips de selección múltiple para salsas o adiciones.
 /// Las que no son gratis muestran su precio.
@@ -66,10 +67,10 @@ class ExtrasWrap extends StatelessWidget {
                 if (!extra.esGratis) ...[
                   const SizedBox(width: 6),
                   Text(
-                    '+\$${extra.precio}',
+                    '+${formatoPesos(extra.precio)}',
                     style: AppTextStyles.heading(
                       size: 10.5,
-                      color: activo ? Colors.white : AppColors.mostaza,
+                      color: activo ? Colors.white : AppColors.verde,
                     ),
                   ),
                 ],
@@ -132,7 +133,8 @@ Future<Set<Extra>?> editarExtras({
                 Text(titulo, style: AppTextStyles.heading(size: 16)),
                 const SizedBox(height: 2),
                 Text(subtitulo,
-                    style: AppTextStyles.body(size: 11.5, color: AppColors.muted)),
+                    style:
+                        AppTextStyles.body(size: 11.5, color: AppColors.muted)),
                 const SizedBox(height: 14),
                 Flexible(
                   child: SingleChildScrollView(
@@ -151,8 +153,11 @@ Future<Set<Extra>?> editarExtras({
                     Text('Suman', style: AppTextStyles.body(size: 12.5)),
                     const Spacer(),
                     Text(
-                      extraTotal == 0 ? 'Sin costo' : '+\$$extraTotal',
-                      style: AppTextStyles.heading(size: 14, color: AppColors.tomate),
+                      extraTotal == 0
+                          ? 'Sin costo'
+                          : '+${formatoPesos(extraTotal)}',
+                      style: AppTextStyles.heading(
+                          size: 14, color: AppColors.tomate),
                     ),
                   ],
                 ),

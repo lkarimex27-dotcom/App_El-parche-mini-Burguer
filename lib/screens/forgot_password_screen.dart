@@ -164,7 +164,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         fit: StackFit.expand,
         children: [
           const AppImage(
-            'assets/images/login_bg.jpg',
+            'assets/images/logo parche miniburguer.jpeg',
             fallbackUrl: BusinessInfo.fotoAmbiente,
             fit: BoxFit.cover,
           ),
@@ -227,7 +227,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case _Paso.correo:
         return [
           Text('¿Olvidaste tu contraseña?',
-              textAlign: TextAlign.center, style: AppTextStyles.heading(size: 16)),
+              textAlign: TextAlign.center,
+              style: AppTextStyles.heading(size: 16)),
           const SizedBox(height: 6),
           Text(
             'Escribe el correo de tu cuenta y te mandamos\nun código de 6 dígitos.',
@@ -248,7 +249,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case _Paso.codigo:
         return [
           Text('Revisa tu correo',
-              textAlign: TextAlign.center, style: AppTextStyles.heading(size: 16)),
+              textAlign: TextAlign.center,
+              style: AppTextStyles.heading(size: 16)),
           const SizedBox(height: 6),
           Text(
             'Mandamos un código de 6 dígitos a\n${_correo.text.trim()}',
@@ -281,7 +283,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
-                borderSide: const BorderSide(color: AppColors.mostaza, width: 1.6),
+                borderSide:
+                    const BorderSide(color: AppColors.mostaza, width: 1.6),
               ),
             ),
           ),
@@ -290,7 +293,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: _segundosParaReenviar > 0
                 ? Text(
                     'Puedes reenviarlo en $_segundosParaReenviar s',
-                    style: AppTextStyles.body(size: 11.5, color: AppColors.muted),
+                    style:
+                        AppTextStyles.body(size: 11.5, color: AppColors.muted),
                   )
                 : GestureDetector(
                     onTap: () => _enviarCodigo(reenvio: true),
@@ -306,7 +310,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       case _Paso.nueva:
         return [
           Text('Crea tu contraseña nueva',
-              textAlign: TextAlign.center, style: AppTextStyles.heading(size: 16)),
+              textAlign: TextAlign.center,
+              style: AppTextStyles.heading(size: 16)),
           const SizedBox(height: 6),
           Text(
             'Mínimo 6 caracteres.',
@@ -329,7 +334,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             oculto: _ocultarNueva,
           ),
           const SizedBox(height: 18),
-          PrimaryButton(label: 'Guardar contraseña', onPressed: _guardarContrasena),
+          PrimaryButton(
+              label: 'Guardar contraseña', onPressed: _guardarContrasena),
         ];
     }
   }
@@ -414,7 +420,9 @@ class _Campo extends StatelessWidget {
             : IconButton(
                 onPressed: onVerOcultar,
                 icon: Icon(
-                  oculto ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  oculto
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
                   size: 19,
                   color: AppColors.muted,
                 ),

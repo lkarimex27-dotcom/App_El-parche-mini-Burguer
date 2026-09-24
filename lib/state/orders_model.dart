@@ -1,23 +1,54 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/order.dart';
+import '../models/extras.dart';
 import 'cart_model.dart';
 
 /// Los pedidos del cliente. Se crean a partir del carrito cuando se
 /// confirma el pago, copiando todo lo que eligió: producto, salsas,
 /// adiciones, gaseosa (sabor y tamaño), cantidades y precios.
 class OrdersModel extends ChangeNotifier {
+  static const _clavePedidos = 'pedidos_guardados';
   final List<Order> _pedidos = [];
+  final bool _persistir;
   int _consecutivo = 1000;
 
   /// [iniciales] solo se usa para sembrar pedidos de ejemplo mientras no
   /// hay backend (ver lib/admin/data/admin_mock.dart). En producción se
   /// construye vacío y se llena con [crearDesdeCarrito].
-  OrdersModel({List<Order>? iniciales}) {
+  OrdersModel({List<Order>? iniciales, bool persistir = false})
+      : _persistir = persistir {
     if (iniciales == null) return;
     _pedidos.addAll(iniciales);
     for (final p in iniciales) {
       final n = int.tryParse(p.id);
       if (n != null && n > _consecutivo) _consecutivo = n;
+    }
+  }
+
+  /// Carga los pedidos reales guardados en este dispositivo al arrancar.
+  /// Las pruebas y las siembras demo no activan persistencia.
+  Future<void> cargarGuardados() async {
+    if (!_persistir) return;
+    final preferencias = await SharedPreferences.getInstance();
+    final texto = preferencias.getString(_clavePedidos);
+    if (texto == null || texto.isEmpty) return;
+
+    try {
+      final datos = jsonDecode(texto) as List<dynamic>;
+      _pedidos
+        ..clear()
+        ..addAll(datos.map((dato) =>
+            _pedidoDesdeJson(Map<String, dynamic>.from(dato as Map))));
+      _actualizarConsecutivo();
+      notifyListeners();
+    } on FormatException {
+      // Un valor incompleto no debe impedir que la app arranque.
+    } on TypeError {
+      // Ignora datos antiguos o corruptos y conserva la lista vacía.
     }
   }
 
@@ -32,6 +63,14 @@ class OrdersModel extends ChangeNotifier {
     }
     return null;
   }
+
+  List<Order> pedidosAsignados(String domiciliarioId) => _pedidos
+      .where((pedido) => pedido.domiciliarioId == domiciliarioId)
+      .toList(growable: false);
+
+  List<Order> historialDe(String domiciliarioId) => pedidosAsignados(
+        domiciliarioId,
+      ).where((pedido) => pedido.status == OrderStatus.entregado).toList();
 
   /// Mueve el pedido a otro estado y lo anota en su historial.
   /// [nota] guarda el motivo cuando se rechaza o se cancela.
@@ -49,6 +88,26 @@ class OrdersModel extends ChangeNotifier {
       ),
     );
     notifyListeners();
+    unawaited(_guardar());
+  }
+
+  bool confirmarEntrega(Order pedido, String codigo) {
+    if (pedido.status != OrderStatus.enCamino ||
+        codigo.trim() != pedido.codigoEntrega) {
+      return false;
+    }
+    cambiarEstado(pedido, OrderStatus.entregado);
+    return true;
+  }
+
+  void reportarNovedad(Order pedido, String novedad) {
+    final texto = novedad.trim();
+    if (texto.isEmpty) return;
+    pedido.novedad = texto;
+    pedido.historial.add(
+      OrderEvento(fecha: DateTime.now(), texto: 'Novedad · $texto'),
+    );
+    notifyListeners();
   }
 
   /// Pasa el carrito a pedido. Devuelve el pedido creado.
@@ -58,6 +117,7 @@ class OrdersModel extends ChangeNotifier {
     String cliente = '',
     String? direccion,
     String? comprobante,
+    String? codigoEntrega,
   }) {
     final lineas = carrito.lineas
         .map(
@@ -91,10 +151,122 @@ class OrdersModel extends ChangeNotifier {
       cliente: cliente,
       direccion: direccion,
       comprobante: comprobante,
+      codigoEntrega: codigoEntrega ?? _codigoTemporal(),
     );
 
     _pedidos.insert(0, pedido);
     notifyListeners();
+    unawaited(_guardar());
     return pedido;
   }
+
+  void _actualizarConsecutivo() {
+    for (final pedido in _pedidos) {
+      final numero = int.tryParse(pedido.id);
+      if (numero != null && numero > _consecutivo) _consecutivo = numero;
+    }
+  }
+
+  String _codigoTemporal() => _consecutivo.toString().padLeft(4, '0');
+
+  Future<void> _guardar() async {
+    if (!_persistir) return;
+    final preferencias = await SharedPreferences.getInstance();
+    await preferencias.setString(
+      _clavePedidos,
+      jsonEncode(_pedidos.map(_pedidoAJson).toList()),
+    );
+  }
+
+  Map<String, dynamic> _pedidoAJson(Order pedido) => {
+        'id': pedido.id,
+        'fecha': pedido.fecha.toIso8601String(),
+        'status': pedido.status.name,
+        'lineas': pedido.lineas
+            .map((linea) => {
+                  'productId': linea.productId,
+                  'nombre': linea.nombre,
+                  'categoria': linea.categoria,
+                  'imageAsset': linea.imageAsset,
+                  'imageUrl': linea.imageUrl,
+                  'cantidad': linea.cantidad,
+                  'precioBase': linea.precioBase,
+                  'salsas': linea.salsas.map(_extraAJson).toList(),
+                  'adiciones': linea.adiciones.map(_extraAJson).toList(),
+                  'opciones': linea.opciones,
+                })
+            .toList(),
+        'subtotal': pedido.subtotal,
+        'domicilio': pedido.domicilio,
+        'metodoPago': pedido.metodoPago,
+        'cliente': pedido.cliente,
+        'direccion': pedido.direccion,
+        'comprobante': pedido.comprobante,
+        'note': pedido.note,
+        'historial': pedido.historial
+            .map((evento) => {
+                  'fecha': evento.fecha.toIso8601String(),
+                  'texto': evento.texto,
+                  'estado': evento.estado?.name,
+                })
+            .toList(),
+      };
+
+  Order _pedidoDesdeJson(Map<String, dynamic> dato) {
+    final lineas = (dato['lineas'] as List<dynamic>).map((valor) {
+      final linea = Map<String, dynamic>.from(valor as Map);
+      return OrderLine(
+        productId: linea['productId'] as String,
+        nombre: linea['nombre'] as String,
+        categoria: linea['categoria'] as String,
+        imageAsset: linea['imageAsset'] as String,
+        imageUrl: linea['imageUrl'] as String,
+        cantidad: linea['cantidad'] as int,
+        precioBase: linea['precioBase'] as int,
+        salsas: _extrasDesdeJson(linea['salsas']),
+        adiciones: _extrasDesdeJson(linea['adiciones']),
+        opciones: Map<String, String>.from(linea['opciones'] as Map),
+      );
+    }).toList();
+    final historial = (dato['historial'] as List<dynamic>).map((valor) {
+      final evento = Map<String, dynamic>.from(valor as Map);
+      return OrderEvento(
+        fecha: DateTime.parse(evento['fecha'] as String),
+        texto: evento['texto'] as String,
+        estado: _estadoDesdeJson(evento['estado']),
+      );
+    }).toList();
+
+    return Order(
+      id: dato['id'] as String,
+      fecha: DateTime.parse(dato['fecha'] as String),
+      status: _estadoDesdeJson(dato['status'])!,
+      lineas: List.unmodifiable(lineas),
+      subtotal: dato['subtotal'] as int,
+      domicilio: dato['domicilio'] as int,
+      metodoPago: dato['metodoPago'] as String,
+      cliente: dato['cliente'] as String? ?? '',
+      direccion: dato['direccion'] as String?,
+      comprobante: dato['comprobante'] as String?,
+      note: dato['note'] as String?,
+      historial: List.unmodifiable(historial),
+    );
+  }
+
+  static Map<String, dynamic> _extraAJson(Extra extra) => {
+        'id': extra.id,
+        'nombre': extra.nombre,
+        'precio': extra.precio,
+      };
+
+  static List<Extra> _extrasDesdeJson(dynamic dato) =>
+      (dato as List<dynamic>).map((valor) {
+        final extra = Map<String, dynamic>.from(valor as Map);
+        return Extra(extra['id'] as String, extra['nombre'] as String,
+            precio: extra['precio'] as int);
+      }).toList();
+
+  static OrderStatus? _estadoDesdeJson(dynamic valor) => valor == null
+      ? null
+      : OrderStatus.values.firstWhere((estado) => estado.name == valor);
 }

@@ -10,6 +10,7 @@ import '../widgets/admin_card.dart';
 import '../widgets/admin_search_bar.dart';
 import '../widgets/admin_states.dart';
 import 'admin_pedido_detalle_screen.dart';
+import '../../models/precio.dart';
 
 /// Listado administrativo de pedidos: buscar, filtrar por estado y entrar
 /// al detalle. Los que esperan aprobación quedan de primeros.
@@ -193,24 +194,24 @@ class _TarjetaPedido extends StatelessWidget {
                               '${otros > 0 ? ' +$otros' : ''}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.body(
-                          size: 12, color: AppColors.muted),
+                      style:
+                          AppTextStyles.body(size: 12, color: AppColors.muted),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '#${pedido.id} · ${pedido.fechaTexto} · ${pedido.metodoPago}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.body(
-                          size: 11, color: AppColors.muted),
+                      style:
+                          AppTextStyles.body(size: 11, color: AppColors.muted),
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              Text('\$${pedido.total}',
+              Text(formatoPesos(pedido.total),
                   style:
-                      AppTextStyles.heading(size: 14, color: AppColors.tomate)),
+                      AppTextStyles.heading(size: 14, color: AppColors.verde)),
             ],
           ),
           const SizedBox(height: 10),
@@ -219,8 +220,8 @@ class _TarjetaPedido extends StatelessWidget {
               Flexible(child: OrderStatusBadge(status: pedido.status)),
               const Spacer(),
               Text('Ver detalle',
-                  style: AppTextStyles.body(
-                      size: 11.5, color: AppColors.mostaza)),
+                  style:
+                      AppTextStyles.body(size: 11.5, color: AppColors.mostaza)),
               const Icon(Icons.chevron_right_rounded,
                   size: 18, color: AppColors.mostaza),
             ],

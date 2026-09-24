@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../state/app_scope.dart';
 import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
 import '../../widgets/app_header.dart';
 import '../models/permisos.dart';
 import '../widgets/admin_states.dart';
 import 'admin_pedidos_screen.dart';
+import 'admin_module_screen.dart';
+import 'admin_profile_screen.dart';
 import 'dashboard_screen.dart';
 import 'mas_screen.dart';
 
@@ -31,26 +32,30 @@ class _AdminNavScreenState extends State<AdminNavScreen> {
 
   void _irA(int i) => setState(() => _indice = i);
 
-  /// Desde el dashboard o desde "Más": si el módulo es una pestaña, cambia
-  /// de pestaña; si no, todavía no tiene pantalla (llega en otra etapa).
+  /// Desde el dashboard o desde "Más": cambia de pestaña o abre el módulo.
   void _abrirModulo(List<ModuloAdmin> visibles, ModuloAdmin modulo) {
     final i = visibles.indexOf(modulo);
     if (i != -1) {
       _irA(i);
       return;
     }
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          backgroundColor: AppColors.carbon,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          content: Text('${modulo.label}: módulo en construcción',
-              style: AppTextStyles.body(size: 12.5, color: Colors.white)),
-        ),
+    if (modulo == ModuloAdmin.perfil) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const AdminProfileScreen()),
       );
+      return;
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => Scaffold(
+          backgroundColor: AppColors.crema,
+          body: AdminModuleScreen(
+            modulo: modulo,
+            mostrarRegreso: true,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -81,7 +86,7 @@ class _AdminNavScreenState extends State<AdminNavScreen> {
     return Scaffold(
       body: Column(
         children: [
-          const AppHeader(),
+          const AppHeader(mostrarPerfil: false),
           Expanded(child: IndexedStack(index: indice, children: pantallas)),
         ],
       ),
@@ -120,28 +125,8 @@ class _AdminNavScreenState extends State<AdminNavScreen> {
         );
       case ModuloAdmin.pedidos:
         return const AdminPedidosScreen();
-      // Producción e Inventario llegan en las siguientes etapas.
       default:
-        return _EnConstruccion(modulo: modulo);
+        return AdminModuleScreen(modulo: modulo);
     }
-  }
-}
-
-class _EnConstruccion extends StatelessWidget {
-  final ModuloAdmin modulo;
-  const _EnConstruccion({required this.modulo});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.crema,
-      child: Center(
-        child: AdminEmptyState(
-          icono: modulo.icono,
-          titulo: modulo.label,
-          detalle: 'Este módulo se construye en la siguiente etapa.',
-        ),
-      ),
-    );
   }
 }

@@ -17,6 +17,7 @@ dependencies:
   url_launcher: ^6.3.2
   sensors_plus: ^7.1.0
   flutter_native_splash: ^2.4.8
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

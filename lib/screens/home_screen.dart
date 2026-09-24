@@ -9,6 +9,7 @@ import '../widgets/app_image.dart';
 import '../widgets/category_selector.dart';
 import '../widgets/product_card.dart';
 import 'product_detail_screen.dart';
+import '../models/precio.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onVerMenu;
@@ -86,8 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     children: [
                       Text('Ver en el menú',
-                          style: AppTextStyles.body(size: 11.5, color: AppColors.mostaza)),
-                      const Icon(Icons.chevron_right, size: 16, color: AppColors.mostaza),
+                          style: AppTextStyles.body(
+                              size: 11.5, color: AppColors.mostaza)),
+                      const Icon(Icons.chevron_right,
+                          size: 16, color: AppColors.mostaza),
                     ],
                   ),
                 ),
@@ -216,23 +219,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
                         color: AppColors.ambar,
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: Text('Abierto · ${BusinessInfo.tiempoEntrega}',
-                          style: AppTextStyles.heading(size: 9.5, color: Colors.white)),
+                          style: AppTextStyles.heading(
+                              size: 9.5, color: Colors.white)),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       saludo,
-                      style: AppTextStyles.heading(size: 17, color: Colors.white),
+                      style:
+                          AppTextStyles.heading(size: 17, color: Colors.white),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '${BusinessInfo.tagline}. Elige una categoría y pide en minutos.',
-                      style: AppTextStyles.body(size: 11.5, color: Colors.white),
+                      style:
+                          AppTextStyles.body(size: 11.5, color: Colors.white),
                     ),
                   ],
                 ),
@@ -256,21 +263,22 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.borde),
         ),
-        child: const Row(
+        // Ya no es const: el precio del domicilio pasa por formatoPesos().
+        child: Row(
           children: [
-            _DatoRapido(
+            const _DatoRapido(
               icon: Icons.delivery_dining,
               valor: BusinessInfo.tiempoEntrega,
               etiqueta: 'Entrega',
             ),
-            _Separador(),
+            const _Separador(),
             _DatoRapido(
               icon: Icons.two_wheeler,
-              valor: '\$${BusinessInfo.precioDomicilio}',
+              valor: formatoPesos(BusinessInfo.precioDomicilio),
               etiqueta: 'Domicilio',
             ),
-            _Separador(),
-            _DatoRapido(
+            const _Separador(),
+            const _DatoRapido(
               icon: Icons.star_rounded,
               valor: '${BusinessInfo.calificacion}',
               etiqueta: '${BusinessInfo.resenas} reseñas',
@@ -307,7 +315,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.check_circle, size: 16, color: AppColors.verde),
+                    const Icon(Icons.check_circle,
+                        size: 16, color: AppColors.verde),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(p, style: AppTextStyles.body(size: 12)),
@@ -337,17 +346,23 @@ class _HomeScreenState extends State<HomeScreen> {
             Text('Dónde y cómo pedir',
                 style: AppTextStyles.heading(size: 13, color: Colors.white)),
             const SizedBox(height: 12),
-            const _InfoRow(icon: Icons.access_time_rounded, text: BusinessInfo.horario),
+            const _InfoRow(
+                icon: Icons.access_time_rounded, text: BusinessInfo.horario),
             const SizedBox(height: 10),
-            const _InfoRow(icon: Icons.location_on_outlined, text: BusinessInfo.direccion),
+            const _InfoRow(
+                icon: Icons.location_on_outlined, text: BusinessInfo.direccion),
             const SizedBox(height: 10),
-            const _InfoRow(icon: Icons.phone_outlined, text: BusinessInfo.telefono),
+            const _InfoRow(
+                icon: Icons.phone_outlined, text: BusinessInfo.telefono),
             const SizedBox(height: 10),
-            const _InfoRow(icon: Icons.moped_outlined, text: BusinessInfo.zonasDomicilio),
+            const _InfoRow(
+                icon: Icons.moped_outlined, text: BusinessInfo.zonasDomicilio),
             const SizedBox(height: 10),
-            const _InfoRow(icon: Icons.payments_outlined, text: BusinessInfo.metodosPago),
+            const _InfoRow(
+                icon: Icons.payments_outlined, text: BusinessInfo.metodosPago),
             const SizedBox(height: 10),
-            const _InfoRow(icon: Icons.camera_alt_outlined, text: BusinessInfo.instagram),
+            const _InfoRow(
+                icon: Icons.camera_alt_outlined, text: BusinessInfo.instagram),
           ],
         ),
       ),
@@ -387,7 +402,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(titulo, style: AppTextStyles.heading(size: 15)),
                 if (subtitulo != null) ...[
                   const SizedBox(height: 2),
-                  Text(subtitulo, style: AppTextStyles.body(size: 11, color: AppColors.muted)),
+                  Text(subtitulo,
+                      style:
+                          AppTextStyles.body(size: 11, color: AppColors.muted)),
                 ],
               ],
             ),
@@ -396,7 +413,8 @@ class _HomeScreenState extends State<HomeScreen> {
             GestureDetector(
               onTap: onAccion,
               child: Text(accion,
-                  style: AppTextStyles.body(size: 11.5, color: AppColors.mostaza)),
+                  style:
+                      AppTextStyles.body(size: 11.5, color: AppColors.mostaza)),
             ),
         ],
       ),
@@ -409,7 +427,8 @@ class _DatoRapido extends StatelessWidget {
   final String valor;
   final String etiqueta;
 
-  const _DatoRapido({required this.icon, required this.valor, required this.etiqueta});
+  const _DatoRapido(
+      {required this.icon, required this.valor, required this.etiqueta});
 
   @override
   Widget build(BuildContext context) {
@@ -453,7 +472,8 @@ class _InfoRow extends StatelessWidget {
         Icon(icon, size: 16, color: AppColors.ambar),
         const SizedBox(width: 10),
         Expanded(
-          child: Text(text, style: AppTextStyles.body(size: 12, color: Colors.white)),
+          child: Text(text,
+              style: AppTextStyles.body(size: 12, color: Colors.white)),
         ),
       ],
     );

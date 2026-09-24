@@ -10,6 +10,7 @@ import 'package:parche_mini_burger/state/app_scope.dart';
 import 'package:parche_mini_burger/state/cart_model.dart';
 import 'package:parche_mini_burger/state/orders_model.dart';
 import 'package:parche_mini_burger/state/user_model.dart';
+import 'package:parche_mini_burger/models/precio.dart';
 
 Product get _clasica => demoProducts.firstWhere((p) => p.id == 'hamburguesa_doble');
 Extra get _tocineta => kAdiciones.firstWhere((e) => e.id == 'ad_tocineta');
@@ -108,13 +109,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Pedido #${pedido.id}'), findsOneWidget);
-    expect(find.text('2 × ${_clasica.name}'), findsOneWidget);
-    expect(find.textContaining(_bbq.nombre, findRichText: true), findsOneWidget);
-    expect(find.textContaining(_tocineta.nombre, findRichText: true), findsOneWidget);
+    // Sale dos veces: en la lista de productos y en el desglose de la cuenta.
+    expect(find.text('2 × ${_clasica.name}'), findsNWidgets(2));
+    expect(find.textContaining(_bbq.nombre, findRichText: true), findsNWidgets(2));
+    expect(find.textContaining(_tocineta.nombre, findRichText: true),
+        findsNWidgets(2));
     expect(find.textContaining('Cerdo', findRichText: true), findsWidgets);
     expect(find.text('Bancolombia'), findsOneWidget);
     expect(find.text('Cra 45 #12-30'), findsOneWidget);
-    expect(find.text('\$${pedido.total}'), findsOneWidget);
+    expect(find.text(formatoPesos(pedido.total)), findsOneWidget);
   });
 
   testWidgets('sin pedidos, la pestaña lo dice en vez de mostrar ejemplos',
@@ -139,10 +142,10 @@ void main() {
 
     // Lo que sí debe estar.
     expect(find.text(_clasica.name), findsOneWidget);
-    expect(find.text('\$${_clasica.price}'), findsOneWidget);
+    expect(find.text(formatoPesos(_clasica.price)), findsOneWidget);
     expect(find.text(_clasica.description), findsOneWidget);
     expect(find.text('Cantidad'), findsOneWidget);
-    expect(find.text('Agregar al carrito · \$${_clasica.price}'), findsOneWidget);
+    expect(find.text('Agregar al carrito · ${formatoPesos(_clasica.price)}'), findsOneWidget);
 
     // Lo que NO: personalización ni ingredientes.
     expect(find.text('Salsas'), findsNothing);
@@ -168,26 +171,56 @@ void main() {
     await tester.tap(find.text('Bebidas'));
     await tester.pumpAndSettle();
 
-    // La lista muestra nombre y precio de cada bebida.
-    expect(find.text(_bebida.name), findsOneWidget);
-    expect(find.text('\$${_bebida.price}'), findsWidgets);
+    // Primero se escogen marcas, no presentaciones sueltas.
+    expect(find.text('Coca-Cola'), findsOneWidget);
+    expect(find.text('Hit'), findsOneWidget);
 
-    // El botón "Agregar" de esa bebida, no el de otra tarjeta.
-    final tarjeta = find
-        .ancestor(of: find.text(_bebida.name), matching: find.byType(Container))
-        .first;
-
-    await tester.tap(find.text('Hit mora'));
+    await tester.tap(find.text('Postobón'));
     await tester.pumpAndSettle();
+
+    // Dentro de la marca salen los tamaños, y el de 400 ml tiene varios
+    // sabores, así que trae su seleccionador en vez de repetir la fila.
+    expect(find.text('400 ml'), findsOneWidget);
+    expect(find.byType(DropdownButton<String>), findsWidgets);
+
+    // Se cambia el sabor y se agrega esa fila.
+    final fila = find
+        .ancestor(of: find.text('400 ml'), matching: find.byType(Row))
+        .last;
     await tester.tap(
-      find.descendant(of: tarjeta, matching: find.text('Agregar')),
-    );
+        find.descendant(of: fila, matching: find.byType(DropdownButton<String>)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cuatro').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.descendant(of: fila, matching: find.text('Agregar')));
     await tester.pumpAndSettle();
 
     final bebidaEnCarrito =
         carrito.lineas.firstWhere((l) => l.product.id == _bebida.id);
-    expect(bebidaEnCarrito.opciones['Sabor'], 'Hit mora');
+    expect(bebidaEnCarrito.opciones['Sabor'], 'Cuatro');
     expect(carrito.subtotal, _clasica.price + _bebida.price);
+  });
+
+  testWidgets('las bebidas se agrupan por marca y cada marca trae sus tamaños',
+      (tester) async {
+    final marcas = bebidasPorMarca();
+    final coca = marcas.firstWhere((m) => m.nombre == 'Coca-Cola');
+
+    // Coca-Cola se arma con presentaciones que estaban repartidas entre
+    // varios productos del menú, y van de la más barata a la más cara.
+    expect(coca.presentaciones.map((p) => p.tamano),
+        containsAll(<String>['Pequeña', '400 ml', 'Econolitro', '1.5 L']));
+    expect(coca.desde, 2600);
+    final precios = coca.presentaciones.map((p) => p.precio).toList();
+    expect(precios, orderedEquals(List.of(precios)..sort()));
+
+    // Ninguna bebida se queda sin marca: todas aparecen en algún grupo.
+    final enGrupos = marcas
+        .expand((m) => m.presentaciones)
+        .map((p) => p.producto.id)
+        .toSet();
+    expect(enGrupos, bebidas.map((b) => b.id).toSet());
   });
 
   test('la variante con recargo cambia el precio del producto', () {

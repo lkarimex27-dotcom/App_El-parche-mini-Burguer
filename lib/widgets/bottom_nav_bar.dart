@@ -26,11 +26,15 @@ class AppBottomNavBar extends StatelessWidget {
       selectedItemColor: AppColors.mostaza,
       unselectedItemColor: AppColors.muted,
       showUnselectedLabels: true,
-      selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
-      unselectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+      selectedLabelStyle:
+          const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
+      unselectedLabelStyle:
+          const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
       items: [
-        const BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Inicio'),
-        const BottomNavigationBarItem(icon: Icon(Icons.restaurant_menu_rounded), label: 'Menú'),
+        const BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded), label: 'Inicio'),
+        const BottomNavigationBarItem(
+            icon: Icon(Icons.restaurant_menu_rounded), label: 'Menú'),
         BottomNavigationBarItem(
           icon: Badge.count(
             count: cantidadCarrito,
@@ -41,8 +45,10 @@ class AppBottomNavBar extends StatelessWidget {
           ),
           label: 'Carrito',
         ),
-        const BottomNavigationBarItem(icon: Icon(Icons.receipt_long_rounded), label: 'Pedidos'),
-        const BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Perfil'),
+        const BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long_rounded), label: 'Pedidos'),
+        const BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded), label: 'Perfil'),
       ],
     );
   }

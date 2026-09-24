@@ -10,6 +10,7 @@ import 'package:parche_mini_burger/state/app_scope.dart';
 import 'package:parche_mini_burger/state/cart_model.dart';
 import 'package:parche_mini_burger/state/orders_model.dart';
 import 'package:parche_mini_burger/widgets/app_image.dart';
+import 'package:parche_mini_burger/models/precio.dart';
 
 Product get _clasica => demoProducts.firstWhere((p) => p.id == 'hamburguesa_doble');
 Extra get _tocineta => kAdiciones.firstWhere((e) => e.id == 'ad_tocineta');
@@ -73,7 +74,7 @@ void main() {
     expect(find.text('+1 producto'), findsOneWidget);
     expect(find.textContaining('4 en total'), findsOneWidget);
     // Total y estado reales del pedido.
-    expect(find.text('\$${pedidos.pedidos.first.total}'), findsOneWidget);
+    expect(find.text(formatoPesos(pedidos.pedidos.first.total)), findsOneWidget);
     expect(find.text('En preparación'), findsOneWidget);
   });
 
@@ -93,16 +94,18 @@ void main() {
 
     expect(find.byType(OrderDetailScreen), findsOneWidget);
 
-    // Los dos productos, con salsas, adiciones y bebida.
-    expect(find.text('3 × ${_clasica.name}'), findsOneWidget);
-    expect(find.text('1 × ${_chuzo.name}'), findsOneWidget);
-    expect(find.textContaining(_bbq.nombre, findRichText: true), findsOneWidget);
-    expect(find.textContaining(_tocineta.nombre, findRichText: true), findsOneWidget);
+    // Los dos productos, con salsas, adiciones y bebida. Cada uno sale dos
+    // veces: en la lista y en el desglose de la cuenta.
+    expect(find.text('3 × ${_clasica.name}'), findsNWidgets(2));
+    expect(find.text('1 × ${_chuzo.name}'), findsNWidgets(2));
+    expect(find.textContaining(_bbq.nombre, findRichText: true), findsNWidgets(2));
+    expect(find.textContaining(_tocineta.nombre, findRichText: true),
+        findsNWidgets(2));
     expect(find.textContaining('Cerdo', findRichText: true), findsWidgets);
 
     // Subtotales, total, entrega, pago, estado y fecha.
     expect(find.textContaining('Subtotal · 3 ×'), findsOneWidget);
-    expect(find.text('\$${pedido.total}'), findsOneWidget);
+    expect(find.text(formatoPesos(pedido.total)), findsOneWidget);
     expect(find.text('Cra 45 #12-30, apto 302'), findsOneWidget);
     expect(find.text('Nequi'), findsOneWidget);
     expect(find.text('#${pedido.id}'), findsOneWidget);

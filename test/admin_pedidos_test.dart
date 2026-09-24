@@ -12,7 +12,8 @@ import 'package:parche_mini_burger/state/orders_model.dart';
 import 'package:parche_mini_burger/state/user_model.dart';
 
 /// El panel de pedidos con los pedidos sembrados.
-Widget _pantalla(OrdersModel pedidos, {Rol rol = Rol.administrador}) => AppScope(
+Widget _pantalla(OrdersModel pedidos, {Rol rol = Rol.administrador}) =>
+    AppScope(
       usuarioInicial: UserModel(nombre: 'Andrés Gómez', rol: rol),
       pedidosInicial: pedidos,
       child: const MaterialApp(home: Scaffold(body: AdminPedidosScreen())),
@@ -41,7 +42,8 @@ void main() {
 
   group('Regla de aprobación', () {
     test('un pedido grande nace pendiente y pide aprobación', () {
-      final caro = demoProducts.firstWhere((p) => p.id == 'salchipapa_super_gourmet');
+      final caro =
+          demoProducts.firstWhere((p) => p.id == 'salchipapa_super_gourmet');
       final carrito = CartModel()..agregar(product: caro, cantidad: 6);
       expect(carrito.total, greaterThan(kMontoAprobacion));
 
@@ -158,7 +160,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(caro.status, OrderStatus.pendiente);
 
-    await tester.enterText(find.byType(TextField).last, 'Comprobante no válido');
+    await tester.enterText(
+        find.byType(TextField).last, 'Comprobante no válido');
     await tester.tap(find.widgetWithText(TextButton, 'Rechazar'));
     await tester.pumpAndSettle();
 
@@ -166,10 +169,10 @@ void main() {
     expect(caro.note, 'Comprobante no válido');
   });
 
-  testWidgets('un cocinero no puede mover pedidos', (tester) async {
+  testWidgets('un empleado no puede mover pedidos', (tester) async {
     final pedidos = _conSiembra();
 
-    await tester.pumpWidget(_pantalla(pedidos, rol: Rol.cocinero));
+    await tester.pumpWidget(_pantalla(pedidos, rol: Rol.empleado));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Laura Mejía'));
