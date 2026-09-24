@@ -10,6 +10,7 @@ import '../widgets/bebidas_sheet.dart';
 import '../widgets/extras_picker.dart';
 import '../widgets/primary_button.dart';
 import 'payment_screen.dart';
+import '../models/precio.dart';
 
 class CartScreen extends StatelessWidget {
   /// Para el botón del carrito vacío.
@@ -35,12 +36,15 @@ class CartScreen extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Expanded(child: Text('Tu carrito', style: AppTextStyles.heading(size: 19))),
+                Expanded(
+                    child: Text('Tu carrito',
+                        style: AppTextStyles.heading(size: 19))),
                 if (!carrito.estaVacio)
                   GestureDetector(
                     onTap: () => _confirmarVaciar(context, carrito),
                     child: Text('Vaciar',
-                        style: AppTextStyles.body(size: 11.5, color: AppColors.tomate)),
+                        style: AppTextStyles.body(
+                            size: 11.5, color: AppColors.tomate)),
                   ),
               ],
             ),
@@ -52,7 +56,8 @@ class CartScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(18),
                     children: [
                       ...carrito.lineas.map(
-                        (linea) => _LineaCarrito(linea: linea, carrito: carrito),
+                        (linea) =>
+                            _LineaCarrito(linea: linea, carrito: carrito),
                       ),
                       // Las bebidas se escogen aquí, no en el menú.
                       _SeccionBebidas(carrito: carrito),
@@ -65,7 +70,7 @@ class CartScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
               child: PrimaryButton(
-                label: 'Continuar al pago · \$${carrito.total}',
+                label: 'Continuar al pago · ${formatoPesos(carrito.total)}',
                 onPressed: () => _irAPagar(context, carrito),
               ),
             ),
@@ -92,7 +97,8 @@ class CartScreen extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
-        title: Text('¿Vaciar el carrito?', style: AppTextStyles.heading(size: 15)),
+        title:
+            Text('¿Vaciar el carrito?', style: AppTextStyles.heading(size: 15)),
         content: Text('Se quitan todos los productos que agregaste.',
             style: AppTextStyles.body(size: 12.5)),
         actions: [
@@ -103,7 +109,8 @@ class CartScreen extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: Text('Sí, vaciar',
-                style: AppTextStyles.heading(size: 12.5, color: AppColors.tomate)),
+                style:
+                    AppTextStyles.heading(size: 12.5, color: AppColors.tomate)),
           ),
         ],
       ),
@@ -187,14 +194,17 @@ class _LineaCarrito extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(linea.product.name, style: AppTextStyles.heading(size: 13)),
+                    Text(linea.product.name,
+                        style: AppTextStyles.heading(size: 13)),
                     const SizedBox(height: 2),
                     Text(linea.resumen,
-                        style: AppTextStyles.body(size: 11, color: AppColors.muted)),
+                        style: AppTextStyles.body(
+                            size: 11, color: AppColors.muted)),
                     const SizedBox(height: 4),
                     Text(
-                      '\$${linea.precioUnitario} c/u',
-                      style: AppTextStyles.body(size: 11, color: AppColors.mostaza),
+                      '${formatoPesos(linea.precioUnitario)} c/u',
+                      style: AppTextStyles.body(
+                          size: 11, color: AppColors.mostaza),
                     ),
                   ],
                 ),
@@ -244,10 +254,12 @@ class _LineaCarrito extends StatelessWidget {
             ],
           ],
           // ── Personalización: solo para la comida ──
-          if (linea.product.permiteSalsas || linea.product.permiteAdiciones) ...[
+          if (linea.product.permiteSalsas ||
+              linea.product.permiteAdiciones) ...[
             const SizedBox(height: 12),
             Text('Personaliza tu pedido',
-                style: AppTextStyles.heading(size: 11.5, color: AppColors.muted)),
+                style:
+                    AppTextStyles.heading(size: 11.5, color: AppColors.muted)),
             const SizedBox(height: 8),
             if (linea.product.tieneVariantes) ...[
               _BotonEditar(
@@ -269,7 +281,8 @@ class _LineaCarrito extends StatelessWidget {
                       onTap: () => _editarSalsas(context),
                     ),
                   ),
-                if (linea.product.permiteSalsas && linea.product.permiteAdiciones)
+                if (linea.product.permiteSalsas &&
+                    linea.product.permiteAdiciones)
                   const SizedBox(width: 8),
                 if (linea.product.permiteAdiciones)
                   Expanded(
@@ -290,15 +303,21 @@ class _LineaCarrito extends StatelessWidget {
           ),
           Row(
             children: [
-              _QtyButton(icon: Icons.remove, onTap: () => carrito.cambiarCantidad(linea, -1)),
+              _QtyButton(
+                  icon: Icons.remove,
+                  onTap: () => carrito.cambiarCantidad(linea, -1)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Text('${linea.cantidad}', style: AppTextStyles.heading(size: 14)),
+                child: Text('${linea.cantidad}',
+                    style: AppTextStyles.heading(size: 14)),
               ),
-              _QtyButton(icon: Icons.add, onTap: () => carrito.cambiarCantidad(linea, 1)),
+              _QtyButton(
+                  icon: Icons.add,
+                  onTap: () => carrito.cambiarCantidad(linea, 1)),
               const Spacer(),
-              Text('\$${linea.total}',
-                  style: AppTextStyles.heading(size: 15, color: AppColors.carbon)),
+              Text(formatoPesos(linea.total),
+                  style:
+                      AppTextStyles.heading(size: 15, color: AppColors.carbon)),
             ],
           ),
         ],
@@ -333,7 +352,8 @@ class _LineaDetalle extends StatelessWidget {
               children: [
                 TextSpan(
                   text: '$etiqueta: ',
-                  style: AppTextStyles.heading(size: 10.5, color: AppColors.carbon),
+                  style: AppTextStyles.heading(
+                      size: 10.5, color: AppColors.carbon),
                 ),
                 TextSpan(text: texto),
               ],
@@ -359,7 +379,8 @@ class _ListaExtras extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final texto = extras
-        .map((e) => e.esGratis ? e.nombre : '${e.nombre} +\$${e.precio}')
+        .map((e) =>
+            e.esGratis ? e.nombre : '${e.nombre} +${formatoPesos(e.precio)}')
         .join(' · ');
 
     return Row(
@@ -374,7 +395,8 @@ class _ListaExtras extends StatelessWidget {
               children: [
                 TextSpan(
                   text: '$etiqueta: ',
-                  style: AppTextStyles.heading(size: 10.5, color: AppColors.carbon),
+                  style: AppTextStyles.heading(
+                      size: 10.5, color: AppColors.carbon),
                 ),
                 TextSpan(text: texto),
               ],
@@ -391,7 +413,8 @@ class _BotonEditar extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _BotonEditar({required this.icono, required this.label, required this.onTap});
+  const _BotonEditar(
+      {required this.icono, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -454,8 +477,8 @@ class _Resumen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Total', style: AppTextStyles.heading(size: 14)),
-              Text('\$${carrito.total}',
-                  style: AppTextStyles.heading(size: 16, color: AppColors.mostaza)),
+              Text(formatoPesos(carrito.total),
+                  style: AppTextStyles.heading(size: 16, color: AppColors.verde)),
             ],
           ),
         ],
@@ -476,9 +499,11 @@ class _CarritoVacio extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.shopping_cart_outlined, size: 48, color: AppColors.borde),
+            const Icon(Icons.shopping_cart_outlined,
+                size: 48, color: AppColors.borde),
             const SizedBox(height: 12),
-            Text('Tu carrito está vacío', style: AppTextStyles.heading(size: 15)),
+            Text('Tu carrito está vacío',
+                style: AppTextStyles.heading(size: 15)),
             const SizedBox(height: 4),
             Text(
               'Agrega algo rico del menú y aquí lo ves',
@@ -489,7 +514,8 @@ class _CarritoVacio extends StatelessWidget {
               const SizedBox(height: 20),
               SizedBox(
                 width: 180,
-                child: PrimaryButton(label: 'Ver el menú', onPressed: onVerMenu),
+                child:
+                    PrimaryButton(label: 'Ver el menú', onPressed: onVerMenu),
               ),
             ],
           ],
@@ -534,8 +560,9 @@ class _SummaryRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: AppTextStyles.body(size: 12.5, color: AppColors.muted)),
-        Text('\$$value', style: AppTextStyles.body(size: 12.5)),
+        Text(label,
+            style: AppTextStyles.body(size: 12.5, color: AppColors.muted)),
+        Text(formatoPesos(value), style: AppTextStyles.body(size: 12.5)),
       ],
     );
   }
@@ -598,7 +625,7 @@ class _HojaOpciones extends StatelessWidget {
                             style: AppTextStyles.body(
                                 size: 12.5, weight: FontWeight.w600)),
                       ),
-                      Text('\$${o.precio}',
+                      Text(formatoPesos(o.precio),
                           style: AppTextStyles.heading(
                               size: 12, color: AppColors.muted)),
                     ],
@@ -662,8 +689,7 @@ class _SeccionBebidas extends StatelessWidget {
                             .join(' · '),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style:
-                        AppTextStyles.body(size: 11, color: AppColors.muted),
+                    style: AppTextStyles.body(size: 11, color: AppColors.muted),
                   ),
                 ],
               ),

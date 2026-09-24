@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../models/business_info.dart';
 import '../../models/order.dart';
+import '../../models/precio.dart';
 import '../../services/enlaces.dart';
 import '../../state/app_scope.dart';
 import '../../state/orders_model.dart';
@@ -155,7 +156,8 @@ class _PinEntregaDialogState extends State<_PinEntregaDialog> {
     FocusNode(),
   ];
 
-  String get _codigo => _controllers.map((controller) => controller.text).join();
+  String get _codigo =>
+      _controllers.map((controller) => controller.text).join();
 
   @override
   void dispose() {
@@ -327,7 +329,7 @@ class _ProductosPedido extends StatelessWidget {
                               style: AppTextStyles.body(
                                   size: 12.5, weight: FontWeight.w600)),
                         ),
-                        Text('\$${linea.total}',
+                        Text(formatoPesos(linea.total),
                             style: AppTextStyles.heading(
                                 size: 11.5, color: AppColors.tomate)),
                       ],
@@ -373,7 +375,7 @@ class _PagoPedido extends StatelessWidget {
             children: [
               Text('Total', style: AppTextStyles.heading(size: 14)),
               const Spacer(),
-              Text('\$${pedido.total}',
+              Text(formatoPesos(pedido.total),
                   style:
                       AppTextStyles.heading(size: 17, color: AppColors.tomate)),
             ],

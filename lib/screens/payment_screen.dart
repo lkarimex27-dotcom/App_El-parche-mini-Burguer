@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import '../models/precio.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -190,7 +191,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
               )
             else
-              const Icon(Icons.upload_rounded, color: AppColors.mostaza, size: 26),
+              const Icon(Icons.upload_rounded,
+                  color: AppColors.mostaza, size: 26),
             const SizedBox(height: 10),
             Text(
               _cargando ? 'Abriendo…' : 'Toca para subir tu comprobante',
@@ -200,11 +202,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const _Pista(icon: Icons.photo_library_outlined, texto: 'Galería'),
+                const _Pista(
+                    icon: Icons.photo_library_outlined, texto: 'Galería'),
                 const SizedBox(width: 8),
-                Text('o', style: AppTextStyles.body(size: 11, color: AppColors.muted)),
+                Text('o',
+                    style:
+                        AppTextStyles.body(size: 11, color: AppColors.muted)),
                 const SizedBox(width: 8),
-                const _Pista(icon: Icons.folder_open_outlined, texto: 'Archivos'),
+                const _Pista(
+                    icon: Icons.folder_open_outlined, texto: 'Archivos'),
               ],
             ),
             const SizedBox(height: 8),
@@ -239,7 +245,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           const SizedBox(height: 10),
           Row(
             children: [
-              const Icon(Icons.check_circle_rounded, size: 18, color: AppColors.verde),
+              const Icon(Icons.check_circle_rounded,
+                  size: 18, color: AppColors.verde),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -249,22 +256,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       _comprobanteNombre ?? 'comprobante',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.body(size: 12, weight: FontWeight.w600),
+                      style:
+                          AppTextStyles.body(size: 12, weight: FontWeight.w600),
                     ),
                     Text(_peso(_comprobanteBytes!),
-                        style: AppTextStyles.body(size: 10.5, color: AppColors.muted)),
+                        style: AppTextStyles.body(
+                            size: 10.5, color: AppColors.muted)),
                   ],
                 ),
               ),
               TextButton(
                 onPressed: _elegirOrigen,
                 child: Text('Cambiar',
-                    style: AppTextStyles.heading(size: 11.5, color: AppColors.mostaza)),
+                    style: AppTextStyles.heading(
+                        size: 11.5, color: AppColors.mostaza)),
               ),
               TextButton(
                 onPressed: _quitarComprobante,
                 child: Text('Quitar',
-                    style: AppTextStyles.heading(size: 11.5, color: AppColors.tomate)),
+                    style: AppTextStyles.heading(
+                        size: 11.5, color: AppColors.tomate)),
               ),
             ],
           ),
@@ -304,24 +315,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   title: 'Bancolombia',
                   subtitle: 'Ahorros · 000-123456-78',
                   selected: _metodo == _MetodoPago.bancolombia,
-                  onTap: () => setState(() => _metodo = _MetodoPago.bancolombia),
+                  onTap: () =>
+                      setState(() => _metodo = _MetodoPago.bancolombia),
                 ),
                 const SizedBox(height: 18),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: AppColors.carbon, borderRadius: BorderRadius.circular(14)),
+                  decoration: BoxDecoration(
+                      color: AppColors.carbon,
+                      borderRadius: BorderRadius.circular(14)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Total a transferir', style: AppTextStyles.heading(size: 12, color: Colors.white)),
+                      Text('Total a transferir',
+                          style: AppTextStyles.heading(
+                              size: 12, color: Colors.white)),
                       const SizedBox(height: 4),
-                      Text('\$${widget.total}', style: AppTextStyles.heading(size: 22, color: AppColors.ambar)),
+                      Text(formatoPesos(widget.total),
+                          style: AppTextStyles.heading(
+                              size: 22, color: AppColors.ambar)),
                     ],
                   ),
                 ),
                 const SizedBox(height: 18),
-                Text('Sube tu comprobante', style: AppTextStyles.heading(size: 12.5)),
+                Text('Sube tu comprobante',
+                    style: AppTextStyles.heading(size: 12.5)),
                 const SizedBox(height: 8),
                 if (_tieneComprobante) _vistaPrevia() else _zonaDeSubida(),
               ],
@@ -384,7 +403,8 @@ class _OpcionOrigen extends StatelessWidget {
                   Text(titulo, style: AppTextStyles.heading(size: 13.5)),
                   const SizedBox(height: 2),
                   Text(detalle,
-                      style: AppTextStyles.body(size: 11, color: AppColors.muted)),
+                      style:
+                          AppTextStyles.body(size: 11, color: AppColors.muted)),
                 ],
               ),
             ),
@@ -409,7 +429,8 @@ class _Pista extends StatelessWidget {
       children: [
         Icon(icon, size: 14, color: AppColors.mostaza),
         const SizedBox(width: 4),
-        Text(texto, style: AppTextStyles.body(size: 11.5, color: AppColors.carbon)),
+        Text(texto,
+            style: AppTextStyles.body(size: 11.5, color: AppColors.carbon)),
       ],
     );
   }
@@ -441,14 +462,17 @@ class _MetodoTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: selected ? AppColors.mostaza : AppColors.borde, width: 1.6),
+          border: Border.all(
+              color: selected ? AppColors.mostaza : AppColors.borde,
+              width: 1.6),
         ),
         child: Row(
           children: [
             Container(
               width: 34,
               height: 34,
-              decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(9)),
+              decoration: BoxDecoration(
+                  color: color, borderRadius: BorderRadius.circular(9)),
               child: Icon(icon, color: Colors.white, size: 18),
             ),
             const SizedBox(width: 12),
@@ -457,7 +481,9 @@ class _MetodoTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title, style: AppTextStyles.heading(size: 13)),
-                  Text(subtitle, style: AppTextStyles.body(size: 11, color: AppColors.muted)),
+                  Text(subtitle,
+                      style:
+                          AppTextStyles.body(size: 11, color: AppColors.muted)),
                 ],
               ),
             ),
@@ -467,7 +493,9 @@ class _MetodoTile extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: selected ? AppColors.mostaza : Colors.transparent,
-                border: Border.all(color: selected ? AppColors.mostaza : AppColors.borde, width: 1.6),
+                border: Border.all(
+                    color: selected ? AppColors.mostaza : AppColors.borde,
+                    width: 1.6),
               ),
             ),
           ],

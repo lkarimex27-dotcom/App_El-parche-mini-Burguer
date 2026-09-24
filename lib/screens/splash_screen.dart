@@ -145,9 +145,9 @@ class _SplashScreenState extends State<SplashScreen>
   static const double _tLogoDentro = 0.85;
   static const double _tLogoArriba = 0.93;
 
-  /// Proporción real de assets/images/logo 1.png (380 × 227). El logo NO es
+  /// Proporción real de assets/images/logo empresa.png (647 × 386). El logo NO es
   /// cuadrado: de aquí sale el alto, y con él el centro del polvo.
-  static const double _proporcionLogo = 227 / 380;
+  static const double _proporcionLogo = 386 / 647;
 
   late final AnimationController _controller;
   late final Animation<double> _puntoOpacidad;

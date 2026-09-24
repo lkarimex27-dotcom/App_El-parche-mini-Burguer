@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/order.dart';
+import '../../models/precio.dart';
 import '../../models/product.dart';
 import '../../state/app_scope.dart';
 import '../../state/orders_model.dart';
@@ -68,7 +69,7 @@ class AdminPedidoDetalleScreen extends StatelessWidget {
                 if (pedido.requiereAprobacion) ...[
                   const SizedBox(height: 12),
                   Text(
-                    'Supera los \$$kMontoAprobacion, así que necesita tu visto '
+                    'Supera los ${formatoPesos(kMontoAprobacion)}, así que necesita tu visto '
                     'bueno antes de pasar a producción.',
                     style: AppTextStyles.body(size: 12, color: AppColors.muted),
                   ),
@@ -138,16 +139,17 @@ class AdminPedidoDetalleScreen extends StatelessWidget {
               children: [
                 _Fila(
                     etiqueta: '${pedido.itemCount} productos',
-                    valor: '\$${pedido.subtotal}'),
-                _Fila(etiqueta: 'Domicilio', valor: '\$${pedido.domicilio}'),
+                    valor: formatoPesos(pedido.subtotal)),
+                _Fila(
+                    etiqueta: 'Domicilio',
+                    valor: formatoPesos(pedido.domicilio)),
                 const Divider(height: 18, color: AppColors.borde),
                 Row(
                   children: [
                     Text('Total', style: AppTextStyles.heading(size: 14)),
                     const Spacer(),
-                    Text('\$${pedido.total}',
-                        style: AppTextStyles.heading(
-                            size: 17, color: AppColors.tomate)),
+                    Text(formatoPesos(pedido.total),
+                  style: AppTextStyles.heading(size: 17, color: AppColors.verde)),
                   ],
                 ),
               ],
@@ -316,9 +318,8 @@ class _LineaPedido extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text('\$${linea.total}',
-                    style: AppTextStyles.heading(
-                        size: 13, color: AppColors.tomate)),
+                Text(formatoPesos(linea.total),
+                  style: AppTextStyles.heading(size: 13, color: AppColors.verde)),
               ],
             ),
             if (linea.opciones.isNotEmpty ||
@@ -336,7 +337,7 @@ class _LineaPedido extends StatelessWidget {
                 _Detalle(
                   etiqueta: 'Adiciones',
                   texto: linea.adiciones
-                      .map((e) => '${e.nombre} +\$${e.precio}')
+                      .map((e) => '${e.nombre} +${formatoPesos(e.precio)}')
                       .join(', '),
                 ),
             ],

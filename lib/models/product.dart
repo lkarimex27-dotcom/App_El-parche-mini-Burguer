@@ -78,6 +78,13 @@ class Product {
   /// Aparece en el carrusel "Destacadas" del Inicio.
   final bool destacado;
 
+  /// Solo en bebidas. [marca] es la de la botella cuando el producto es de
+  /// una sola ("Coca-Cola", "Hit"); si ofrece sabores de varias marcas se
+  /// deja vacía y la marca sale del sabor elegido (ver [marcaDeSabor]).
+  /// [tamano] es cómo se llama la presentación: "Pequeña", "1.5 L"…
+  final String marca;
+  final String tamano;
+
   const Product({
     required this.id,
     required this.name,
@@ -91,6 +98,8 @@ class Product {
     this.permiteSalsas = true,
     this.permiteAdiciones = true,
     this.destacado = false,
+    this.marca = '',
+    this.tamano = '',
   });
 
   bool get tieneVariantes => variantes.isNotEmpty;
@@ -131,7 +140,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/hamburguesa mini.jpg',
     imageUrl: '',
     price: 12500,
-    description: 'La mini de siempre. Puedes pedirla con queso o con tocineta.',
+    description:
+        'Pequeña de tamaño, grande de sabor: carne a la plancha, ensalada fresca y ripio de papa bien crocante. La que todo el mundo pide.',
     ingredientes: ['Pan', _ensalada, 'Ripio de papa', 'Carne', _salsasAlGusto],
     variantes: [
       Variante('Queso o tocineta', [
@@ -149,7 +159,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/hamburguesa_sencilla.jpg',
     imageUrl: '',
     price: 14500,
-    description: 'Pan, ensalada, ripio de papa y carne.',
+    description:
+        'La clásica sin vueltas: carne jugosa recién hecha, ensalada fresquita y ripio de papa que cruje en cada mordisco.',
     ingredientes: ['Pan', _ensalada, 'Ripio de papa', 'Carne', _salsasAlGusto],
   ),
   Product(
@@ -159,7 +170,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/tradicional.jpg',
     imageUrl: '',
     price: 15500,
-    description: 'La tradicional con queso o con tocineta, tú eliges.',
+    description:
+        'Nuestra tradicional, como más te guste: con queso derretido o con tocineta crocante. Tú decides cuál.',
     ingredientes: [
       'Pan',
       _ensalada,
@@ -183,7 +195,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/burguer tradicional.jpg',
     imageUrl: '',
     price: 16000,
-    description: 'La tradicional con queso y tocineta.',
+    description:
+        '¿Para qué escoger? Queso derretido y tocineta crocante juntos sobre la carne. La consentida de la casa.',
     ingredientes: [
       'Pan',
       _ensalada,
@@ -201,7 +214,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/hamburguesa_doble.jpg',
     imageUrl: '',
     price: 18500,
-    description: 'Doble carne, doble queso y doble tocineta.',
+    description:
+        'Doble de todo: dos carnes, doble queso derretido y doble tocineta. Para cuando el hambre viene en serio.',
     ingredientes: [
       'Pan',
       _ensalada,
@@ -220,7 +234,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/burguer triple.jpg',
     imageUrl: '',
     price: 20500,
-    description: 'Triple carne, triple queso y triple tocineta.',
+    description:
+        'Tres carnes, triple queso y triple tocineta. Una torre que toca agarrar con las dos manos.',
     ingredientes: [
       'Pan',
       _ensalada,
@@ -238,7 +253,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/hamburguesa_atun_queso.jpg',
     imageUrl: '',
     price: 17500,
-    description: 'Con atún y queso.',
+    description:
+        'Atún con queso derretido, ensalada fresca y ripio de papa. Distinta a todas y más liviana.',
     ingredientes: [
       'Pan',
       _ensalada,
@@ -255,7 +271,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/burguer de pollo.jpg',
     imageUrl: '',
     price: 17500,
-    description: 'Carne de pollo con queso y tocineta.',
+    description:
+        'Pechuga de pollo dorada con queso derretido y tocineta crocante. Suave por dentro, crocante por fuera.',
     ingredientes: [
       'Pan',
       _ensalada,
@@ -272,7 +289,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/hamburguesa_mixta.jpg',
     imageUrl: '',
     price: 20000,
-    description: 'Pechuga y carne de hamburguesa juntas.',
+    description:
+        'Lo mejor de los dos mundos en un solo pan: pechuga de pollo y carne de res juntas.',
     ingredientes: [
       'Pan',
       _ensalada,
@@ -292,7 +310,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/hamburguesa_premium_casa.jpg',
     imageUrl: '',
     price: 21000,
-    description: 'Carne artesanal con huevo entero.',
+    description:
+        'Nuestra premium: carne artesanal con huevo entero encima. La que uno pide cuando el día lo merece.',
     ingredientes: [
       'Pan',
       _ensalada,
@@ -315,7 +334,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/arepa_burger_sencilla.jpg',
     imageUrl: '',
     price: 14000,
-    description: 'Arepa tela con carne de hamburguesa, queso y tocineta.',
+    description:
+        'Arepa tela calientica en vez de pan, con carne de hamburguesa, queso derretido y tocineta crocante.',
     ingredientes: [
       'Arepa tela',
       'Queso',
@@ -331,7 +351,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/arepa_burger_especial.jpg',
     imageUrl: '',
     price: 15000,
-    description: 'La arepa burger con ensalada y ripio.',
+    description:
+        'La arepa burger completa: carne, queso derretido, tocineta, ensalada fresca y ripio de papa.',
     ingredientes: [
       'Arepa',
       'Queso',
@@ -349,7 +370,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/arepa_desmechada.jpg',
     imageUrl: '',
     price: 18000,
-    description: 'Carne desmechada mixta de pollo, res y cerdo.',
+    description:
+        'Arepa rellena de carne desmechada de pollo, res y cerdo. Bien servida y llena de sabor.',
     ingredientes: [
       'Arepa tela',
       'Queso',
@@ -366,7 +388,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/arepa_gourmet.jpg',
     imageUrl: '',
     price: 18000,
-    description: 'Trocitos de pollo, cerdo, jamón y maicitos.',
+    description:
+        'Trocitos de pollo y cerdo, jamón y maicitos dulces sobre arepa tela. La más completa de todas.',
     ingredientes: [
       'Arepa tela',
       'Queso',
@@ -384,7 +407,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/arepa rellena.jpg',
     imageUrl: '',
     price: 18000,
-    description: 'Arepa rellena de carne mixta desmechada.',
+    description:
+        'Arepa rellena hasta el borde de carne mixta desmechada. Se come con tenedor y sin pena.',
     ingredientes: [
       'Arepa rellena',
       'Carne mixta desmechada de pollo, res y cerdo',
@@ -402,7 +426,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/chuzo de pollo.jpg',
     imageUrl: '',
     price: 19000,
-    description: 'Con ensalada, papas a la francesa y arepa con queso.',
+    description:
+        'Chuzo a la parrilla de pollo o de cerdo, con papas a la francesa, ensalada y arepa con queso. Plato completo.',
     ingredientes: [
       'Ensalada',
       'Porción de papas a la francesa',
@@ -426,7 +451,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/patacon.jpg',
     imageUrl: '',
     price: 18000,
-    description: 'Pollo, cerdo y res con tocineta y queso.',
+    description:
+        'Patacón crocante coronado con pollo, cerdo y res, más tocineta y queso derretido encima.',
     ingredientes: [
       'Pollo',
       'Cerdo',
@@ -443,7 +469,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/patacon ranchero.jpg',
     imageUrl: '',
     price: 18000,
-    description: 'Pollo, cerdo y res con salchicha ranchera.',
+    description:
+        'Patacón crocante con pollo, cerdo, res y salchicha ranchera. Bien servido y bien sabroso.',
     ingredientes: [
       'Pollo',
       'Cerdo',
@@ -462,7 +489,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/perra.jpg',
     imageUrl: '',
     price: 14500,
-    description: 'Queso, tocineta, ensalada y ripio.',
+    description:
+        'La perra de entrada: queso derretido, tocineta, ensalada fresca y ripio de papa crocante.',
     ingredientes: [
       'Pan',
       'Queso',
@@ -479,7 +507,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/gran_perra.jpg',
     imageUrl: '',
     price: 15500,
-    description: 'Queso, tocineta, ensalada y ripio.',
+    description:
+        'Más grande y con todo encima: queso derretido, tocineta crocante, ensalada y ripio de papa.',
     ingredientes: [
       'Pan',
       'Queso',
@@ -496,7 +525,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/super_perra.jpg',
     imageUrl: '',
     price: 17500,
-    description: 'Con doble tocineta.',
+    description:
+        'La más cargada de la casa: doble tocineta crocante sobre queso derretido. Para los que no se miden.',
     ingredientes: [
       'Pan',
       'Queso',
@@ -516,7 +546,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/perro.jpg',
     imageUrl: '',
     price: 13000,
-    description: 'Mini perrito con queso y tocineta.',
+    description:
+        'El mini con todo: queso derretido y tocineta crocante. El tamaño perfecto para acompañar.',
     ingredientes: [
       'Pan para perro',
       'Salchicha',
@@ -534,7 +565,7 @@ const List<Product> demoProducts = [
     imageUrl: '',
     price: 12500,
     description:
-        'Mini perrito con queso o con tocineta. Incluye salsas al gusto.',
+        'El mini como lo prefieras: con queso derretido o con tocineta crocante, y las salsas que quieras.',
     variantes: [
       Variante('Elige queso o tocineta', [
         OpcionVariante('Queso', 12500),
@@ -549,7 +580,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/perro_mediano_y.jpg',
     imageUrl: '',
     price: 14500,
-    description: 'Perro mediano con queso y tocineta. Incluye salsas al gusto.',
+    description:
+        'Tamaño mediano con queso derretido y tocineta crocante, más todas las salsas que le quieras poner.',
   ),
   Product(
     id: 'perro_mediano_o',
@@ -559,7 +591,7 @@ const List<Product> demoProducts = [
     imageUrl: '',
     price: 14000,
     description:
-        'Perro mediano con queso o con tocineta. Incluye salsas al gusto.',
+        'Mediano y a tu gusto: con queso derretido o con tocineta crocante, y salsas al gusto.',
     variantes: [
       Variante('Elige queso o tocineta', [
         OpcionVariante('Queso', 14000),
@@ -574,7 +606,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/gran_perro_y.jpg',
     imageUrl: '',
     price: 15500,
-    description: 'Gran perro con queso y tocineta. Incluye salsas al gusto.',
+    description:
+        'Grande de verdad, con queso derretido y tocineta crocante. De los que llenan.',
     destacado: true,
   ),
   Product(
@@ -585,7 +618,7 @@ const List<Product> demoProducts = [
     imageUrl: '',
     price: 15000,
     description:
-        'Gran perro con queso o con tocineta. Incluye salsas al gusto.',
+        'El grande como te guste: con queso derretido o con tocineta, y las salsas que pidas.',
     variantes: [
       Variante('Elige queso o tocineta', [
         OpcionVariante('Queso', 15000),
@@ -600,7 +633,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/super_perro_y.jpg',
     imageUrl: '',
     price: 17500,
-    description: 'Súper perro con queso y tocineta. Incluye salsas al gusto.',
+    description:
+        'El más grande de todos, con queso derretido y tocineta crocante. Para el hambre grande.',
   ),
 
   // ════════════════════════ SALCHIPAPAS ═════════════════════════
@@ -611,7 +645,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/megatradicional.jpg',
     imageUrl: '',
     price: 20000,
-    description: 'Con carne de hamburguesa picada y nugget de pollo.',
+    description:
+        'Papas crocantes con carne de hamburguesa picada y nuggets de pollo. Para compartir… o no.',
     ingredientes: [
       'Papas',
       'Salchicha',
@@ -630,7 +665,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/salchipapas especial.png',
     imageUrl: '',
     price: 16000,
-    description: 'Con queso, tocineta y nugget de pollo.',
+    description:
+        'Papas doradas con queso derretido, tocineta crocante y nuggets de pollo por encima.',
     ingredientes: [
       'Papas',
       'Salchicha',
@@ -647,7 +683,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/salchipapa_sencilla.jpg',
     imageUrl: '',
     price: 13000,
-    description: 'Papas, salchicha, huevo de codorniz y nugget de pollo.',
+    description:
+        'Papas crocantes con salchicha, huevitos de codorniz y nuggets de pollo. La de toda la vida.',
     ingredientes: [
       'Papas',
       'Salchicha',
@@ -662,7 +699,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/especial gourmet.png',
     imageUrl: '',
     price: 20500,
-    description: 'Tamaño personal. Con queso o con tocineta, tú eliges.',
+    description:
+        'La gourmet en tamaño personal, con queso derretido o con tocineta crocante. Tú eliges.',
     ingredientes: [
       'Papas',
       'Salchicha',
@@ -687,7 +725,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/salchipapa_mega_gourmet.jpg',
     imageUrl: '',
     price: 23000,
-    description: 'La gourmet grande, con queso o con tocineta.',
+    description:
+        'La gourmet en tamaño grande, con queso derretido o con tocineta. Alcanza para dos.',
     ingredientes: [
       'Papas',
       'Salchicha',
@@ -712,7 +751,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/salchipapa_mega_gourmet_qy.jpg',
     imageUrl: '',
     price: 27000,
-    description: 'La mega gourmet con queso y tocineta.',
+    description:
+        'La mega gourmet sin tener que escoger: queso derretido y tocineta crocante al tiempo.',
     ingredientes: [
       'Papas',
       'Salchicha',
@@ -732,7 +772,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/super gourmet.jpg',
     imageUrl: '',
     price: 33000,
-    description: 'La Mega Gourmet más carne desmechada mixta.',
+    description:
+        'La más grande de la carta: toda la mega gourmet más carne desmechada mixta encima.',
     ingredientes: [
       'Mega Gourmet',
       'Queso',
@@ -750,7 +791,8 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/gaseosa_pequena.jpg',
     imageUrl: '',
     price: 2600,
-    description: 'Gaseosa pequeña.',
+    tamano: 'Pequeña',
+    description: 'Bien fría y del tamaño justo para acompañar tu pedido.',
     variantes: [
       Variante('Sabor', [
         OpcionVariante('Manzana', 2600),
@@ -764,10 +806,12 @@ const List<Product> demoProducts = [
     id: 'mr_tea',
     name: 'Mr Tea',
     category: 'Bebidas',
-    imageAsset: 'assets/images/menu/mr_tea.jpg',
+    imageAsset: 'assets/images/mr tea.jpg',
     imageUrl: '',
     price: 3500,
-    description: 'Té Mr Tea.',
+    marca: 'Mr Tea',
+    tamano: 'Botella',
+    description: 'Té helado de limón, refrescante y no tan dulce.',
     variantes: [
       Variante('Sabor', [OpcionVariante('Limón', 3500)]),
     ],
@@ -781,14 +825,11 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/gaseosa_flexi_400.jpg',
     imageUrl: '',
     price: 4000,
-    description: 'Presentación de 400 ml.',
+    tamano: '400 ml',
+    description: 'La personal de 400 ml, con la mayor variedad de sabores.',
     variantes: [
       Variante('Sabor', [
         OpcionVariante('Coca-Cola', 4000),
-        OpcionVariante('Hit mora', 4000),
-        OpcionVariante('Hit mango', 4000),
-        OpcionVariante('Hit tropical', 4000),
-        OpcionVariante('Hit piña-naranja', 4000),
         OpcionVariante('Manzana', 4000),
         OpcionVariante('Cuatro', 4000),
       ]),
@@ -800,10 +841,11 @@ const List<Product> demoProducts = [
     id: 'gaseosa_postobon_1_5',
     name: 'Gaseosa Postobón 1.5 L',
     category: 'Bebidas',
-    imageAsset: 'assets/images/menu/gaseosa_postobon_1_5.jpg',
+    imageAsset: 'assets/images/gaseosa postobon 1.5.jpg',
     imageUrl: '',
     price: 6000,
-    description: 'Presentación de 1.5 litros.',
+    tamano: '1.5 L',
+    description: 'Litro y medio para compartir, en los sabores de siempre.',
     variantes: [
       Variante('Sabor', [
         OpcionVariante('Manzana', 6000),
@@ -820,10 +862,11 @@ const List<Product> demoProducts = [
     id: 'gaseosa_2_litros',
     name: 'Gaseosa 2 litros',
     category: 'Bebidas',
-    imageAsset: 'assets/images/menu/gaseosa_2_litros.jpg',
+    imageAsset: 'assets/images/gaseosa 2 litros.png',
     imageUrl: '',
     price: 7500,
-    description: 'Presentación de 2 litros.',
+    tamano: '2 L',
+    description: 'Dos litros: la de la mesa cuando el pedido es para todos.',
     variantes: [
       Variante('Sabor', [
         OpcionVariante('Manzana', 7500),
@@ -842,7 +885,9 @@ const List<Product> demoProducts = [
     imageAsset: 'assets/images/menu/coca_cola_1_5.jpg',
     imageUrl: '',
     price: 7500,
-    description: 'Presentación de 1.5 litros.',
+    marca: 'Coca-Cola',
+    tamano: '1.5 L',
+    description: 'La Coca-Cola grande, para acompañar todo el pedido.',
     permiteSalsas: false,
     permiteAdiciones: false,
   ),
@@ -850,10 +895,12 @@ const List<Product> demoProducts = [
     id: 'hit_litro',
     name: 'Hit de litro',
     category: 'Bebidas',
-    imageAsset: 'assets/images/menu/hit_litro.jpg',
+    imageAsset: 'assets/images/hit litro.jpg',
     imageUrl: '',
     price: 6000,
-    description: 'Marca Postobón.',
+    marca: 'Hit',
+    tamano: '1 L',
+    description: 'Un litro de jugo Hit, si prefieres algo con fruta.',
     permiteSalsas: false,
     permiteAdiciones: false,
   ),
@@ -861,10 +908,12 @@ const List<Product> demoProducts = [
     id: 'econolitro_postobon',
     name: 'Econolitro Postobón',
     category: 'Bebidas',
-    imageAsset: 'assets/images/menu/econolitro_postobon.jpg',
+    imageAsset: 'assets/images/econolitro postobon.jpg',
     imageUrl: '',
     price: 4500,
-    description: 'Econolitro Postobón.',
+    marca: 'Postobón',
+    tamano: 'Econolitro',
+    description: 'El econolitro de Postobón: rinde y es el más económico.',
     permiteSalsas: false,
     permiteAdiciones: false,
   ),
@@ -872,10 +921,12 @@ const List<Product> demoProducts = [
     id: 'econolitro_coca_cola',
     name: 'Econolitro Coca-Cola',
     category: 'Bebidas',
-    imageAsset: 'assets/images/menu/econolitro_coca_cola.jpg',
+    imageAsset: 'assets/images/econolitro coca cola.jpg',
     imageUrl: '',
     price: 6000,
-    description: 'Econolitro Coca-Cola.',
+    marca: 'Coca-Cola',
+    tamano: 'Econolitro',
+    description: 'Econolitro de Coca-Cola, el que alcanza para repetir.',
     permiteSalsas: false,
     permiteAdiciones: false,
   ),
@@ -887,6 +938,145 @@ List<Product> get productosDelMenu =>
 
 /// Las bebidas que se ofrecen dentro del carrito.
 List<Product> get bebidas => productosDeCategoria(kCategoriaBebidas);
+
+// ───────────────────────── Bebidas por marca ─────────────────────────
+//
+// En el menú del negocio una bebida es una presentación ("Gaseosa Flexi
+// 400 ml") que trae sabores de varias marcas. Pero el cliente no piensa
+// así: piensa "quiero una Coca-Cola" y después mira de qué tamaño. Lo que
+// sigue le da la vuelta a esa lista para ofrecerla por marca, sin tocar
+// los productos ni los precios: cada presentación sigue siendo la misma
+// del menú y al carrito se agrega igual que antes.
+
+/// De qué marca es cada sabor del menú. Lo que no esté aquí se agrupa
+/// bajo "Otras", que es mejor que dejarlo por fuera.
+const Map<String, String> _marcaPorSabor = {
+  'Coca-Cola': 'Coca-Cola',
+  'Manzana': 'Postobón',
+  'Uva': 'Postobón',
+  'Colombiana': 'Postobón',
+  'Naranjada': 'Postobón',
+  'Cuatro': 'Postobón',
+  'Pepsi': 'Pepsi',
+  'Limón': 'Mr Tea',
+};
+
+/// El orden en que se muestran las marcas. Las que no estén salen después,
+/// alfabéticamente, así agregar una bebida nueva nunca la deja invisible.
+const List<String> _ordenMarcas = [
+  'Coca-Cola',
+  'Postobón',
+  'Hit',
+  'Pepsi',
+  'Mr Tea',
+];
+
+String marcaDeSabor(String sabor) => _marcaPorSabor[sabor] ?? 'Otras';
+
+/// Un tamaño concreto de una marca, con los sabores que esa marca tiene en
+/// ese tamaño. Es una sola fila aunque haya varios sabores: el sabor se
+/// escoge ahí mismo, en vez de repetir la tarjeta una vez por sabor.
+class PresentacionBebida {
+  final Product producto;
+  final String tamano;
+
+  /// Los sabores de esta marca en este tamaño. Vacía si el producto no da
+  /// a elegir (una Coca-Cola 1.5 L es lo que es).
+  final List<String> sabores;
+
+  final int precio;
+
+  const PresentacionBebida({
+    required this.producto,
+    required this.tamano,
+    required this.precio,
+    this.sabores = const [],
+  });
+
+  /// Solo se le pregunta al cliente cuando de verdad hay que escoger.
+  bool get pideSabor => sabores.length > 1;
+
+  /// Lo que se manda al carrito: las mismas opciones de siempre.
+  Map<String, String> opcionesCon(String? sabor) {
+    final elegido = sabor ?? (sabores.isEmpty ? null : sabores.first);
+    return elegido == null ? const {} : {'Sabor': elegido};
+  }
+}
+
+/// Una marca con todas sus presentaciones, de la más barata a la más cara.
+class MarcaBebida {
+  final String nombre;
+  final List<PresentacionBebida> presentaciones;
+
+  const MarcaBebida({required this.nombre, required this.presentaciones});
+
+  int get desde => presentaciones.first.precio;
+
+  /// La foto de la presentación más grande: es la que mejor muestra la marca.
+  String get imageAsset => presentaciones.last.producto.imageAsset;
+}
+
+/// Las bebidas agrupadas por marca, listas para la hoja del carrito.
+List<MarcaBebida> bebidasPorMarca() {
+  final porMarca = <String, List<PresentacionBebida>>{};
+
+  for (final bebida in bebidas) {
+    final sabores = bebida.variantes
+        .where((v) => v.titulo == 'Sabor')
+        .expand((v) => v.opciones)
+        .toList();
+
+    if (sabores.isEmpty) {
+      // Sin sabores a elegir: la marca la trae el producto.
+      final marca = bebida.marca.isEmpty ? 'Otras' : bebida.marca;
+      porMarca.putIfAbsent(marca, () => []).add(PresentacionBebida(
+            producto: bebida,
+            tamano: bebida.tamano,
+            precio: bebida.price,
+          ));
+      continue;
+    }
+
+    // Los sabores de un mismo tamaño se juntan por marca: queda una fila
+    // por marca y tamaño, con sus sabores adentro, en vez de repetir la
+    // misma tarjeta una vez por sabor.
+    final saboresPorMarca = <String, List<OpcionVariante>>{};
+    for (final sabor in sabores) {
+      // Si el producto declara marca, manda esa; si no, la dice el sabor.
+      final marca =
+          bebida.marca.isNotEmpty ? bebida.marca : marcaDeSabor(sabor.nombre);
+      saboresPorMarca.putIfAbsent(marca, () => []).add(sabor);
+    }
+
+    saboresPorMarca.forEach((marca, suyos) {
+      porMarca.putIfAbsent(marca, () => []).add(PresentacionBebida(
+            producto: bebida,
+            tamano: bebida.tamano,
+            sabores: suyos.map((s) => s.nombre).toList(),
+            // En este menú todos los sabores de un tamaño valen igual; si
+            // algún día no, manda el más barato y el resto se ve al elegir.
+            precio: suyos.map((s) => s.precio).reduce((a, b) => a < b ? a : b),
+          ));
+    });
+  }
+
+  final marcas = porMarca.entries
+      .map((e) => MarcaBebida(
+            nombre: e.key,
+            presentaciones: e.value..sort((a, b) => a.precio - b.precio),
+          ))
+      .toList();
+
+  marcas.sort((a, b) {
+    final ia = _ordenMarcas.indexOf(a.nombre);
+    final ib = _ordenMarcas.indexOf(b.nombre);
+    if (ia >= 0 && ib >= 0) return ia - ib;
+    if (ia >= 0) return -1;
+    if (ib >= 0) return 1;
+    return a.nombre.compareTo(b.nombre);
+  });
+  return marcas;
+}
 
 /// El ícono de una categoría, para el placeholder cuando no hay foto.
 IconData iconoDeCategoria(String categoria) {

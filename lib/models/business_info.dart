@@ -4,7 +4,7 @@ class BusinessInfo {
   BusinessInfo._();
 
   /// Logo oficial del negocio (assets/images/).
-  static const String logo = 'assets/images/logo 1.png';
+  static const String logo = 'assets/images/logo empresa.png';
 
   static const String nombre = 'El parche de las miniBurguer';
   static const String nombreCorto = 'El Parche';
@@ -19,6 +19,14 @@ class BusinessInfo {
 
   static const String horario = 'Lun a dom · 5:00 p.m. – 11:30 p.m.';
   static const String direccion = 'Cra 45 #12-30, Barrio El Parche';
+
+  // ─────────── UBICACIÓN: CONFIGURAR CON EL LOCAL REAL ───────────
+  // Estas coordenadas son provisionales. Para poner las del local: abre
+  // Google Maps, haz clic derecho justo encima del negocio y elige
+  // "copiar coordenadas"; pega el primer número en latitud y el segundo
+  // en longitud. El mapa de "Contactar" se mueve solo.
+  static const double latitud = 6.2442;
+  static const double longitud = -75.5812;
 
   // ─────────────── CONTACTO: CONFIGURAR AQUÍ ───────────────
   // Estos son los datos que venían en el proyecto. Reemplázalos por los

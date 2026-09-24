@@ -62,6 +62,21 @@ void main() {
     expect(find.text('Entregado'), findsNothing);
   });
 
+  testWidgets('la fase actual resalta y las demás se desvanecen',
+      (tester) async {
+    await mostrar(tester, pedido(OrderStatus.preparacion));
+
+    // Los pasos se pintan con opacidad distinta: el de ahora al 100 %, los
+    // ya cumplidos a media luz y los que faltan casi apagados.
+    final opacidades = tester
+        .widgetList<Opacity>(find.byType(Opacity))
+        .map((o) => o.opacity)
+        .toSet();
+    expect(opacidades, contains(1.0));
+    expect(opacidades.any((o) => o < 0.6), isTrue);
+    expect(opacidades.any((o) => o < 0.4), isTrue);
+  });
+
   testWidgets('la hora de cada fase sale del historial', (tester) async {
     await mostrar(tester, pedido(OrderStatus.pendiente));
     expect(find.text('1:05 p.m.'), findsOneWidget);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../models/precio.dart';
 
 /// Un grupo de opciones del producto: "Queso o tocineta", "Pollo o cerdo",
 /// "Sabor"… Se escoge una sola. Si alguna opción cambia el precio, se ve.
@@ -36,7 +37,8 @@ class VariantePicker extends StatelessWidget {
             child: GestureDetector(
               onTap: () => onElegir(o),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
                 decoration: BoxDecoration(
                   color: activa ? const Color(0xFFFBF1DF) : Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -63,10 +65,14 @@ class VariantePicker extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      diferencia == 0 ? '\$${o.precio}' : '+\$$diferencia',
+                      diferencia == 0
+                          ? formatoPesos(o.precio)
+                          : '+${formatoPesos(diferencia)}',
                       style: AppTextStyles.heading(
                         size: 12,
-                        color: diferencia == 0 ? AppColors.muted : AppColors.mostaza,
+                        color: diferencia == 0
+                            ? AppColors.muted
+                            : AppColors.mostaza,
                       ),
                     ),
                   ],
