@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'admin/data/admin_mock.dart';
+import 'domiciliario/models/domiciliario_model.dart';
 import 'state/app_scope.dart';
 import 'state/orders_model.dart';
 import 'theme/app_colors.dart';
@@ -25,6 +26,7 @@ class ParcheMiniBurgerApp extends StatelessWidget {
       // TEMPORAL: pedidos de ejemplo para ver el panel administrativo con
       // datos. Al conectar el backend se quita este parámetro y listo.
       pedidosInicial: OrdersModel(iniciales: pedidosDeEjemplo()),
+      domiciliarioInicial: DomiciliarioModel(vehiculo: 'Moto', enTurno: true),
       child: MaterialApp(
         title: 'El parche de la mini burger',
         debugShowCheckedModeBanner: false,

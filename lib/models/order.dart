@@ -2,7 +2,17 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import 'extras.dart';
 
-enum OrderStatus { pendiente, rechazado, aprobado, preparacion, listo, entregado, cancelado }
+enum OrderStatus {
+  pendiente,
+  rechazado,
+  aprobado,
+  preparacion,
+  listo,
+  enLocal,
+  enCamino,
+  entregado,
+  cancelado,
+}
 
 extension OrderStatusUi on OrderStatus {
   String get label {
@@ -17,6 +27,10 @@ extension OrderStatusUi on OrderStatus {
         return 'En preparación';
       case OrderStatus.listo:
         return 'Listo para recoger';
+      case OrderStatus.enLocal:
+        return 'En el local';
+      case OrderStatus.enCamino:
+        return 'En camino';
       case OrderStatus.entregado:
         return 'Entregado';
       case OrderStatus.cancelado:
@@ -36,6 +50,10 @@ extension OrderStatusUi on OrderStatus {
         return Icons.access_time_rounded;
       case OrderStatus.listo:
         return Icons.shopping_bag_rounded;
+      case OrderStatus.enLocal:
+        return Icons.storefront_rounded;
+      case OrderStatus.enCamino:
+        return Icons.delivery_dining_rounded;
       case OrderStatus.entregado:
         return Icons.done_all_rounded;
       case OrderStatus.cancelado:
@@ -50,6 +68,8 @@ extension OrderStatusUi on OrderStatus {
         return AppColors.tomate;
       case OrderStatus.aprobado:
       case OrderStatus.listo:
+      case OrderStatus.enLocal:
+      case OrderStatus.enCamino:
       case OrderStatus.entregado:
         return AppColors.verde;
       case OrderStatus.pendiente:
@@ -65,6 +85,8 @@ extension OrderStatusUi on OrderStatus {
         return const Color(0xFFF7E2DE);
       case OrderStatus.aprobado:
       case OrderStatus.listo:
+      case OrderStatus.enLocal:
+      case OrderStatus.enCamino:
       case OrderStatus.entregado:
         return const Color(0xFFE1EEE9);
       case OrderStatus.pendiente:
@@ -135,6 +157,8 @@ const List<OrderStatus> kFasesPedido = [
   OrderStatus.aprobado,
   OrderStatus.preparacion,
   OrderStatus.listo,
+  OrderStatus.enLocal,
+  OrderStatus.enCamino,
   OrderStatus.entregado,
 ];
 
@@ -160,6 +184,16 @@ class Order {
   /// Nombre de quien hizo el pedido.
   final String cliente;
 
+  /// Datos que llegan del backend de pedidos. Son opcionales para conservar
+  /// compatibilidad con pedidos antiguos y con pedidos para recoger.
+  final String? telefonoCliente;
+  final String? horaEstimada;
+  final String? domiciliarioId;
+
+  /// Código que el cliente comunica al domiciliario para confirmar entrega.
+  /// Se congela al crear el pedido y no cambia durante su ciclo de vida.
+  final String codigoEntrega;
+
   /// 'Nequi' o 'Bancolombia'.
   final String metodoPago;
 
@@ -171,6 +205,9 @@ class Order {
 
   /// Motivo cuando el pedido fue rechazado o cancelado.
   String? note;
+
+  /// Novedad reportada durante la entrega.
+  String? novedad;
 
   /// Lo que le ha pasado al pedido, del más viejo al más nuevo.
   final List<OrderEvento> historial;
@@ -184,9 +221,14 @@ class Order {
     required this.domicilio,
     required this.metodoPago,
     this.cliente = '',
+    this.telefonoCliente,
+    this.horaEstimada,
+    this.domiciliarioId,
+    this.codigoEntrega = '0000',
     this.direccion,
     this.comprobante,
     this.note,
+    this.novedad,
     List<OrderEvento>? historial,
   }) : historial = historial ??
             [

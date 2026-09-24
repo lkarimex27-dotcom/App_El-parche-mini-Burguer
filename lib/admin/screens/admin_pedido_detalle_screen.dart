@@ -70,8 +70,7 @@ class AdminPedidoDetalleScreen extends StatelessWidget {
                   Text(
                     'Supera los \$$kMontoAprobacion, así que necesita tu visto '
                     'bueno antes de pasar a producción.',
-                    style:
-                        AppTextStyles.body(size: 12, color: AppColors.muted),
+                    style: AppTextStyles.body(size: 12, color: AppColors.muted),
                   ),
                   const SizedBox(height: 12),
                   if (puedeMover)
@@ -227,8 +226,8 @@ class AdminPedidoDetalleScreen extends StatelessWidget {
               Navigator.of(context).pop(texto);
             },
             child: Text('Rechazar',
-                style: AppTextStyles.heading(
-                    size: 12.5, color: AppColors.tomate)),
+                style:
+                    AppTextStyles.heading(size: 12.5, color: AppColors.tomate)),
           ),
         ],
       ),
@@ -253,6 +252,10 @@ class _SiguientePaso extends StatelessWidget {
       case OrderStatus.preparacion:
         return OrderStatus.listo;
       case OrderStatus.listo:
+        return OrderStatus.enLocal;
+      case OrderStatus.enLocal:
+        return OrderStatus.enCamino;
+      case OrderStatus.enCamino:
         return OrderStatus.entregado;
       case OrderStatus.entregado:
       case OrderStatus.rechazado:
@@ -359,8 +362,7 @@ class _Detalle extends StatelessWidget {
           SizedBox(
             width: 74,
             child: Text(etiqueta,
-                style:
-                    AppTextStyles.body(size: 11.5, color: AppColors.muted)),
+                style: AppTextStyles.body(size: 11.5, color: AppColors.muted)),
           ),
           Expanded(
             child: Text(texto, style: AppTextStyles.body(size: 11.5)),
@@ -437,8 +439,8 @@ class _PasoHistorial extends StatelessWidget {
                           size: 12.5, weight: FontWeight.w600)),
                   const SizedBox(height: 2),
                   Text(_hora(evento.fecha),
-                      style: AppTextStyles.body(
-                          size: 11, color: AppColors.muted)),
+                      style:
+                          AppTextStyles.body(size: 11, color: AppColors.muted)),
                 ],
               ),
             ),
@@ -448,7 +450,6 @@ class _PasoHistorial extends StatelessWidget {
     );
   }
 
-  String _hora(DateTime f) =>
-      '${f.day.toString().padLeft(2, '0')}/'
+  String _hora(DateTime f) => '${f.day.toString().padLeft(2, '0')}/'
       '${f.month.toString().padLeft(2, '0')} · ${horaEnPalabras(f)}';
 }
