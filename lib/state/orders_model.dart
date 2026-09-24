@@ -39,6 +39,7 @@ class OrdersModel extends ChangeNotifier {
 
     try {
       final datos = jsonDecode(texto) as List<dynamic>;
+      if (datos.isEmpty) return;
       _pedidos
         ..clear()
         ..addAll(datos.map((dato) =>
@@ -67,6 +68,14 @@ class OrdersModel extends ChangeNotifier {
   List<Order> pedidosAsignados(String domiciliarioId) => _pedidos
       .where((pedido) => pedido.domiciliarioId == domiciliarioId)
       .toList(growable: false);
+
+  void agregarPedidosEjemplo(List<Order> pedidos) {
+    if (pedidos.isEmpty) return;
+    _pedidos.addAll(pedidos);
+    _actualizarConsecutivo();
+    notifyListeners();
+    unawaited(_guardar());
+  }
 
   List<Order> historialDe(String domiciliarioId) => pedidosAsignados(
         domiciliarioId,
@@ -159,6 +168,10 @@ class OrdersModel extends ChangeNotifier {
     unawaited(_guardar());
     return pedido;
   }
+
+  String _codigoTemporal() => (DateTime.now().microsecondsSinceEpoch % 10000)
+      .toString()
+      .padLeft(4, '0');
 
   void _actualizarConsecutivo() {
     for (final pedido in _pedidos) {

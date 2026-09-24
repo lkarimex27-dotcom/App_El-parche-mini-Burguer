@@ -7,6 +7,7 @@ import 'home_screen.dart';
 import 'menu_screen.dart';
 import 'cart_screen.dart';
 import 'orders_screen.dart';
+import 'profile_screen.dart';
 
 /// Contenedor de las 4 pestañas del bottom nav:
 /// Inicio, Menú, Carrito y Mis pedidos.
@@ -14,7 +15,9 @@ import 'orders_screen.dart';
 /// El encabezado (logo + perfil) vive aquí, así se ve igual en todas
 /// las pestañas y las pantallas de adentro no lo repiten.
 class MainNavScreen extends StatefulWidget {
-  const MainNavScreen({super.key});
+  final VoidCallback? onVolverDomiciliario;
+
+  const MainNavScreen({super.key, this.onVolverDomiciliario});
 
   @override
   State<MainNavScreen> createState() => _MainNavScreenState();
@@ -53,12 +56,16 @@ class _MainNavScreenState extends State<MainNavScreen> {
         onPedidoEnviado: () => _goToTab(3),
       ),
       OrdersScreen(onVerMenu: () => _goToTab(1)),
+      ProfileScreen(onCerrar: () => _goToTab(0)),
     ];
 
     return Scaffold(
       body: Column(
         children: [
-          const Aparicion(orden: 0, child: AppHeader()),
+          Aparicion(
+            orden: 0,
+            child: AppHeader(onVolver: widget.onVolverDomiciliario),
+          ),
           Expanded(
             child: IndexedStack(index: _currentIndex, children: screens),
           ),

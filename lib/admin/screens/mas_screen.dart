@@ -21,15 +21,15 @@ class MasScreen extends StatelessWidget {
   ];
 
   static const List<_Grupo> _grupos = [
-    _Grupo('Catálogo', [
-      ModuloAdmin.productos,
-      ModuloAdmin.categorias,
-      ModuloAdmin.fichasTecnicas,
-    ]),
     _Grupo('Abastecimiento', [
       ModuloAdmin.compras,
       ModuloAdmin.proveedores,
       ModuloAdmin.perdidas,
+    ]),
+    _Grupo('Catálogo', [
+      ModuloAdmin.productos,
+      ModuloAdmin.categorias,
+      ModuloAdmin.fichasTecnicas,
     ]),
     _Grupo('Comercial', [
       ModuloAdmin.ventas,
