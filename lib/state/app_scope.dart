@@ -21,7 +21,6 @@ class AppScope extends StatefulWidget {
   final OrdersModel? pedidosInicial;
   final DomiciliarioModel? domiciliarioInicial;
   final AdminRepository? adminInicial;
-  final DomiciliarioModel? domiciliarioInicial;
 
   const AppScope({
     super.key,
@@ -31,7 +30,6 @@ class AppScope extends StatefulWidget {
     this.pedidosInicial,
     this.domiciliarioInicial,
     this.adminInicial,
-    this.domiciliarioInicial,
   });
 
   static CartModel carrito(BuildContext context) =>
@@ -50,9 +48,6 @@ class AppScope extends StatefulWidget {
   static AdminRepository admin(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_AdminScope>()!.notifier!;
 
-  static DomiciliarioModel domiciliario(BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<_DomiciliarioScope>()!
-      .notifier!;
 
   static CartModel carritoSinEscuchar(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_CarritoScope>()!.notifier!;
@@ -69,8 +64,6 @@ class AppScope extends StatefulWidget {
   static AdminRepository adminSinEscuchar(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_AdminScope>()!.notifier!;
 
-  static DomiciliarioModel domiciliarioSinEscuchar(BuildContext context) =>
-      context.getInheritedWidgetOfExactType<_DomiciliarioScope>()!.notifier!;
 
   @override
   State<AppScope> createState() => _AppScopeState();
@@ -83,8 +76,6 @@ class _AppScopeState extends State<AppScope> {
   late final DomiciliarioModel _domiciliario =
       widget.domiciliarioInicial ?? DomiciliarioModel();
   late final AdminRepository _admin = widget.adminInicial ?? AdminRepository();
-  late final DomiciliarioModel _domiciliario =
-      widget.domiciliarioInicial ?? DomiciliarioModel();
 
   @override
   void dispose() {
@@ -93,7 +84,6 @@ class _AppScopeState extends State<AppScope> {
     _pedidos.dispose();
     _domiciliario.dispose();
     _admin.dispose();
-    _domiciliario.dispose();
     super.dispose();
   }
 
@@ -105,18 +95,12 @@ class _AppScopeState extends State<AppScope> {
         notifier: _usuario,
         child: _PedidosScope(
           notifier: _pedidos,
-<<<<<<< HEAD
           child: _AdminScope(
             notifier: _admin,
             child: _DomiciliarioScope(
               notifier: _domiciliario,
               child: widget.child,
             ),
-=======
-          child: _DomiciliarioScope(
-            notifier: _domiciliario,
-            child: _AdminScope(notifier: _admin, child: widget.child),
->>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
           ),
         ),
       ),
@@ -142,8 +126,4 @@ class _DomiciliarioScope extends InheritedNotifier<DomiciliarioModel> {
 
 class _AdminScope extends InheritedNotifier<AdminRepository> {
   const _AdminScope({required super.notifier, required super.child});
-}
-
-class _DomiciliarioScope extends InheritedNotifier<DomiciliarioModel> {
-  const _DomiciliarioScope({required super.notifier, required super.child});
 }

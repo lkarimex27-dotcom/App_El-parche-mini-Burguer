@@ -90,40 +90,12 @@ class DashboardScreen extends StatelessWidget {
                       icono: Icons.payments_outlined,
                       onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
                     ),
-<<<<<<< HEAD
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: MetricCard(
-                        etiqueta: 'Ticket promedio',
-                        valor: formatoPesos(ticketPromedio),
-                        icono: Icons.account_balance_wallet_rounded,
-                        color: AppColors.verde,
-                        onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: MetricCard(
-                        etiqueta: 'Meta del día',
-                        valor:
-                            '${(cumplimientoMeta * 100).clamp(0, 100).round()}%',
-                        icono: Icons.flag_circle_rounded,
-                        detalle: formatoPesos(metaDiaria),
-                        color: AppColors.mostaza,
-                        onTap: () =>
-                            onAbrirModulo?.call(ModuloAdmin.indicadores),
-                      ),
-=======
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: MetricCard(
                       etiqueta: 'Ticket promedio',
-                      valor: '\$${ticketPromedio.toString()}',
+                      valor: formatoPesos(ticketPromedio),
                       icono: Icons.account_balance_wallet_rounded,
                       color: AppColors.verde,
                       onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
@@ -140,11 +112,9 @@ class DashboardScreen extends StatelessWidget {
                       valor:
                           '${(cumplimientoMeta * 100).clamp(0, 100).round()}%',
                       icono: Icons.flag_circle_rounded,
-                      detalle:
-                          '\$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                      detalle: formatoPesos(metaDiaria),
                       color: AppColors.mostaza,
                       onTap: () => onAbrirModulo?.call(ModuloAdmin.indicadores),
->>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -176,7 +146,6 @@ class DashboardScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-<<<<<<< HEAD
                       Text('Cumplimiento de meta',
                           style: AppTextStyles.body(
                               size: 12,
@@ -195,20 +164,6 @@ class DashboardScreen extends StatelessWidget {
                           style: AppTextStyles.body(
                               size: 11, color: AppColors.muted),
                         ),
-=======
-                      Expanded(
-                        child: Text('Cumplimiento de meta',
-                            style: AppTextStyles.body(
-                                size: 12,
-                                weight: FontWeight.w700,
-                                color: AppColors.carbon)),
-                      ),
-                      const Spacer(),
-                      Text(
-                        '\$${ventasHoy.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')} / \$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
-                        style: AppTextStyles.body(
-                            size: 11, color: AppColors.muted),
->>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
                       ),
                     ],
                   ),

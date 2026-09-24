@@ -62,14 +62,13 @@ class _MainNavScreenState extends State<MainNavScreen> {
     return Scaffold(
       body: Column(
         children: [
-<<<<<<< HEAD
-          Aparicion(orden: 0, child: AppHeader(onPerfil: () => _goToTab(4))),
-=======
           Aparicion(
             orden: 0,
-            child: AppHeader(onVolver: widget.onVolverDomiciliario),
+            child: AppHeader(
+              onPerfil: () => _goToTab(4),
+              onVolver: widget.onVolverDomiciliario,
+            ),
           ),
->>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
           Expanded(
             child: IndexedStack(index: _currentIndex, children: screens),
           ),

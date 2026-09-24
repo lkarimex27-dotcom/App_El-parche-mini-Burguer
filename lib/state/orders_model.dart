@@ -170,20 +170,15 @@ class OrdersModel extends ChangeNotifier {
     return pedido;
   }
 
-<<<<<<< HEAD
   /// El PIN de 4 dígitos que el cliente le dicta al domiciliario para
   /// confirmar que recibió. Se genera al crear el pedido y no vuelve a
   /// cambiar: si fuera predecible, una entrega se podría dar por hecha
-  /// sin que el cliente tenga nada en la mano.
+  /// sin que el cliente tenga nada en la mano. Por eso no sale del reloj,
+  /// que cualquiera puede adivinar sabiendo la hora del pedido.
   String _codigoTemporal() =>
       List.generate(4, (_) => _azar.nextInt(10)).join();
 
   static final Random _azar = Random.secure();
-=======
-  String _codigoTemporal() => (DateTime.now().microsecondsSinceEpoch % 10000)
-      .toString()
-      .padLeft(4, '0');
->>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
 
   void _actualizarConsecutivo() {
     for (final pedido in _pedidos) {
