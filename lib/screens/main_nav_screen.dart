@@ -15,7 +15,9 @@ import 'profile_screen.dart';
 /// El encabezado (logo + perfil) vive aquí, así se ve igual en todas
 /// las pestañas y las pantallas de adentro no lo repiten.
 class MainNavScreen extends StatefulWidget {
-  const MainNavScreen({super.key});
+  final VoidCallback? onVolverDomiciliario;
+
+  const MainNavScreen({super.key, this.onVolverDomiciliario});
 
   @override
   State<MainNavScreen> createState() => _MainNavScreenState();
@@ -60,7 +62,14 @@ class _MainNavScreenState extends State<MainNavScreen> {
     return Scaffold(
       body: Column(
         children: [
+<<<<<<< HEAD
           Aparicion(orden: 0, child: AppHeader(onPerfil: () => _goToTab(4))),
+=======
+          Aparicion(
+            orden: 0,
+            child: AppHeader(onVolver: widget.onVolverDomiciliario),
+          ),
+>>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
           Expanded(
             child: IndexedStack(index: _currentIndex, children: screens),
           ),

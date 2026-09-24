@@ -241,6 +241,26 @@ class Order {
 
   int get total => subtotal + domicilio;
 
+  Order asignarADomiciliario(String domiciliarioIdNuevo) => Order(
+        id: id,
+        fecha: fecha,
+        status: status,
+        lineas: lineas,
+        subtotal: subtotal,
+        domicilio: domicilio,
+        metodoPago: metodoPago,
+        cliente: cliente,
+        telefonoCliente: telefonoCliente,
+        horaEstimada: horaEstimada,
+        domiciliarioId: domiciliarioIdNuevo,
+        codigoEntrega: codigoEntrega,
+        direccion: direccion,
+        comprobante: comprobante,
+        note: note,
+        novedad: novedad,
+        historial: historial,
+      );
+
   /// Los pedidos grandes esperan el visto bueno del administrador antes
   /// de generar la orden de producción.
   bool get requiereAprobacion =>

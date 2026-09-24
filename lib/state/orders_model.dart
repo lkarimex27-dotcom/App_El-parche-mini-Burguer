@@ -40,6 +40,7 @@ class OrdersModel extends ChangeNotifier {
 
     try {
       final datos = jsonDecode(texto) as List<dynamic>;
+      if (datos.isEmpty) return;
       _pedidos
         ..clear()
         ..addAll(datos.map((dato) =>
@@ -68,6 +69,14 @@ class OrdersModel extends ChangeNotifier {
   List<Order> pedidosAsignados(String domiciliarioId) => _pedidos
       .where((pedido) => pedido.domiciliarioId == domiciliarioId)
       .toList(growable: false);
+
+  void agregarPedidosEjemplo(List<Order> pedidos) {
+    if (pedidos.isEmpty) return;
+    _pedidos.addAll(pedidos);
+    _actualizarConsecutivo();
+    notifyListeners();
+    unawaited(_guardar());
+  }
 
   List<Order> historialDe(String domiciliarioId) => pedidosAsignados(
         domiciliarioId,
@@ -161,6 +170,7 @@ class OrdersModel extends ChangeNotifier {
     return pedido;
   }
 
+<<<<<<< HEAD
   /// El PIN de 4 dígitos que el cliente le dicta al domiciliario para
   /// confirmar que recibió. Se genera al crear el pedido y no vuelve a
   /// cambiar: si fuera predecible, una entrega se podría dar por hecha
@@ -169,6 +179,11 @@ class OrdersModel extends ChangeNotifier {
       List.generate(4, (_) => _azar.nextInt(10)).join();
 
   static final Random _azar = Random.secure();
+=======
+  String _codigoTemporal() => (DateTime.now().microsecondsSinceEpoch % 10000)
+      .toString()
+      .padLeft(4, '0');
+>>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
 
   void _actualizarConsecutivo() {
     for (final pedido in _pedidos) {

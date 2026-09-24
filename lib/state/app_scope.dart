@@ -19,6 +19,7 @@ class AppScope extends StatefulWidget {
   final CartModel? carritoInicial;
   final UserModel? usuarioInicial;
   final OrdersModel? pedidosInicial;
+  final DomiciliarioModel? domiciliarioInicial;
   final AdminRepository? adminInicial;
   final DomiciliarioModel? domiciliarioInicial;
 
@@ -28,6 +29,7 @@ class AppScope extends StatefulWidget {
     this.carritoInicial,
     this.usuarioInicial,
     this.pedidosInicial,
+    this.domiciliarioInicial,
     this.adminInicial,
     this.domiciliarioInicial,
   });
@@ -40,6 +42,10 @@ class AppScope extends StatefulWidget {
 
   static OrdersModel pedidos(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_PedidosScope>()!.notifier!;
+
+  static DomiciliarioModel domiciliario(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_DomiciliarioScope>()!
+      .notifier!;
 
   static AdminRepository admin(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_AdminScope>()!.notifier!;
@@ -57,6 +63,9 @@ class AppScope extends StatefulWidget {
   static OrdersModel pedidosSinEscuchar(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_PedidosScope>()!.notifier!;
 
+  static DomiciliarioModel domiciliarioSinEscuchar(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_DomiciliarioScope>()!.notifier!;
+
   static AdminRepository adminSinEscuchar(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_AdminScope>()!.notifier!;
 
@@ -71,6 +80,8 @@ class _AppScopeState extends State<AppScope> {
   late final CartModel _carrito = widget.carritoInicial ?? CartModel();
   late final UserModel _usuario = widget.usuarioInicial ?? UserModel();
   late final OrdersModel _pedidos = widget.pedidosInicial ?? OrdersModel();
+  late final DomiciliarioModel _domiciliario =
+      widget.domiciliarioInicial ?? DomiciliarioModel();
   late final AdminRepository _admin = widget.adminInicial ?? AdminRepository();
   late final DomiciliarioModel _domiciliario =
       widget.domiciliarioInicial ?? DomiciliarioModel();
@@ -80,6 +91,7 @@ class _AppScopeState extends State<AppScope> {
     _carrito.dispose();
     _usuario.dispose();
     _pedidos.dispose();
+    _domiciliario.dispose();
     _admin.dispose();
     _domiciliario.dispose();
     super.dispose();
@@ -93,12 +105,18 @@ class _AppScopeState extends State<AppScope> {
         notifier: _usuario,
         child: _PedidosScope(
           notifier: _pedidos,
+<<<<<<< HEAD
           child: _AdminScope(
             notifier: _admin,
             child: _DomiciliarioScope(
               notifier: _domiciliario,
               child: widget.child,
             ),
+=======
+          child: _DomiciliarioScope(
+            notifier: _domiciliario,
+            child: _AdminScope(notifier: _admin, child: widget.child),
+>>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
           ),
         ),
       ),
@@ -116,6 +134,10 @@ class _UsuarioScope extends InheritedNotifier<UserModel> {
 
 class _PedidosScope extends InheritedNotifier<OrdersModel> {
   const _PedidosScope({required super.notifier, required super.child});
+}
+
+class _DomiciliarioScope extends InheritedNotifier<DomiciliarioModel> {
+  const _DomiciliarioScope({required super.notifier, required super.child});
 }
 
 class _AdminScope extends InheritedNotifier<AdminRepository> {

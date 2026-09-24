@@ -79,20 +79,18 @@ class DashboardScreen extends StatelessWidget {
           ),
 
           // ── Indicadores clave del negocio ──
-          Aparicion(
-            orden: 2,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: MetricCard(
-                        etiqueta: 'Ventas hoy',
-                        valor: formatoPesos(ventasHoy),
-                        icono: Icons.payments_outlined,
-                        onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
-                      ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: MetricCard(
+                      etiqueta: 'Ventas hoy',
+                      valor: formatoPesos(ventasHoy),
+                      icono: Icons.payments_outlined,
+                      onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
                     ),
+<<<<<<< HEAD
                     const SizedBox(width: 10),
                     Expanded(
                       child: MetricCard(
@@ -119,26 +117,54 @@ class DashboardScreen extends StatelessWidget {
                         onTap: () =>
                             onAbrirModulo?.call(ModuloAdmin.indicadores),
                       ),
+=======
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: MetricCard(
+                      etiqueta: 'Ticket promedio',
+                      valor: '\$${ticketPromedio.toString()}',
+                      icono: Icons.account_balance_wallet_rounded,
+                      color: AppColors.verde,
+                      onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: MetricCard(
-                        etiqueta: 'Pedidos en curso',
-                        valor: '$enCurso',
-                        icono: Icons.receipt_long_outlined,
-                        detalle: porAprobar.isEmpty
-                            ? '$entregadosHoy entregados hoy'
-                            : '${porAprobar.length} por aprobar',
-                        color: porAprobar.isEmpty
-                            ? AppColors.mostaza
-                            : AppColors.tomate,
-                        onTap: () => onAbrirModulo?.call(ModuloAdmin.pedidos),
-                      ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: MetricCard(
+                      etiqueta: 'Meta del día',
+                      valor:
+                          '${(cumplimientoMeta * 100).clamp(0, 100).round()}%',
+                      icono: Icons.flag_circle_rounded,
+                      detalle:
+                          '\$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                      color: AppColors.mostaza,
+                      onTap: () => onAbrirModulo?.call(ModuloAdmin.indicadores),
+>>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: MetricCard(
+                      etiqueta: 'Pedidos en curso',
+                      valor: '$enCurso',
+                      icono: Icons.receipt_long_outlined,
+                      detalle: porAprobar.isEmpty
+                          ? '$entregadosHoy entregados hoy'
+                          : '${porAprobar.length} por aprobar',
+                      color: porAprobar.isEmpty
+                          ? AppColors.mostaza
+                          : AppColors.tomate,
+                      onTap: () => onAbrirModulo?.call(ModuloAdmin.pedidos),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
           const SizedBox(height: 18),
           Aparicion(
@@ -150,6 +176,7 @@ class DashboardScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
+<<<<<<< HEAD
                       Text('Cumplimiento de meta',
                           style: AppTextStyles.body(
                               size: 12,
@@ -168,6 +195,20 @@ class DashboardScreen extends StatelessWidget {
                           style: AppTextStyles.body(
                               size: 11, color: AppColors.muted),
                         ),
+=======
+                      Expanded(
+                        child: Text('Cumplimiento de meta',
+                            style: AppTextStyles.body(
+                                size: 12,
+                                weight: FontWeight.w700,
+                                color: AppColors.carbon)),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '\$${ventasHoy.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')} / \$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                        style: AppTextStyles.body(
+                            size: 11, color: AppColors.muted),
+>>>>>>> c438655f150cab2ad02ddc8ca1916c8e0bc9c7bf
                       ),
                     ],
                   ),
@@ -176,7 +217,8 @@ class DashboardScreen extends StatelessWidget {
                     value: cumplimientoMeta.clamp(0.0, 1.0),
                     minHeight: 8,
                     backgroundColor: AppColors.crema2,
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.verde),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(AppColors.verde),
                     borderRadius: BorderRadius.circular(99),
                   ),
                   const SizedBox(height: 8),
@@ -487,7 +529,7 @@ class _FilaPedido extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(formatoPesos(pedido.total),
-                  style: AppTextStyles.heading(size: 14, color: AppColors.verde)),
+              style: AppTextStyles.heading(size: 14, color: AppColors.verde)),
         ],
       ),
     );
