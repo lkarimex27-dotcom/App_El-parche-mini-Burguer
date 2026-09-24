@@ -179,7 +179,8 @@ class _SplashScreenState extends State<SplashScreen>
   final GlobalKey _bloqueTexto = GlobalKey();
 
   // Arrastre del logo y su rebote elástico al soltar.
-  final ValueNotifier<Offset> _arrastreLogo = ValueNotifier<Offset>(Offset.zero);
+  final ValueNotifier<Offset> _arrastreLogo =
+      ValueNotifier<Offset>(Offset.zero);
   late final AnimationController _resorte;
   Animation<Offset>? _resorteAnim;
 
@@ -216,7 +217,8 @@ class _SplashScreenState extends State<SplashScreen>
     _logoEscala = Tween<double>(begin: 0.6, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(_tRevelado, _tLogoDentro, curve: Curves.bounceOut),
+        curve:
+            const Interval(_tRevelado, _tLogoDentro, curve: Curves.bounceOut),
       ),
     );
     _logoCaida = CurvedAnimation(
@@ -225,7 +227,8 @@ class _SplashScreenState extends State<SplashScreen>
     );
     _logoSube = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(_tLogoDentro, _tLogoArriba, curve: Curves.easeInOut),
+      curve:
+          const Interval(_tLogoDentro, _tLogoArriba, curve: Curves.easeInOut),
     );
     _abajoOpacidad = CurvedAnimation(
       parent: _controller,
@@ -602,7 +605,7 @@ class _SplashScreenState extends State<SplashScreen>
               fit: StackFit.expand,
               children: [
                 const AppImage(
-                  'assets/images/splash_bg.jpg',
+                  '',
                   fallbackUrl: BusinessInfo.fotoAmbiente,
                   fit: BoxFit.cover,
                 ),
@@ -765,8 +768,7 @@ class _SplashScreenState extends State<SplashScreen>
                 key: _bloqueTexto,
                 duration: const Duration(milliseconds: 260),
                 curve: Curves.easeOut,
-                transform:
-                    Matrix4.translationValues(apartar.dx, apartar.dy, 0),
+                transform: Matrix4.translationValues(apartar.dx, apartar.dy, 0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

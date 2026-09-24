@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'admin/data/admin_mock.dart';
 import 'state/app_scope.dart';
 import 'state/orders_model.dart';
 import 'theme/app_colors.dart';
@@ -21,10 +22,10 @@ class ParcheMiniBurgerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // AppScope va por fuera del MaterialApp para que el carrito y los
     // datos del usuario sobrevivan a cualquier navegación.
+    final pedidos = OrdersModel(persistir: true);
+    unawaited(pedidos.cargarGuardados());
     return AppScope(
-      // TEMPORAL: pedidos de ejemplo para ver el panel administrativo con
-      // datos. Al conectar el backend se quita este parámetro y listo.
-      pedidosInicial: OrdersModel(iniciales: pedidosDeEjemplo()),
+      pedidosInicial: pedidos,
       child: MaterialApp(
         title: 'El parche de la mini burger',
         debugShowCheckedModeBanner: false,

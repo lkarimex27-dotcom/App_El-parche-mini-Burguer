@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
         fit: StackFit.expand,
         children: [
           const AppImage(
-            'assets/images/login_bg.jpg',
+            '',
             fallbackUrl: BusinessInfo.fotoAmbiente,
             fit: BoxFit.cover,
           ),
@@ -114,9 +114,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             icon: Icons.mail_outline_rounded,
                             teclado: TextInputType.emailAddress,
                             obligatorio: true,
-                            validarAdemas: (v) => !v.contains('@') || !v.contains('.')
-                                ? 'Correo no válido'
-                                : null,
+                            validarAdemas: (v) =>
+                                !v.contains('@') || !v.contains('.')
+                                    ? 'Correo no válido'
+                                    : null,
                           ),
                           const SizedBox(height: 10),
                           AppTextField(
@@ -143,10 +144,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: GestureDetector(
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
-                                    builder: (_) => const ForgotPasswordScreen()),
+                                    builder: (_) =>
+                                        const ForgotPasswordScreen()),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
                                 child: Text(
                                   '¿Olvidaste tu contraseña?',
                                   style: AppTextStyles.heading(
@@ -156,18 +159,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          PrimaryButton(label: 'Iniciar sesión', onPressed: _entrar),
+                          PrimaryButton(
+                              label: 'Iniciar sesión', onPressed: _entrar),
                           const SizedBox(height: 14),
                           Row(
                             children: [
-                              const Expanded(child: Divider(color: AppColors.borde)),
+                              const Expanded(
+                                  child: Divider(color: AppColors.borde)),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 child: Text('o continúa con',
                                     style: AppTextStyles.body(
                                         size: 10.5, color: AppColors.muted)),
                               ),
-                              const Expanded(child: Divider(color: AppColors.borde)),
+                              const Expanded(
+                                  child: Divider(color: AppColors.borde)),
                             ],
                           ),
                           const SizedBox(height: 12),
@@ -189,7 +196,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 14),
                           GestureDetector(
                             onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                              MaterialPageRoute(
+                                  builder: (_) => const RegisterScreen()),
                             ),
                             child: RichText(
                               text: TextSpan(
