@@ -228,8 +228,9 @@ class _HojaTamanosState extends State<_HojaTamanos> {
             child: Row(
               children: [
                 AppImage(
-                  p.producto.imageAsset,
-                  fallbackUrl: p.producto.imageUrl,
+                  // La de la marca, no la del producto: un mismo producto
+                  // del menú agrupa varias marcas.
+                  marca.imageAsset,
                   placeholderIcon: Icons.local_drink,
                   width: 50,
                   height: 50,

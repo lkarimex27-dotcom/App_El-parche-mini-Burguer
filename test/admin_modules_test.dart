@@ -14,6 +14,26 @@ Widget _app(AdminRepository repository, Widget child) => AppScope(
     );
 
 void main() {
+  // Pantalla alta para que la lista de módulos se construya entera: en
+  // 800×600 los de abajo no llegan a existir.
+  setUp(() {
+    final view = TestWidgetsFlutterBinding.ensureInitialized()
+        .platformDispatcher
+        .views
+        .first;
+    view.physicalSize = const Size(900, 2600);
+    view.devicePixelRatio = 1.0;
+  });
+
+  tearDown(() {
+    final view = TestWidgetsFlutterBinding.ensureInitialized()
+        .platformDispatcher
+        .views
+        .first;
+    view.resetPhysicalSize();
+    view.resetDevicePixelRatio();
+  });
+
   test('un proveedor con compras no se puede eliminar', () {
     final repository = AdminRepository();
     final proveedor = repository.registros(ModuloAdmin.proveedores).first;
@@ -32,10 +52,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Compras'), findsOneWidget);
     expect(find.text('Proveedores'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('Indicadores'), 300);
+    // Con la pantalla alta del setUp la lista cabe entera, así que no hay
+    // que desplazarla (y scrollUntilVisible falla si hay más de una).
     expect(find.text('Indicadores'), findsOneWidget);
 
-    await tester.scrollUntilVisible(find.text('Proveedores'), -300);
     await tester.tap(find.text('Proveedores'));
     await tester.pumpAndSettle();
     expect(find.text('Distribuciones La 30'), findsOneWidget);

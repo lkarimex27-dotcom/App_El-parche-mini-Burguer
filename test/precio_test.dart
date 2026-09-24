@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parche_mini_burger/models/precio.dart';
 import 'package:parche_mini_burger/models/product.dart';
@@ -40,6 +42,22 @@ void main() {
     for (final id in ['coca_cola_1_5', 'hit_litro', 'econolitro_postobon',
         'econolitro_coca_cola']) {
       expect(sabores[id], isEmpty, reason: id);
+    }
+  });
+
+  test('cada marca de bebida muestra su propia foto', () {
+    // Pepsi se vende dentro de productos de Postobón: si la foto saliera
+    // del producto, Pepsi aparecería con la botella de Postobón.
+    final vistas = <String, String>{};
+
+    for (final marca in bebidasPorMarca()) {
+      expect(marca.imageAsset, isNotEmpty, reason: marca.nombre);
+      expect(File(marca.imageAsset).existsSync(), isTrue,
+          reason: '${marca.nombre} apunta a ${marca.imageAsset} y no está');
+      expect(vistas.containsKey(marca.imageAsset), isFalse,
+          reason: '${marca.nombre} repite la foto de '
+              '${vistas[marca.imageAsset]}');
+      vistas[marca.imageAsset] = marca.nombre;
     }
   });
 

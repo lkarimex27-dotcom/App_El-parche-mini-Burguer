@@ -115,7 +115,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Te damos la bienvenida, Andrés 👋'), findsOneWidget);
-    expect(find.text('AG'), findsOneWidget); // iniciales del encabezado
+    // El encabezado ya solo lleva el logo: las iniciales quedaron en el
+    // perfil, donde las comprueba la prueba de abajo.
+    expect(usuario.iniciales, 'AG');
     expect(find.textContaining('Camila'), findsNothing);
   });
 

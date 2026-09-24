@@ -130,7 +130,8 @@ void main() {
     expect(find.text('Todavía no tienes pedidos'), findsOneWidget);
   });
 
-  testWidgets('la ficha del producto es solo lo básico', (tester) async {
+  testWidgets('la ficha del producto trae lo básico y sus adiciones',
+      (tester) async {
     final carrito = CartModel();
 
     await tester.pumpWidget(AppScope(
@@ -145,16 +146,43 @@ void main() {
     expect(find.text(formatoPesos(_clasica.price)), findsOneWidget);
     expect(find.text(_clasica.description), findsOneWidget);
     expect(find.text('Cantidad'), findsOneWidget);
-    expect(find.text('Agregar al carrito · ${formatoPesos(_clasica.price)}'), findsOneWidget);
+    expect(find.text('Adiciones'), findsOneWidget);
+    expect(find.text('Agregar al carrito · ${formatoPesos(_clasica.price)}'),
+        findsOneWidget);
 
-    // Lo que NO: personalización ni ingredientes.
+    // Lo que NO: salsas, bebidas ni la lista de ingredientes.
     expect(find.text('Salsas'), findsNothing);
-    expect(find.text('Adiciones'), findsNothing);
     expect(find.text('Ingredientes'), findsNothing);
     expect(find.text('Bebidas'), findsNothing);
     for (final ingrediente in _clasica.ingredientes) {
       expect(find.text(ingrediente), findsNothing);
     }
+  });
+
+  testWidgets('la adición elegida en la ficha se suma al precio y va al carrito',
+      (tester) async {
+    final carrito = CartModel();
+
+    await tester.pumpWidget(AppScope(
+      carritoInicial: carrito,
+      usuarioInicial: UserModel(),
+      child: MaterialApp(home: ProductDetailScreen(product: _clasica)),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(_tocineta.nombre));
+    await tester.pumpAndSettle();
+
+    // El botón ya cobra la adición antes de agregar nada.
+    final conAdicion = _clasica.price + _tocineta.precio;
+    expect(find.text('Agregar al carrito · ${formatoPesos(conAdicion)}'),
+        findsOneWidget);
+
+    await tester.tap(find.textContaining('Agregar al carrito'));
+    await tester.pumpAndSettle();
+
+    expect(carrito.lineas.single.adiciones, contains(_tocineta));
+    expect(carrito.subtotal, conAdicion);
   });
 
   testWidgets('las bebidas se agregan desde el carrito, con su sabor',

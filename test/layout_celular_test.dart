@@ -30,7 +30,7 @@ void main() {
     view.resetDevicePixelRatio();
   });
 
-  testWidgets('las 5 pestañas se dibujan sin desbordes', (tester) async {
+  testWidgets('cada pestaña del menú de abajo se dibuja sin desbordes', (tester) async {
     final carrito = CartModel()
       ..agregar(
         product: demoProducts.first,
@@ -46,12 +46,18 @@ void main() {
     ));
     await tester.pump();
 
-    for (var tab = 0; tab < 5; tab++) {
-      await tester.tap(find.byType(BottomNavigationBar).first.evaluate().isEmpty
-          ? find.byIcon(Icons.home_rounded)
-          : find.byIcon(_iconos[tab]));
+    // Las pestañas salen de la barra misma: si mañana se agrega o se quita
+    // una, la prueba la recorre igual en vez de romperse por el número.
+    final barra = tester.widget<BottomNavigationBar>(
+      find.byType(BottomNavigationBar),
+    );
+    expect(barra.items, isNotEmpty);
+
+    for (var tab = 0; tab < barra.items.length; tab++) {
+      await tester.tap(find.text(barra.items[tab].label!));
       await tester.pumpAndSettle();
-      expect(tester.takeException(), isNull, reason: 'pestaña $tab');
+      expect(tester.takeException(), isNull,
+          reason: 'pestaña ${barra.items[tab].label}');
     }
   });
 
@@ -96,16 +102,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    // La ficha quedó simple: sin salsas, adiciones ni personalización.
+    // Las adiciones se escogen aquí, con la foto del plato a la vista.
+    expect(find.text('Adiciones'), findsOneWidget);
+    // Las salsas siguen en el carrito.
     expect(find.text('Salsas'), findsNothing);
-    expect(find.text('Adiciones'), findsNothing);
   });
 }
 
-const _iconos = [
-  Icons.home_rounded,
-  Icons.restaurant_menu_rounded,
-  Icons.shopping_cart_rounded,
-  Icons.receipt_long_rounded,
-  Icons.person_rounded,
-];

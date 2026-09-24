@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -159,6 +160,15 @@ class OrdersModel extends ChangeNotifier {
     unawaited(_guardar());
     return pedido;
   }
+
+  /// El PIN de 4 dígitos que el cliente le dicta al domiciliario para
+  /// confirmar que recibió. Se genera al crear el pedido y no vuelve a
+  /// cambiar: si fuera predecible, una entrega se podría dar por hecha
+  /// sin que el cliente tenga nada en la mano.
+  String _codigoTemporal() =>
+      List.generate(4, (_) => _azar.nextInt(10)).join();
+
+  static final Random _azar = Random.secure();
 
   void _actualizarConsecutivo() {
     for (final pedido in _pedidos) {

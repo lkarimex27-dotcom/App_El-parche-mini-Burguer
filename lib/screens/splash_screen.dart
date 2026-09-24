@@ -19,14 +19,13 @@ import 'login_screen.dart';
 /// Pantalla de entrada.
 ///
 /// Coreografía, toda sobre un único [AnimationController]:
-///   1. Un punto mostaza aparece en el centro y rebota contra los 4 bordes.
-///   2. Al volver al centro se expande y revela la foto de fondo.
-///   3. El logo cae desde arriba con rebote y levanta una nube de polvo.
-///   4. El logo sube a su sitio y entran el texto y el botón "Comenzar".
+///   1. Un círculo se abre desde el centro y revela la foto de fondo.
+///   2. El logo cae desde arriba con rebote y levanta una nube de polvo.
+///   3. El logo sube a su sitio y entran el texto y el botón "Comenzar".
 ///
 /// Después de la animación el logo responde al arrastre (inclinación 3D con
-/// rebote elástico) y a la inclinación del celular, el texto se aparta del
-/// dedo y cada toque deja una onda.
+/// rebote elástico) y a la inclinación del celular, y el texto se aparta
+/// del dedo.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -73,35 +72,6 @@ class _TexturaPuntos extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-/// Una onda viva: su controlador y dónde nació.
-class _Onda {
-  final AnimationController controller;
-  final Offset posicion;
-  const _Onda({required this.controller, required this.posicion});
-}
-
-class _PintorOndas extends CustomPainter {
-  final List<_Onda> ondas;
-  const _PintorOndas(this.ondas);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    for (final onda in ondas) {
-      final t = onda.controller.value;
-      final radio = 170 * Curves.easeOut.transform(t);
-      final opacidad = (1 - t).clamp(0.0, 1.0) * 0.22;
-      canvas.drawCircle(
-        onda.posicion,
-        radio,
-        Paint()..color = AppColors.mostaza.withValues(alpha: opacidad),
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _PintorOndas oldDelegate) => true;
-}
-
 /// Nube de polvo cuando el logo aterriza, como un sello contra la mesa.
 class _PintorPolvo extends CustomPainter {
   final double progress;
@@ -133,24 +103,18 @@ class _PintorPolvo extends CustomPainter {
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   /// Todo el splash dura esto. Bajarlo acelera la coreografía completa.
-  static const Duration _duracion = Duration(milliseconds: 4800);
+  static const Duration _duracion = Duration(milliseconds: 3000);
 
   // Línea de tiempo, en fracciones de 0 a 1 del controlador.
-  static const double _tPuntoVisible = 0.05;
-  static const double _tArriba = 0.18;
-  static const double _tIzquierda = 0.31;
-  static const double _tAbajo = 0.44;
-  static const double _tDerecha = 0.57;
-  static const double _tRevelado = 0.72;
-  static const double _tLogoDentro = 0.85;
-  static const double _tLogoArriba = 0.93;
+  static const double _tRevelado = 0.26;
+  static const double _tLogoDentro = 0.62;
+  static const double _tLogoArriba = 0.80;
 
-  /// Proporción real de assets/images/logo empresa.png (647 × 386). El logo NO es
+  /// Proporción real de assets/images/logo-parche.png (647 × 386). El logo NO es
   /// cuadrado: de aquí sale el alto, y con él el centro del polvo.
   static const double _proporcionLogo = 386 / 647;
 
   late final AnimationController _controller;
-  late final Animation<double> _puntoOpacidad;
   late final Animation<double> _revelado;
   late final Animation<double> _logoOpacidad;
   late final Animation<double> _logoEscala;
@@ -169,10 +133,6 @@ class _SplashScreenState extends State<SplashScreen>
     final angulo = (2 * pi / 14) * i;
     return Offset(cos(angulo), sin(angulo));
   });
-
-  // Ondas al tocar. El tick es solo para repintar esa capa.
-  final List<_Onda> _ondas = [];
-  final ValueNotifier<int> _tickOndas = ValueNotifier<int>(0);
 
   // Dónde está el dedo, para que el texto se aparte.
   final ValueNotifier<Offset?> _dedo = ValueNotifier<Offset?>(null);
@@ -202,13 +162,10 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller = AnimationController(vsync: this, duration: _duracion);
 
-    _puntoOpacidad = CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0, _tPuntoVisible, curve: Curves.easeOut),
-    );
+    // El círculo abre desde el primer frame: es lo primero que se ve.
     _revelado = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(_tDerecha, _tRevelado, curve: Curves.easeIn),
+      curve: const Interval(0, _tRevelado, curve: Curves.easeOut),
     );
     _logoOpacidad = CurvedAnimation(
       parent: _controller,
@@ -345,12 +302,7 @@ class _SplashScreenState extends State<SplashScreen>
     _polvo.dispose();
     _resorte.dispose();
     _sensor?.cancel();
-    for (final onda in _ondas) {
-      onda.controller.dispose();
-    }
-    _ondas.clear();
     _cronoFrame.stop();
-    _tickOndas.dispose();
     _dedo.dispose();
     _arrastreLogo.dispose();
     _inclinacion.dispose();
@@ -369,7 +321,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (_cronoFrame.elapsedMilliseconds > 40) {
         _framesPesados++;
         final t = _controller.value;
-        if (_framesPesados >= 3 && t >= _tDerecha && t <= _tLogoDentro) {
+        if (_framesPesados >= 3 && t <= _tLogoDentro) {
           _activarModoLigero();
           return;
         }
@@ -402,28 +354,6 @@ class _SplashScreenState extends State<SplashScreen>
   void _entrar() {
     HapticFeedback.lightImpact();
     Navigator.of(context).pushReplacement(rutaConFundido(const LoginScreen()));
-  }
-
-  void _agregarOnda(Offset posicion) {
-    if (_modoLigero) return;
-
-    final controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    );
-    late final _Onda onda;
-    onda = _Onda(controller: controller, posicion: posicion);
-
-    controller.addListener(() => _tickOndas.value++);
-    controller.addStatusListener((status) {
-      if (status != AnimationStatus.completed) return;
-      _ondas.remove(onda);
-      controller.dispose();
-      if (mounted) _tickOndas.value++;
-    });
-
-    _ondas.add(onda);
-    controller.forward();
   }
 
   /// Cuánto se aparta el bloque de texto del dedo. Devuelve cero si el dedo
@@ -491,34 +421,6 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  /// Dónde está el punto en cada instante: entra desde un borde y llega al
-  /// centro, y así con los cuatro lados.
-  Alignment _posicionPunto(double t) {
-    Alignment desde(double inicio, double fin, Alignment borde) {
-      final local = ((t - inicio) / (fin - inicio)).clamp(0.0, 1.0);
-      return Alignment.lerp(
-        borde,
-        Alignment.center,
-        Curves.easeOut.transform(local),
-      )!;
-    }
-
-    if (t < _tPuntoVisible) return Alignment.center;
-    if (t < _tArriba) {
-      return desde(_tPuntoVisible, _tArriba, const Alignment(0, -1.3));
-    }
-    if (t < _tIzquierda) {
-      return desde(_tArriba, _tIzquierda, const Alignment(-1.3, 0));
-    }
-    if (t < _tAbajo) {
-      return desde(_tIzquierda, _tAbajo, const Alignment(0, 1.3));
-    }
-    if (t < _tDerecha) {
-      return desde(_tAbajo, _tDerecha, const Alignment(1.3, 0));
-    }
-    return Alignment.center;
-  }
-
   // ──────────────────────────────── Pintura ──────────────────────────
 
   @override
@@ -543,7 +445,6 @@ class _SplashScreenState extends State<SplashScreen>
         behavior: HitTestBehavior.translucent,
         onPointerDown: (e) {
           if (!_listo) return;
-          _agregarOnda(e.localPosition);
           _dedo.value = e.localPosition;
         },
         onPointerMove: (e) {
@@ -561,8 +462,7 @@ class _SplashScreenState extends State<SplashScreen>
 
             return Stack(
               children: [
-                if (t < _tRevelado) _punto(t),
-                if (t >= _tDerecha) ..._fondoRevelado(size),
+                ..._fondoRevelado(size),
                 _logo(layout, logoCentrado, caidaY),
                 _texto(layout),
                 _boton(layout, t),
@@ -574,27 +474,8 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  /// El punto que rebota. El degradado descentrado lo hace ver esférico.
-  Widget _punto(double t) {
-    return Align(
-      alignment: _posicionPunto(t),
-      child: Opacity(
-        opacity: _puntoOpacidad.value,
-        child: Transform.rotate(
-          // Rueda mientras rebota: dos vueltas completas en todo el recorrido.
-          angle: t * 4 * pi,
-          child: const Icon(
-            Icons.lunch_dining,
-            size: 46,
-            color: AppColors.mostaza,
-          ),
-        ),
-      ),
-    );
-  }
-
   /// Foto + velo crema (el logo es negro: sobre la foto sola no se leería)
-  /// + textura de puntitos + ondas.
+  /// + textura de puntitos.
   List<Widget> _fondoRevelado(Size size) {
     return [
       Positioned.fill(
@@ -620,18 +501,6 @@ class _SplashScreenState extends State<SplashScreen>
           child: IgnorePointer(
             child: RepaintBoundary(
               child: CustomPaint(painter: _TexturaPuntos()),
-            ),
-          ),
-        ),
-      if (!_modoLigero)
-        Positioned.fill(
-          child: IgnorePointer(
-            child: RepaintBoundary(
-              child: ValueListenableBuilder<int>(
-                valueListenable: _tickOndas,
-                builder: (context, _, __) =>
-                    CustomPaint(painter: _PintorOndas(List.of(_ondas))),
-              ),
             ),
           ),
         ),
