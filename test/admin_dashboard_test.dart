@@ -62,8 +62,7 @@ void main() {
     }
   });
 
-  testWidgets('los indicadores salen de los pedidos sembrados',
-      (tester) async {
+  testWidgets('los indicadores salen de los pedidos sembrados', (tester) async {
     final pedidos = pedidosDeEjemplo();
     final porAprobar = pedidos.where((p) => p.requiereAprobacion).toList();
 
@@ -92,14 +91,14 @@ void main() {
     expect(find.text(ModuloAdmin.inventario.label), findsWidgets);
   });
 
-  testWidgets('un cocinero no ve los módulos que no le tocan', (tester) async {
-    await tester.pumpWidget(_panel(Rol.cocinero));
+  testWidgets('un empleado no ve los módulos que no le tocan', (tester) async {
+    await tester.pumpWidget(_panel(Rol.empleado));
     await tester.pumpAndSettle();
 
     // Sí ve producción e inventario…
     expect(find.text('Producción'), findsWidgets);
     expect(find.text('Inventario'), findsWidgets);
-    // …pero no pedidos, que es de vendedor/administrador.
+    // …pero no pedidos, que es de repartidor/administrador.
     expect(find.text('Pedidos'), findsNothing);
 
     // Y en "Más" tampoco le aparecen Compras ni Ventas.
@@ -121,18 +120,33 @@ void main() {
       expect(puedeVer(Rol.cliente, m), isFalse, reason: m.label);
     }
     expect(Rol.cliente.esDelPanel, isFalse);
-    expect(Rol.vendedor.esDelPanel, isTrue);
+    expect(Rol.repartidor.esDelPanel, isFalse);
+    expect(Rol.repartidor.esDomiciliario, isTrue);
+    expect(Rol.empleado.esDelPanel, isTrue);
 
-    // Un vendedor crea pedidos pero no los elimina.
-    expect(puede(Rol.vendedor, ModuloAdmin.pedidos, Permiso.crear), isTrue);
-    expect(puede(Rol.vendedor, ModuloAdmin.pedidos, Permiso.eliminar), isFalse);
+    // El repartidor trabaja en la vista de entregas; el empleado sí opera
+    // los módulos del panel.
+    expect(puede(Rol.repartidor, ModuloAdmin.pedidos, Permiso.crear), isFalse);
+    expect(puede(Rol.empleado, ModuloAdmin.produccion, Permiso.crear), isTrue);
+
+    // Los proveedores se anulan, no se eliminan; el estado de roles se
+    // controla desde el repositorio con una protección adicional para el
+    // registro Administrador.
+    expect(puede(Rol.administrador, ModuloAdmin.proveedores, Permiso.eliminar),
+        isFalse);
+    expect(puede(Rol.administrador, ModuloAdmin.proveedores, Permiso.anular),
+        isTrue);
+    expect(puede(Rol.administrador, ModuloAdmin.roles, Permiso.cambiarEstado),
+        isTrue);
   });
 
   test('el login deduce el rol del correo mientras no hay backend', () {
     expect((UserModel()..iniciarSesionConCorreo('admin@parche.com')).rol,
         Rol.administrador);
-    expect((UserModel()..iniciarSesionConCorreo('cocinero@parche.com')).rol,
-        Rol.cocinero);
+    expect((UserModel()..iniciarSesionConCorreo('repartidor@parche.com')).rol,
+        Rol.repartidor);
+    expect((UserModel()..iniciarSesionConCorreo('empleado@parche.com')).rol,
+        Rol.empleado);
     expect((UserModel()..iniciarSesionConCorreo('camila@correo.com')).rol,
         Rol.cliente);
   });

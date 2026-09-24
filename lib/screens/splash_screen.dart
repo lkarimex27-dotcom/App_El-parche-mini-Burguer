@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kDebugMode, kIsWeb, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -279,6 +280,13 @@ class _SplashScreenState extends State<SplashScreen>
   /// sensors_plus no existe en web ni en escritorio, y en pruebas el plugin
   /// tampoco está: si falla, el splash se ve igual, solo sin parallax.
   void _escucharSensor() {
+    if (kIsWeb ||
+        defaultTargetPlatform == TargetPlatform.windows ||
+        defaultTargetPlatform == TargetPlatform.linux ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      return;
+    }
+
     try {
       _sensor = accelerometerEventStream(
         samplingPeriod: SensorInterval.uiInterval,

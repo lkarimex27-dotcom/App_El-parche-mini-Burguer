@@ -18,9 +18,7 @@ enum ModuloAdmin {
   devoluciones,
   usuarios,
   roles,
-  indicadores,
   perfil,
-  configuracion,
 }
 
 extension ModuloAdminUi on ModuloAdmin {
@@ -56,12 +54,8 @@ extension ModuloAdminUi on ModuloAdmin {
         return 'Usuarios';
       case ModuloAdmin.roles:
         return 'Roles y permisos';
-      case ModuloAdmin.indicadores:
-        return 'Indicadores';
       case ModuloAdmin.perfil:
         return 'Mi perfil';
-      case ModuloAdmin.configuracion:
-        return 'Configuración';
     }
   }
 
@@ -97,12 +91,8 @@ extension ModuloAdminUi on ModuloAdmin {
         return Icons.manage_accounts_outlined;
       case ModuloAdmin.roles:
         return Icons.admin_panel_settings_outlined;
-      case ModuloAdmin.indicadores:
-        return Icons.insights_outlined;
       case ModuloAdmin.perfil:
         return Icons.person_outline_rounded;
-      case ModuloAdmin.configuracion:
-        return Icons.settings_outlined;
     }
   }
 }
@@ -157,28 +147,13 @@ final Map<Rol, Map<ModuloAdmin, Set<Permiso>>> permisosPorRol = {
         if (moduloAdmiteCreacion(m)) Permiso.crear,
         Permiso.ver,
         if (m != ModuloAdmin.perfil) Permiso.editar,
-        if (m == ModuloAdmin.proveedores) Permiso.eliminar,
+        if (m == ModuloAdmin.proveedores) Permiso.anular,
         if (m != ModuloAdmin.dashboard) Permiso.cambiarEstado,
       },
   },
-  Rol.vendedor: {
-    ModuloAdmin.dashboard: _soloVer,
-    ModuloAdmin.pedidos: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
-    ModuloAdmin.productos: _verYCambiarEstado,
-    ModuloAdmin.clientes: {
-      Permiso.ver,
-      Permiso.editar,
-      Permiso.cambiarEstado,
-    },
-    ModuloAdmin.ventas: _verYCambiarEstado,
-    ModuloAdmin.devoluciones: {
-      Permiso.ver,
-      Permiso.crear,
-      Permiso.cambiarEstado,
-    },
-    ModuloAdmin.perfil: {Permiso.ver, Permiso.editar},
-  },
-  Rol.cocinero: {
+  // El repartidor usa la vista de entregas, no el panel administrativo.
+  Rol.repartidor: {},
+  Rol.empleado: {
     ModuloAdmin.dashboard: _soloVer,
     ModuloAdmin.produccion: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
     ModuloAdmin.inventario: _verYCambiarEstado,

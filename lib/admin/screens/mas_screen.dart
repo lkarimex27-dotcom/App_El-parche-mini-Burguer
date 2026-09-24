@@ -35,13 +35,11 @@ class MasScreen extends StatelessWidget {
       ModuloAdmin.ventas,
       ModuloAdmin.clientes,
       ModuloAdmin.devoluciones,
-      ModuloAdmin.indicadores,
     ]),
     _Grupo('Administración', [
       ModuloAdmin.usuarios,
       ModuloAdmin.roles,
       ModuloAdmin.perfil,
-      ModuloAdmin.configuracion,
     ]),
   ];
 
@@ -191,7 +189,7 @@ class _ModuloCard extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: const BoxDecoration(
-                  color: AppColors.crema2,
+                  color: Colors.white,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(modulo.icono, color: AppColors.mostaza, size: 24),

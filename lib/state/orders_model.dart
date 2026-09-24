@@ -167,6 +167,8 @@ class OrdersModel extends ChangeNotifier {
     }
   }
 
+  String _codigoTemporal() => _consecutivo.toString().padLeft(4, '0');
+
   Future<void> _guardar() async {
     if (!_persistir) return;
     final preferencias = await SharedPreferences.getInstance();

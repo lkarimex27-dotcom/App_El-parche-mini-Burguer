@@ -117,8 +117,6 @@ class DashboardScreen extends StatelessWidget {
                         detalle:
                             '\$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
                         color: AppColors.mostaza,
-                        onTap: () =>
-                            onAbrirModulo?.call(ModuloAdmin.indicadores),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -151,16 +149,25 @@ class DashboardScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text('Cumplimiento de meta',
+                      Expanded(
+                        child: Text(
+                          'Cumplimiento de meta',
                           style: AppTextStyles.body(
-                              size: 12,
+                              size: 11,
                               weight: FontWeight.w700,
-                              color: AppColors.carbon)),
-                      const Spacer(),
-                      Text(
-                        '\$${ventasHoy.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')} / \$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
-                        style: AppTextStyles.body(
-                            size: 11, color: AppColors.muted),
+                              color: AppColors.carbon),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          '\$${ventasHoy.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')} / \$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
+                          style: AppTextStyles.body(
+                              size: 10, color: AppColors.muted),
+                        ),
                       ),
                     ],
                   ),
@@ -169,7 +176,8 @@ class DashboardScreen extends StatelessWidget {
                     value: cumplimientoMeta.clamp(0.0, 1.0),
                     minHeight: 8,
                     backgroundColor: AppColors.crema2,
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.verde),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(AppColors.verde),
                     borderRadius: BorderRadius.circular(99),
                   ),
                   const SizedBox(height: 8),
@@ -480,7 +488,7 @@ class _FilaPedido extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(formatoPesos(pedido.total),
-                  style: AppTextStyles.heading(size: 14, color: AppColors.verde)),
+              style: AppTextStyles.heading(size: 14, color: AppColors.verde)),
         ],
       ),
     );

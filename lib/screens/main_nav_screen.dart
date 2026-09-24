@@ -7,9 +7,10 @@ import 'home_screen.dart';
 import 'menu_screen.dart';
 import 'cart_screen.dart';
 import 'orders_screen.dart';
+import 'profile_screen.dart';
 
-/// Contenedor de las 4 pestañas del bottom nav:
-/// Inicio, Menú, Carrito y Mis pedidos.
+/// Contenedor de las 5 pestañas del bottom nav:
+/// Inicio, Menú, Carrito, Mis pedidos y Perfil.
 ///
 /// El encabezado (logo + perfil) vive aquí, así se ve igual en todas
 /// las pestañas y las pantallas de adentro no lo repiten.
@@ -53,12 +54,16 @@ class _MainNavScreenState extends State<MainNavScreen> {
         onPedidoEnviado: () => _goToTab(3),
       ),
       OrdersScreen(onVerMenu: () => _goToTab(1)),
+      ProfileScreen(onCerrar: () => _goToTab(0)),
     ];
 
     return Scaffold(
       body: Column(
         children: [
-          const Aparicion(orden: 0, child: AppHeader()),
+          Aparicion(
+            orden: 0,
+            child: AppHeader(onPerfil: () => _goToTab(4)),
+          ),
           Expanded(
             child: IndexedStack(index: _currentIndex, children: screens),
           ),

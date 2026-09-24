@@ -47,6 +47,8 @@ class AppBottomNavBar extends StatelessWidget {
         ),
         const BottomNavigationBarItem(
             icon: Icon(Icons.receipt_long_rounded), label: 'Pedidos'),
+        const BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded), label: 'Perfil'),
       ],
     );
   }
