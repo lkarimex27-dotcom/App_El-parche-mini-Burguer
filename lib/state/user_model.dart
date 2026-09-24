@@ -112,6 +112,9 @@ class UserModel extends ChangeNotifier {
         return Rol.vendedor;
       case 'cocinero':
         return Rol.cocinero;
+      case 'repartidor':
+      case 'domiciliario':
+        return Rol.domiciliario;
       default:
         return Rol.cliente;
     }
@@ -176,7 +179,8 @@ class UserModel extends ChangeNotifier {
     return _direcciones.isEmpty ? null : _direcciones.first;
   }
 
-  bool esPrincipal(Direccion direccion) => direccion.id == _direccionPrincipalId;
+  bool esPrincipal(Direccion direccion) =>
+      direccion.id == _direccionPrincipalId;
 
   void agregarDireccion({
     required String alias,
@@ -204,7 +208,8 @@ class UserModel extends ChangeNotifier {
   void eliminarDireccion(Direccion direccion) {
     _direcciones.removeWhere((d) => d.id == direccion.id);
     if (_direccionPrincipalId == direccion.id) {
-      _direccionPrincipalId = _direcciones.isEmpty ? null : _direcciones.first.id;
+      _direccionPrincipalId =
+          _direcciones.isEmpty ? null : _direcciones.first.id;
     }
     notifyListeners();
   }

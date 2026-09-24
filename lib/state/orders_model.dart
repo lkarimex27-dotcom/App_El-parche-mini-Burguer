@@ -33,6 +33,14 @@ class OrdersModel extends ChangeNotifier {
     return null;
   }
 
+  List<Order> pedidosAsignados(String domiciliarioId) => _pedidos
+      .where((pedido) => pedido.domiciliarioId == domiciliarioId)
+      .toList(growable: false);
+
+  List<Order> historialDe(String domiciliarioId) => pedidosAsignados(
+        domiciliarioId,
+      ).where((pedido) => pedido.status == OrderStatus.entregado).toList();
+
   /// Mueve el pedido a otro estado y lo anota en su historial.
   /// [nota] guarda el motivo cuando se rechaza o se cancela.
   void cambiarEstado(Order pedido, OrderStatus nuevo, {String? nota}) {
@@ -51,6 +59,25 @@ class OrdersModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool confirmarEntrega(Order pedido, String codigo) {
+    if (pedido.status != OrderStatus.enCamino ||
+        codigo.trim() != pedido.codigoEntrega) {
+      return false;
+    }
+    cambiarEstado(pedido, OrderStatus.entregado);
+    return true;
+  }
+
+  void reportarNovedad(Order pedido, String novedad) {
+    final texto = novedad.trim();
+    if (texto.isEmpty) return;
+    pedido.novedad = texto;
+    pedido.historial.add(
+      OrderEvento(fecha: DateTime.now(), texto: 'Novedad · $texto'),
+    );
+    notifyListeners();
+  }
+
   /// Pasa el carrito a pedido. Devuelve el pedido creado.
   Order crearDesdeCarrito({
     required CartModel carrito,
@@ -58,6 +85,7 @@ class OrdersModel extends ChangeNotifier {
     String cliente = '',
     String? direccion,
     String? comprobante,
+    String? codigoEntrega,
   }) {
     final lineas = carrito.lineas
         .map(
@@ -91,10 +119,13 @@ class OrdersModel extends ChangeNotifier {
       cliente: cliente,
       direccion: direccion,
       comprobante: comprobante,
+      codigoEntrega: codigoEntrega ?? _codigoTemporal(),
     );
 
     _pedidos.insert(0, pedido);
     notifyListeners();
     return pedido;
   }
+
+  String _codigoTemporal() => (_consecutivo % 10000).toString().padLeft(4, '0');
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import '../domiciliario/models/domiciliario_model.dart';
 import 'cart_model.dart';
 import 'orders_model.dart';
 import 'user_model.dart';
@@ -17,6 +18,7 @@ class AppScope extends StatefulWidget {
   final CartModel? carritoInicial;
   final UserModel? usuarioInicial;
   final OrdersModel? pedidosInicial;
+  final DomiciliarioModel? domiciliarioInicial;
 
   const AppScope({
     super.key,
@@ -24,6 +26,7 @@ class AppScope extends StatefulWidget {
     this.carritoInicial,
     this.usuarioInicial,
     this.pedidosInicial,
+    this.domiciliarioInicial,
   });
 
   static CartModel carrito(BuildContext context) =>
@@ -44,6 +47,13 @@ class AppScope extends StatefulWidget {
   static OrdersModel pedidosSinEscuchar(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_PedidosScope>()!.notifier!;
 
+  static DomiciliarioModel domiciliario(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_DomiciliarioScope>()!
+      .notifier!;
+
+  static DomiciliarioModel domiciliarioSinEscuchar(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_DomiciliarioScope>()!.notifier!;
+
   @override
   State<AppScope> createState() => _AppScopeState();
 }
@@ -52,12 +62,15 @@ class _AppScopeState extends State<AppScope> {
   late final CartModel _carrito = widget.carritoInicial ?? CartModel();
   late final UserModel _usuario = widget.usuarioInicial ?? UserModel();
   late final OrdersModel _pedidos = widget.pedidosInicial ?? OrdersModel();
+  late final DomiciliarioModel _domiciliario =
+      widget.domiciliarioInicial ?? DomiciliarioModel();
 
   @override
   void dispose() {
     _carrito.dispose();
     _usuario.dispose();
     _pedidos.dispose();
+    _domiciliario.dispose();
     super.dispose();
   }
 
@@ -67,7 +80,11 @@ class _AppScopeState extends State<AppScope> {
       notifier: _carrito,
       child: _UsuarioScope(
         notifier: _usuario,
-        child: _PedidosScope(notifier: _pedidos, child: widget.child),
+        child: _PedidosScope(
+          notifier: _pedidos,
+          child:
+              _DomiciliarioScope(notifier: _domiciliario, child: widget.child),
+        ),
       ),
     );
   }
@@ -83,4 +100,8 @@ class _UsuarioScope extends InheritedNotifier<UserModel> {
 
 class _PedidosScope extends InheritedNotifier<OrdersModel> {
   const _PedidosScope({required super.notifier, required super.child});
+}
+
+class _DomiciliarioScope extends InheritedNotifier<DomiciliarioModel> {
+  const _DomiciliarioScope({required super.notifier, required super.child});
 }
