@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
         fit: StackFit.expand,
         children: [
           const AppImage(
-            'assets/images/login_bg.jpg',
+            '',
             fallbackUrl: BusinessInfo.fotoAmbiente,
             fit: BoxFit.cover,
           ),

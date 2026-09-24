@@ -31,6 +31,14 @@ class DashboardScreen extends StatelessWidget {
 
     final porAprobar = pedidos.where((p) => p.requiereAprobacion).toList();
     final enCurso = pedidos.where((p) => !p.estaCerrado).length;
+    final ticketPromedio = pedidos.isEmpty
+        ? 0
+        : (pedidos.fold<int>(0, (sum, p) => sum + p.total) / pedidos.length)
+            .round();
+    const metaDiaria = 1500000;
+    final cumplimientoMeta = ventasHoy / metaDiaria;
+    final entregadosHoy =
+        pedidos.where((p) => p.status == OrderStatus.entregado).length;
 
     return Container(
       color: AppColors.crema,
@@ -70,7 +78,7 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
 
-          // ── Indicadores ──
+          // ── Indicadores clave del negocio ──
           Aparicion(
             orden: 2,
             child: Column(
@@ -88,9 +96,9 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: MetricCard(
-                        etiqueta: 'Ventas esta semana',
-                        valor: _millones(ventasSemana),
-                        icono: Icons.trending_up_rounded,
+                        etiqueta: 'Ticket promedio',
+                        valor: '\$${ticketPromedio.toString()}',
+                        icono: Icons.account_balance_wallet_rounded,
                         color: AppColors.verde,
                         onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
                       ),
@@ -102,11 +110,25 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: MetricCard(
+                        etiqueta: 'Meta del día',
+                        valor:
+                            '${(cumplimientoMeta * 100).clamp(0, 100).round()}%',
+                        icono: Icons.flag_circle_rounded,
+                        detalle:
+                            '\$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                        color: AppColors.mostaza,
+                        onTap: () =>
+                            onAbrirModulo?.call(ModuloAdmin.indicadores),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: MetricCard(
                         etiqueta: 'Pedidos en curso',
                         valor: '$enCurso',
                         icono: Icons.receipt_long_outlined,
                         detalle: porAprobar.isEmpty
-                            ? null
+                            ? '$entregadosHoy entregados hoy'
                             : '${porAprobar.length} por aprobar',
                         color: porAprobar.isEmpty
                             ? AppColors.mostaza
@@ -114,28 +136,56 @@ class DashboardScreen extends StatelessWidget {
                         onTap: () => onAbrirModulo?.call(ModuloAdmin.pedidos),
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: MetricCard(
-                        etiqueta: 'Stock bajo',
-                        valor: '${insumosBajos.length}',
-                        icono: Icons.inventory_2_outlined,
-                        color: AppColors.tomate,
-                        detalle: 'insumos',
-                        onTap: () =>
-                            onAbrirModulo?.call(ModuloAdmin.inventario),
-                      ),
-                    ),
                   ],
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: 18),
+          Aparicion(
+            orden: 3,
+            child: AdminCard(
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text('Cumplimiento de meta',
+                          style: AppTextStyles.body(
+                              size: 12,
+                              weight: FontWeight.w700,
+                              color: AppColors.carbon)),
+                      const Spacer(),
+                      Text(
+                        '\$${ventasHoy.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')} / \$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                        style: AppTextStyles.body(
+                            size: 11, color: AppColors.muted),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  LinearProgressIndicator(
+                    value: cumplimientoMeta.clamp(0.0, 1.0),
+                    minHeight: 8,
+                    backgroundColor: AppColors.crema2,
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.verde),
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${(cumplimientoMeta * 100).clamp(0, 100).round()}% de la meta diaria alcanzada',
+                    style: AppTextStyles.body(size: 12, color: AppColors.muted),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 22),
 
           // ── Ventas por día ──
           const Aparicion(
-            orden: 3,
+            orden: 4,
             child: Column(
               children: [
                 TituloSeccion(titulo: 'Ventas por día'),
@@ -152,7 +202,7 @@ class DashboardScreen extends StatelessWidget {
 
           // ── Accesos rápidos ──
           Aparicion(
-            orden: 4,
+            orden: 5,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -195,7 +245,7 @@ class DashboardScreen extends StatelessWidget {
 
           // ── Productos más vendidos ──
           Aparicion(
-            orden: 5,
+            orden: 6,
             child: Column(
               children: [
                 const TituloSeccion(titulo: 'Productos más vendidos'),
@@ -215,7 +265,7 @@ class DashboardScreen extends StatelessWidget {
 
           // ── Pedidos recientes ──
           Aparicion(
-            orden: 6,
+            orden: 7,
             child: Column(
               children: [
                 TituloSeccion(
@@ -281,10 +331,6 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
-
-String _millones(int valor) => valor >= 1000000
-    ? '\$\${(valor / 1000000).toStringAsFixed(2)}M'
-    : '\$\${(valor / 1000).round()}k';
 
 class _Alerta extends StatelessWidget {
   final IconData icono;

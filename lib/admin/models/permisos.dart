@@ -129,40 +129,65 @@ extension PermisoUi on Permiso {
   }
 }
 
-const Set<Permiso> _todos = {
+const Set<Permiso> _soloVer = {Permiso.ver};
+const Set<Permiso> _verYCambiarEstado = {
   Permiso.ver,
-  Permiso.crear,
-  Permiso.editar,
-  Permiso.eliminar,
   Permiso.cambiarEstado,
-  Permiso.anular,
 };
 
-const Set<Permiso> _soloVer = {Permiso.ver};
+bool moduloAdmiteCreacion(ModuloAdmin modulo) {
+  switch (modulo) {
+    case ModuloAdmin.proveedores:
+    case ModuloAdmin.compras:
+    case ModuloAdmin.produccion:
+    case ModuloAdmin.pedidos:
+    case ModuloAdmin.devoluciones:
+      return true;
+    default:
+      return false;
+  }
+}
 
 /// Qué puede hacer cada rol en cada módulo. Cuando haya backend, esto es
 /// lo que llegaría de la API: la interfaz ya lee solo de aquí.
 final Map<Rol, Map<ModuloAdmin, Set<Permiso>>> permisosPorRol = {
-  // El administrador tiene todo.
   Rol.administrador: {
-    for (final m in ModuloAdmin.values) m: _todos,
+    for (final m in ModuloAdmin.values)
+      m: {
+        if (moduloAdmiteCreacion(m)) Permiso.crear,
+        Permiso.ver,
+        if (m != ModuloAdmin.perfil) Permiso.editar,
+        if (m == ModuloAdmin.proveedores) Permiso.eliminar,
+        if (m != ModuloAdmin.dashboard) Permiso.cambiarEstado,
+      },
   },
   Rol.vendedor: {
     ModuloAdmin.dashboard: _soloVer,
     ModuloAdmin.pedidos: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
-    ModuloAdmin.productos: _soloVer,
-    ModuloAdmin.clientes: {Permiso.ver, Permiso.crear, Permiso.editar},
-    ModuloAdmin.ventas: {Permiso.ver, Permiso.crear},
-    ModuloAdmin.devoluciones: {Permiso.ver, Permiso.crear},
+    ModuloAdmin.productos: _verYCambiarEstado,
+    ModuloAdmin.clientes: {
+      Permiso.ver,
+      Permiso.editar,
+      Permiso.cambiarEstado,
+    },
+    ModuloAdmin.ventas: _verYCambiarEstado,
+    ModuloAdmin.devoluciones: {
+      Permiso.ver,
+      Permiso.crear,
+      Permiso.cambiarEstado,
+    },
     ModuloAdmin.perfil: {Permiso.ver, Permiso.editar},
   },
   Rol.cocinero: {
     ModuloAdmin.dashboard: _soloVer,
-    ModuloAdmin.produccion: {Permiso.ver, Permiso.cambiarEstado},
-    ModuloAdmin.inventario: _soloVer,
-    ModuloAdmin.fichasTecnicas: _soloVer,
-    ModuloAdmin.perdidas: {Permiso.ver, Permiso.crear},
-    ModuloAdmin.perfil: {Permiso.ver, Permiso.editar},
+    ModuloAdmin.produccion: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
+    ModuloAdmin.inventario: _verYCambiarEstado,
+    ModuloAdmin.fichasTecnicas: _verYCambiarEstado,
+    ModuloAdmin.perfil: {
+      Permiso.ver,
+      Permiso.editar,
+      Permiso.cambiarEstado,
+    },
   },
   // El cliente no entra al panel.
   Rol.cliente: {},

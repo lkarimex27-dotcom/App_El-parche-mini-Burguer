@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         fit: StackFit.expand,
         children: [
           const AppImage(
-            'assets/images/login_bg.jpg',
+            'assets/images/logo parche miniburguer.jpeg',
             fallbackUrl: BusinessInfo.fotoAmbiente,
             fit: BoxFit.cover,
           ),
@@ -108,7 +108,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Expanded(
                         child: Text(
                           'Crear cuenta',
-                          style: AppTextStyles.heading(size: 15, color: Colors.white),
+                          style: AppTextStyles.heading(
+                              size: 15, color: Colors.white),
                         ),
                       ),
                       const AppLogo(height: 34, mostrarNombre: false),
@@ -132,7 +133,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text('Tus datos', style: AppTextStyles.heading(size: 14)),
+                            Text('Tus datos',
+                                style: AppTextStyles.heading(size: 14)),
                             const SizedBox(height: 2),
                             Text(
                               'Los campos con * son obligatorios',
@@ -146,8 +148,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               hint: 'Nombre completo',
                               icon: Icons.person_outline_rounded,
                               obligatorio: true,
-                              validarAdemas: (v) =>
-                                  v.length < 3 ? 'Escribe tu nombre completo' : null,
+                              validarAdemas: (v) => v.length < 3
+                                  ? 'Escribe tu nombre completo'
+                                  : null,
                             ),
                             const SizedBox(height: 10),
 
@@ -172,13 +175,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             value: t.codigo,
                                             child: Text(
                                               t.codigo,
-                                              style: AppTextStyles.body(size: 12.5),
+                                              style: AppTextStyles.body(
+                                                  size: 12.5),
                                             ),
                                           ),
                                         )
                                         .toList(),
-                                    onChanged: (v) => setState(
-                                        () => _tipoDocumento = v ?? _tipoDocumento),
+                                    onChanged: (v) => setState(() =>
+                                        _tipoDocumento = v ?? _tipoDocumento),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -192,15 +196,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     formatters: [
                                       FilteringTextInputFormatter.digitsOnly
                                     ],
-                                    validarAdemas: (v) =>
-                                        v.length < 5 ? 'Número muy corto' : null,
+                                    validarAdemas: (v) => v.length < 5
+                                        ? 'Número muy corto'
+                                        : null,
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              tipoDocumentoPorCodigo(_tipoDocumento)?.nombre ?? '',
+                              tipoDocumentoPorCodigo(_tipoDocumento)?.nombre ??
+                                  '',
                               style: AppTextStyles.body(
                                   size: 10, color: AppColors.muted),
                             ),
@@ -212,9 +218,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               icon: Icons.mail_outline_rounded,
                               teclado: TextInputType.emailAddress,
                               obligatorio: true,
-                              validarAdemas: (v) => !v.contains('@') || !v.contains('.')
-                                  ? 'Correo no válido'
-                                  : null,
+                              validarAdemas: (v) =>
+                                  !v.contains('@') || !v.contains('.')
+                                      ? 'Correo no válido'
+                                      : null,
                             ),
                             const SizedBox(height: 10),
 
@@ -224,7 +231,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               icon: Icons.phone_outlined,
                               teclado: TextInputType.phone,
                               obligatorio: true,
-                              formatters: [FilteringTextInputFormatter.digitsOnly],
+                              formatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
                               validarAdemas: (v) =>
                                   v.length < 7 ? 'Teléfono no válido' : null,
                             ),
@@ -263,7 +272,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             const SizedBox(height: 18),
 
-                            PrimaryButton(label: 'Crear cuenta', onPressed: _crearCuenta),
+                            PrimaryButton(
+                                label: 'Crear cuenta', onPressed: _crearCuenta),
                             const SizedBox(height: 10),
                             GestureDetector(
                               onTap: () => Navigator.of(context).pop(),
