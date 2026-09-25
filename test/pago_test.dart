@@ -69,7 +69,7 @@ void main() {
     // El precio del producto sí se ve, y el botón cobra eso.
     expect(find.text(formatoPesos(demoProducts.first.price)), findsWidgets);
     expect(
-      find.text('Agregar al carrito · ${formatoPesos(demoProducts.first.price)}'),
+      find.text('Agregar · ${formatoPesos(demoProducts.first.price)}'),
       findsOneWidget,
     );
   });

@@ -72,6 +72,10 @@ class ProductCard extends StatelessWidget {
                     fallbackUrl: product.imageUrl,
                     placeholderIcon: iconoDeCategoria(product.category),
                     width: double.infinity,
+                    // Las botellas se ven enteras sobre fondo blanco: una
+                    // gaseosa de 2 L recortada en cuadrado no muestra ni la
+                    // tapa ni la base, solo la mitad de la etiqueta.
+                    enVitrina: product.category == kCategoriaBebidas,
                   ),
                   if (product.destacado)
                     Positioned(

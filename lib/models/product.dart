@@ -1001,6 +1001,28 @@ class PresentacionBebida {
     final elegido = sabor ?? (sabores.isEmpty ? null : sabores.first);
     return elegido == null ? const {} : {'Sabor': elegido};
   }
+
+  /// La foto de esta botella. Cuando hay foto del sabor exacto en este
+  /// tamaño se usa esa, para que al cambiar de sabor cambie la botella;
+  /// si no, la del producto.
+  String fotoDe(String? sabor) =>
+      fotoDeBebida(tamano: tamano, sabor: sabor) ?? producto.imageAsset;
+}
+
+/// Fotos de una botella concreta: este sabor, en este tamaño. Se busca por
+/// "tamaño|sabor" porque una Manzana de 2 L y una de 1.5 L no son la misma
+/// botella.
+const Map<String, String> _fotoPorTamanoYSabor = {
+  '2 L|Manzana': 'assets/images/Manzana 2L.jpeg',
+  '2 L|Colombiana': 'assets/images/colombiana 2L.jpeg',
+  '2 L|Pepsi': 'assets/images/pepsi 2L.jpeg',
+  '2 L|Cuatro': 'assets/images/Quatro 2L.jpeg',
+};
+
+/// La foto de la botella exacta, o null si todavía no hay una.
+String? fotoDeBebida({required String tamano, String? sabor}) {
+  if (sabor == null) return null;
+  return _fotoPorTamanoYSabor['$tamano|$sabor'];
 }
 
 /// La foto de cada marca. Es propia de la marca y no del producto, porque

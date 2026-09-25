@@ -145,9 +145,10 @@ void main() {
     expect(find.text(_clasica.name), findsOneWidget);
     expect(find.text(formatoPesos(_clasica.price)), findsOneWidget);
     expect(find.text(_clasica.description), findsOneWidget);
-    expect(find.text('Cantidad'), findsOneWidget);
     expect(find.text('Adiciones'), findsOneWidget);
-    expect(find.text('Agregar al carrito · ${formatoPesos(_clasica.price)}'),
+    // La cantidad y el total viven en la barra fija de abajo.
+    expect(find.text('1'), findsWidgets);
+    expect(find.text('Agregar · ${formatoPesos(_clasica.price)}'),
         findsOneWidget);
 
     // Lo que NO: salsas, bebidas ni la lista de ingredientes.
@@ -175,10 +176,9 @@ void main() {
 
     // El botón ya cobra la adición antes de agregar nada.
     final conAdicion = _clasica.price + _tocineta.precio;
-    expect(find.text('Agregar al carrito · ${formatoPesos(conAdicion)}'),
-        findsOneWidget);
+    expect(find.text('Agregar · ${formatoPesos(conAdicion)}'), findsOneWidget);
 
-    await tester.tap(find.textContaining('Agregar al carrito'));
+    await tester.tap(find.textContaining('Agregar ·'));
     await tester.pumpAndSettle();
 
     expect(carrito.lineas.single.adiciones, contains(_tocineta));

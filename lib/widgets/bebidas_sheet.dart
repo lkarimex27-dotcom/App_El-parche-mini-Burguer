@@ -130,8 +130,9 @@ class _TarjetaMarca extends StatelessWidget {
             AppImage(
               marca.imageAsset,
               placeholderIcon: Icons.local_drink,
-              width: 56,
-              height: 56,
+              width: 62,
+              height: 62,
+              enVitrina: true,
               borderRadius: BorderRadius.circular(12),
             ),
             const SizedBox(width: 12),
@@ -228,12 +229,16 @@ class _HojaTamanosState extends State<_HojaTamanos> {
             child: Row(
               children: [
                 AppImage(
-                  // La de la marca, no la del producto: un mismo producto
-                  // del menú agrupa varias marcas.
-                  marca.imageAsset,
+                  // La botella de este sabor y este tamaño si la hay; si no,
+                  // la de la marca. Nunca la del producto del menú, que
+                  // agrupa varias marcas.
+                  p.fotoDe(sabor).isEmpty ? marca.imageAsset : p.fotoDe(sabor),
                   placeholderIcon: Icons.local_drink,
-                  width: 50,
-                  height: 50,
+                  width: 62,
+                  height: 62,
+                  // Las botellas son mucho más altas que anchas: recortadas
+                  // se vería solo el centro, sin tapa ni base.
+                  enVitrina: true,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 const SizedBox(width: 12),
