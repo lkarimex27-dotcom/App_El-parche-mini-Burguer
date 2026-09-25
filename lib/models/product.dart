@@ -954,6 +954,10 @@ class PresentacionBebida {
   final Product producto;
   final String tamano;
 
+  /// De qué marca es esta fila. Hace falta para la foto: el producto del
+  /// menú agrupa varias marcas, así que su foto puede ser de otra.
+  final String marca;
+
   /// Los sabores de esta marca en este tamaño. Vacía si el producto no da
   /// a elegir (una Coca-Cola 1.5 L es lo que es).
   final List<String> sabores;
@@ -963,6 +967,7 @@ class PresentacionBebida {
   const PresentacionBebida({
     required this.producto,
     required this.tamano,
+    required this.marca,
     required this.precio,
     this.sabores = const [],
   });
@@ -976,11 +981,14 @@ class PresentacionBebida {
     return elegido == null ? const {} : {'Sabor': elegido};
   }
 
-  /// La foto de esta botella. Cuando hay foto del sabor exacto en este
-  /// tamaño se usa esa, para que al cambiar de sabor cambie la botella;
-  /// si no, la del producto.
+  /// La foto de esta botella. Primero la del sabor exacto en este tamaño,
+  /// para que al cambiar de sabor cambie la botella. Si ese sabor todavía
+  /// no tiene foto, la de la marca — nunca la del producto, que agrupa
+  /// varias marcas y mostraría una Coca-Cola dentro de Postobón.
   String fotoDe(String? sabor) =>
-      fotoDeBebida(tamano: tamano, sabor: sabor) ?? producto.imageAsset;
+      fotoDeBebida(tamano: tamano, sabor: sabor) ??
+      fotoDeMarca(marca) ??
+      producto.imageAsset;
 }
 
 /// Fotos de una botella concreta: este sabor, en este tamaño. Se busca por
@@ -988,6 +996,7 @@ class PresentacionBebida {
 /// botella.
 const Map<String, String> _fotoPorTamanoYSabor = {
   'Pequeña|Manzana': 'assets/images/manzana pequeña.jpg',
+  'Pequeña|Coca-Cola': 'assets/images/coca cola pequeña.jpg',
   '400 ml|Coca-Cola': 'assets/images/coca cola 400 ml.jpg',
   '1.5 L|Manzana': 'assets/images/manzana 1.5.jpg',
   '1.5 L|Uva': 'assets/images/uva 1.5.jpg',
@@ -1010,6 +1019,9 @@ String? fotoDeBebida({required String tamano, String? sabor}) {
 /// un mismo producto del menú ("Gaseosa Postobón 1.5 L") trae sabores de
 /// varias marcas: si se tomara su foto, Pepsi saldría con la botella de
 /// Postobón.
+/// La foto con la que se representa cada marca.
+String? fotoDeMarca(String marca) => _fotoPorMarca[marca];
+
 const Map<String, String> _fotoPorMarca = {
   'Coca-Cola': 'assets/images/coca cola 1.5.jpg',
   'Postobón': 'assets/images/gaseosa postobon 1.5.jpg',
@@ -1049,6 +1061,7 @@ List<MarcaBebida> bebidasPorMarca() {
       porMarca.putIfAbsent(marca, () => []).add(PresentacionBebida(
             producto: bebida,
             tamano: bebida.tamano,
+            marca: marca,
             precio: bebida.price,
           ));
       continue;
@@ -1069,6 +1082,7 @@ List<MarcaBebida> bebidasPorMarca() {
       porMarca.putIfAbsent(marca, () => []).add(PresentacionBebida(
             producto: bebida,
             tamano: bebida.tamano,
+            marca: marca,
             sabores: suyos.map((s) => s.nombre).toList(),
             // En este menú todos los sabores de un tamaño valen igual; si
             // algún día no, manda el más barato y el resto se ve al elegir.

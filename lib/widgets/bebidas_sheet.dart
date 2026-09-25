@@ -236,10 +236,10 @@ class _HojaTamanosState extends State<_HojaTamanos> {
                 Row(
                   children: [
                     AppImage(
-                      // La botella de este sabor y este tamaño si la hay; si
-                      // no, la de la marca. Nunca la del producto del menú,
-                      // que agrupa varias marcas.
-                      foto.isEmpty ? marca.imageAsset : foto,
+                      // fotoDe ya resuelve el orden: la botella de este
+                      // sabor, y si ese sabor todavía no tiene foto, la de
+                      // la marca.
+                      foto,
                       placeholderIcon: Icons.local_drink,
                       width: 62,
                       height: 62,

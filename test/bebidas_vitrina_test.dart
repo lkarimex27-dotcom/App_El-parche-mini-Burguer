@@ -39,14 +39,42 @@ void main() {
     }
   });
 
-  test('un sabor sin foto propia cae en la del producto', () {
-    final coca = bebidasPorMarca().firstWhere((m) => m.nombre == 'Coca-Cola');
-    final pequena =
-        coca.presentaciones.firstWhere((p) => p.tamano == 'Pequeña');
+  test('ninguna fila muestra la botella de otra marca', () {
+    // El 400 ml de Postobón sale del mismo producto que el de Coca-Cola.
+    // Si la foto cayera en la del producto, Postobón mostraría una
+    // Coca-Cola. Esta prueba es la que cazó ese fallo.
+    final deOtraMarca = <String, String>{
+      'assets/images/coca cola 400 ml.jpg': 'Coca-Cola',
+      'assets/images/coca cola 1.5.jpg': 'Coca-Cola',
+      'assets/images/coca cola pequeña.jpg': 'Coca-Cola',
+      'assets/images/manzana pequeña.jpg': 'Postobón',
+      'assets/images/pepsi 1.5.jpg': 'Pepsi',
+    };
 
-    // Todavía no hay foto de "Pequeña|Coca-Cola".
-    expect(fotoDeBebida(tamano: 'Pequeña', sabor: 'Coca-Cola'), isNull);
-    expect(pequena.fotoDe('Coca-Cola'), pequena.producto.imageAsset);
+    for (final marca in bebidasPorMarca()) {
+      for (final p in marca.presentaciones) {
+        final sabores = p.sabores.isEmpty ? <String?>[null] : p.sabores;
+        for (final sabor in sabores) {
+          final foto = p.fotoDe(sabor);
+          final duena = deOtraMarca[foto];
+          expect(duena == null || duena == marca.nombre, isTrue,
+              reason: '${marca.nombre} ${p.tamano} '
+                  '${sabor ?? ""} muestra una foto de $duena');
+        }
+      }
+    }
+  });
+
+  test('un sabor sin foto propia cae en la de su marca', () {
+    final postobon =
+        bebidasPorMarca().firstWhere((m) => m.nombre == 'Postobón');
+    final flexi =
+        postobon.presentaciones.firstWhere((p) => p.tamano == '400 ml');
+
+    // Todavía no hay foto de "400 ml|Cuatro": usa la de Postobón, no la
+    // del producto, que es una Coca-Cola.
+    expect(fotoDeBebida(tamano: '400 ml', sabor: 'Cuatro'), isNull);
+    expect(flexi.fotoDe('Cuatro'), fotoDeMarca('Postobón'));
   });
 
   testWidgets('la botella se muestra entera, no recortada', (tester) async {
