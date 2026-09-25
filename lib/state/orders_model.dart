@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -169,16 +170,21 @@ class OrdersModel extends ChangeNotifier {
     return pedido;
   }
 
-  String _codigoTemporal() => (DateTime.now().microsecondsSinceEpoch % 10000)
-      .toString()
-      .padLeft(4, '0');
-
   void _actualizarConsecutivo() {
     for (final pedido in _pedidos) {
       final numero = int.tryParse(pedido.id);
       if (numero != null && numero > _consecutivo) _consecutivo = numero;
     }
   }
+
+  /// El PIN de 4 dígitos que el cliente le dicta al domiciliario para
+  /// confirmar que recibió. Va al azar a propósito: si saliera del reloj o
+  /// del número del pedido, cualquiera podría adivinarlo y dar por
+  /// entregado algo que nunca llegó.
+  String _codigoTemporal() =>
+      List.generate(4, (_) => _azar.nextInt(10)).join();
+
+  static final Random _azar = Random.secure();
 
   Future<void> _guardar() async {
     if (!_persistir) return;

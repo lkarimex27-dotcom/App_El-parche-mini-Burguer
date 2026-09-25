@@ -101,20 +101,21 @@ class UserModel extends ChangeNotifier {
   }
 
   /// TEMPORAL: mientras no hay backend, el rol sale del correo para poder
-  /// entrar al panel (admin@…, vendedor@…, cocinero@…; cualquier otro es
+  /// entrar al panel (admin@…, repartidor@…, empleado@…; cualquier otro es
   /// cliente). Cuando la API devuelva el rol del usuario, se borra esto.
   static Rol _rolDemoDesdeCorreo(String email) {
     switch (email.split('@').first.toLowerCase()) {
       case 'admin':
       case 'administrador':
         return Rol.administrador;
-      case 'vendedor':
-        return Rol.vendedor;
-      case 'cocinero':
-        return Rol.cocinero;
       case 'repartidor':
+      case 'vendedor':
+        return Rol.repartidor;
+      case 'empleado':
+      case 'cocinero':
+        return Rol.empleado;
       case 'domiciliario':
-        return Rol.domiciliario;
+        return Rol.repartidor;
       default:
         return Rol.cliente;
     }

@@ -9,8 +9,8 @@ import 'cart_screen.dart';
 import 'orders_screen.dart';
 import 'profile_screen.dart';
 
-/// Contenedor de las 4 pestañas del bottom nav:
-/// Inicio, Menú, Carrito y Mis pedidos.
+/// Contenedor de las 5 pestañas del bottom nav:
+/// Inicio, Menú, Carrito, Mis pedidos y Perfil.
 ///
 /// El encabezado (logo + perfil) vive aquí, así se ve igual en todas
 /// las pestañas y las pantallas de adentro no lo repiten.
@@ -64,7 +64,10 @@ class _MainNavScreenState extends State<MainNavScreen> {
         children: [
           Aparicion(
             orden: 0,
-            child: AppHeader(onVolver: widget.onVolverDomiciliario),
+            child: AppHeader(
+              onPerfil: () => _goToTab(4),
+              onVolver: widget.onVolverDomiciliario,
+            ),
           ),
           Expanded(
             child: IndexedStack(index: _currentIndex, children: screens),

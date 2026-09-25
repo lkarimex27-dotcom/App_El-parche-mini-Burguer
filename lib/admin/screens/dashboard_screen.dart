@@ -114,8 +114,8 @@ class DashboardScreen extends StatelessWidget {
                       icono: Icons.flag_circle_rounded,
                       detalle:
                           '\$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                      // Sin onTap: el módulo Indicadores ya no existe.
                       color: AppColors.mostaza,
-                      onTap: () => onAbrirModulo?.call(ModuloAdmin.indicadores),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -148,17 +148,24 @@ class DashboardScreen extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: Text('Cumplimiento de meta',
-                            style: AppTextStyles.body(
-                                size: 12,
-                                weight: FontWeight.w700,
-                                color: AppColors.carbon)),
+                        child: Text(
+                          'Cumplimiento de meta',
+                          style: AppTextStyles.body(
+                              size: 11,
+                              weight: FontWeight.w700,
+                              color: AppColors.carbon),
+                        ),
                       ),
-                      const Spacer(),
-                      Text(
-                        '\$${ventasHoy.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')} / \$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
-                        style: AppTextStyles.body(
-                            size: 11, color: AppColors.muted),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          '\$${ventasHoy.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')} / \$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
+                          style: AppTextStyles.body(
+                              size: 10, color: AppColors.muted),
+                        ),
                       ),
                     ],
                   ),

@@ -6,6 +6,7 @@ import '../models/permisos.dart';
 import '../widgets/admin_states.dart';
 import 'admin_pedidos_screen.dart';
 import 'admin_module_screen.dart';
+import 'admin_profile_screen.dart';
 import 'dashboard_screen.dart';
 import 'mas_screen.dart';
 
@@ -38,11 +39,20 @@ class _AdminNavScreenState extends State<AdminNavScreen> {
       _irA(i);
       return;
     }
+    if (modulo == ModuloAdmin.perfil) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const AdminProfileScreen()),
+      );
+      return;
+    }
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => Scaffold(
-          appBar: AppBar(),
-          body: AdminModuleScreen(modulo: modulo),
+          backgroundColor: AppColors.crema,
+          body: AdminModuleScreen(
+            modulo: modulo,
+            mostrarRegreso: true,
+          ),
         ),
       ),
     );
@@ -76,7 +86,7 @@ class _AdminNavScreenState extends State<AdminNavScreen> {
     return Scaffold(
       body: Column(
         children: [
-          const AppHeader(),
+          const AppHeader(mostrarPerfil: false),
           Expanded(child: IndexedStack(index: indice, children: pantallas)),
         ],
       ),

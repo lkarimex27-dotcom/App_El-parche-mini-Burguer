@@ -64,14 +64,51 @@ class AdminRepository extends ChangeNotifier {
     return registro;
   }
 
+  /// El registro que representa al administrador no se puede desactivar.
+  /// Los demás roles del módulo sí conservan su control de estado.
+  bool puedeCambiarEstado(AdminRegistro registro) {
+    final modulo = _moduloDe(registro);
+    return modulo != null &&
+        (modulo != ModuloAdmin.roles || !_esRolAdministrador(registro));
+  }
+
   void cambiarEstado(AdminRegistro registro) {
-    final modulo = _datos.entries
-        .firstWhere((entry) => entry.value.contains(registro))
-        .key;
+    final modulo = _moduloDe(registro);
+    if (modulo == null || !puedeCambiarEstado(registro)) return;
+
     final estados = estadosPara(modulo);
     final siguiente = (estados.indexOf(registro.estado) + 1) % estados.length;
-    registro.estado = estados[siguiente];
+    establecerEstado(registro, estados[siguiente]);
+  }
+
+  void establecerEstado(AdminRegistro registro, String estado) {
+    final modulo = _moduloDe(registro);
+    if (modulo == null ||
+        !puedeCambiarEstado(registro) ||
+        !estadosPara(modulo).contains(estado) ||
+        registro.estado == estado) {
+      return;
+    }
+    registro.estado = estado;
     notifyListeners();
+  }
+
+  /// Un proveedor se anula dejándolo inactivo, pero nunca se elimina del
+  /// historial para conservar la trazabilidad de sus compras.
+  bool anular(AdminRegistro registro) {
+    if (_moduloDe(registro) != ModuloAdmin.proveedores) return false;
+    establecerEstado(registro, 'Inactivo');
+    return registro.estado == 'Inactivo';
+  }
+
+  bool _esRolAdministrador(AdminRegistro registro) =>
+      registro.titulo.trim().toLowerCase() == 'administrador';
+
+  ModuloAdmin? _moduloDe(AdminRegistro registro) {
+    for (final entry in _datos.entries) {
+      if (entry.value.contains(registro)) return entry.key;
+    }
+    return null;
   }
 
   List<String> estadosPara(ModuloAdmin modulo) {
@@ -79,9 +116,21 @@ class AdminRepository extends ChangeNotifier {
       case ModuloAdmin.inventario:
         return ['Disponible', 'Stock bajo', 'Agotado', 'En reposición'];
       case ModuloAdmin.compras:
-        return ['Borrador', 'Solicitada', 'En tránsito', 'Recibida', 'Cancelada'];
+        return [
+          'Borrador',
+          'Solicitada',
+          'En tránsito',
+          'Recibida',
+          'Cancelada'
+        ];
       case ModuloAdmin.produccion:
-        return ['Pendiente', 'En preparación', 'En control de calidad', 'Lista', 'No conforme'];
+        return [
+          'Pendiente',
+          'En preparación',
+          'En control de calidad',
+          'Lista',
+          'No conforme'
+        ];
       case ModuloAdmin.productos:
         return ['Activo', 'Agotado temporalmente', 'Inactivo'];
       case ModuloAdmin.categorias:
@@ -97,17 +146,19 @@ class AdminRepository extends ChangeNotifier {
       case ModuloAdmin.ventas:
         return ['Pendiente de pago', 'Pagada', 'Anulada', 'Reembolsada'];
       case ModuloAdmin.devoluciones:
-        return ['Pendiente', 'En revisión', 'Aprobada', 'Rechazada', 'Completada'];
+        return [
+          'Pendiente',
+          'En revisión',
+          'Aprobada',
+          'Rechazada',
+          'Completada'
+        ];
       case ModuloAdmin.usuarios:
         return ['Activo', 'Invitación pendiente', 'Bloqueado', 'Inactivo'];
       case ModuloAdmin.roles:
         return ['Activo', 'En revisión', 'Inactivo'];
-      case ModuloAdmin.indicadores:
-        return ['Actualizado', 'Revisar', 'Atendido'];
       case ModuloAdmin.perfil:
         return ['Activo', 'Pendiente de verificación'];
-      case ModuloAdmin.configuracion:
-        return ['Configurado', 'Pendiente de configuración'];
       case ModuloAdmin.dashboard:
       case ModuloAdmin.pedidos:
         return ['Pendiente', 'En revisión', 'Completado'];
@@ -115,11 +166,10 @@ class AdminRepository extends ChangeNotifier {
   }
 
   bool eliminar(ModuloAdmin modulo, AdminRegistro registro) {
-    if (modulo == ModuloAdmin.proveedores &&
-        registros(ModuloAdmin.compras)
-            .any((c) => c.detalle.contains(registro.titulo))) {
-      return false;
-    }
+    // Los proveedores se anulan, pero no se borran: sus compras deben poder
+    // consultar siempre el proveedor con el que se registraron.
+    if (modulo == ModuloAdmin.proveedores) return false;
+
     final eliminado = _datos[modulo]?.remove(registro) ?? false;
     if (eliminado) notifyListeners();
     return eliminado;
@@ -131,13 +181,13 @@ class AdminRepository extends ChangeNotifier {
           id: 'i-1',
           titulo: 'Queso cheddar',
           detalle: 'Stock: 1.5 kg · Mínimo: 5 · Máximo: 20',
-          estado: 'Bajo',
+          estado: 'Stock bajo',
           cantidad: 1.5),
       AdminRegistro(
           id: 'i-2',
           titulo: 'Tocineta',
           detalle: 'Stock: 3 kg · Mínimo: 4 · Máximo: 15',
-          estado: 'Bajo',
+          estado: 'Stock bajo',
           cantidad: 3),
       AdminRegistro(
           id: 'i-3',
@@ -196,7 +246,7 @@ class AdminRepository extends ChangeNotifier {
           id: 'op-1',
           titulo: 'OP-2026-001 · Pedido #1053',
           detalle: '2 Mini Burguer, 2 Gaseosas · entrega estimada 25 min',
-          estado: 'En proceso'),
+          estado: 'En preparación'),
       AdminRegistro(
           id: 'op-2',
           titulo: 'OP-2026-002 · Preparación interna',
@@ -251,8 +301,8 @@ class AdminRepository extends ChangeNotifier {
           estado: 'Activo'),
       AdminRegistro(
           id: 'u-2',
-          titulo: 'cocinero@parche.com',
-          detalle: 'Cocinero · producción e inventario',
+          titulo: 'empleado@parche.com',
+          detalle: 'Empleado · producción e inventario',
           estado: 'Activo'),
     ];
     _datos[ModuloAdmin.roles] = [
@@ -263,13 +313,18 @@ class AdminRepository extends ChangeNotifier {
           estado: 'Activo'),
       AdminRegistro(
           id: 'rol-2',
-          titulo: 'Vendedor',
-          detalle: 'Pedidos, clientes, ventas y devoluciones',
+          titulo: 'Repartidor',
+          detalle: 'Pedidos, ventas y entregas',
           estado: 'Activo'),
       AdminRegistro(
           id: 'rol-3',
-          titulo: 'Cocinero',
+          titulo: 'Empleado',
           detalle: 'Producción, inventario y fichas técnicas',
+          estado: 'Activo'),
+      AdminRegistro(
+          id: 'rol-4',
+          titulo: 'Cliente',
+          detalle: 'Compra desde la app',
           estado: 'Activo'),
     ];
     _datos[ModuloAdmin.perfil] = [
@@ -278,35 +333,6 @@ class AdminRepository extends ChangeNotifier {
           titulo: 'Mi perfil',
           detalle: 'Datos de la cuenta y preferencias de acceso',
           estado: 'Activo'),
-    ];
-    _datos[ModuloAdmin.configuracion] = [
-      AdminRegistro(
-          id: 'config-1',
-          titulo: 'Tiempo de empaque',
-          detalle: '10 minutos añadidos después de producción',
-          estado: 'Configurado'),
-      AdminRegistro(
-          id: 'config-2',
-          titulo: 'Monto de aprobación',
-          detalle: '150000 COP',
-          estado: 'Configurado'),
-    ];
-    _datos[ModuloAdmin.indicadores] = [
-      AdminRegistro(
-          id: 'ind-1',
-          titulo: 'Pedidos con tiempo crítico',
-          detalle: '2 pedidos superan el 80% del tiempo estimado',
-          estado: 'Revisar'),
-      AdminRegistro(
-          id: 'ind-2',
-          titulo: 'Ventas vs devoluciones',
-          detalle: 'Ventas: 1.240.000 COP · Devoluciones: 68.000 COP',
-          estado: 'Actualizado'),
-      AdminRegistro(
-          id: 'ind-3',
-          titulo: 'Top de productos vendidos',
-          detalle: 'Hamburguesa doble · 38 unidades esta semana',
-          estado: 'Actualizado'),
     ];
   }
 }

@@ -25,7 +25,7 @@ Widget pantalla(OrdersModel pedidos) => AppScope(
       usuarioInicial: UserModel(
         nombre: 'Luis Repartidor',
         email: 'repartidor@elparche.com',
-        rol: Rol.domiciliario,
+        rol: Rol.repartidor,
       ),
       pedidosInicial: pedidos,
       domiciliarioInicial: DomiciliarioModel(vehiculo: 'Moto'),
@@ -36,7 +36,7 @@ void main() {
   test('el correo temporal entra como domiciliario', () {
     final usuario = UserModel()..iniciarSesionConCorreo('repartidor@demo.com');
 
-    expect(usuario.rol, Rol.domiciliario);
+    expect(usuario.rol, Rol.repartidor);
     expect(usuario.rol.esDomiciliario, isTrue);
     expect(usuario.rol.esDelPanel, isFalse);
   });
