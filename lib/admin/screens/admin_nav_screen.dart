@@ -86,7 +86,9 @@ class _AdminNavScreenState extends State<AdminNavScreen> {
     return Scaffold(
       body: Column(
         children: [
-          const AppHeader(mostrarPerfil: false),
+          // El círculo con las iniciales va al lado contrario del logo y
+          // abre el perfil, igual que en la app del cliente.
+          AppHeader(onPerfil: () => _abrirModulo(visibles, ModuloAdmin.perfil)),
           Expanded(child: IndexedStack(index: indice, children: pantallas)),
         ],
       ),

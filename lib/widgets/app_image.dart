@@ -19,6 +19,12 @@ class AppImage extends StatelessWidget {
   final BorderRadius? borderRadius;
   final IconData placeholderIcon;
 
+  /// Para fotos de producto recortado sobre fondo blanco, como las botellas.
+  /// Muestra la foto entera sobre un fondo claro en vez de recortarla: una
+  /// gaseosa de 2 L es tres veces más alta que ancha, y con recorte solo se
+  /// vería el centro de la botella, sin tapa ni base.
+  final bool enVitrina;
+
   const AppImage(
     this.assetPath, {
     super.key,
@@ -28,28 +34,38 @@ class AppImage extends StatelessWidget {
     this.fit = BoxFit.cover,
     this.borderRadius,
     this.placeholderIcon = Icons.fastfood_rounded,
+    this.enVitrina = false,
   });
+
+  BoxFit get _fit => enVitrina ? BoxFit.contain : fit;
 
   @override
   Widget build(BuildContext context) {
     // Sin foto propia se pasa derecho al respaldo: Image.asset('') revienta.
-    if (assetPath.isEmpty) {
-      final respaldo = _buildNetwork();
-      return borderRadius == null
-          ? respaldo
-          : ClipRRect(borderRadius: borderRadius!, child: respaldo);
-    }
+    if (assetPath.isEmpty) return _enmarcar(_buildNetwork());
 
-    final Widget image = Image.asset(
+    return _enmarcar(Image.asset(
       assetPath,
       width: width,
       height: height,
-      fit: fit,
+      fit: _fit,
       errorBuilder: (context, error, stackTrace) => _buildNetwork(),
-    );
+    ));
+  }
 
-    if (borderRadius == null) return image;
-    return ClipRRect(borderRadius: borderRadius!, child: image);
+  /// Le pone el fondo de vitrina y las esquinas redondeadas.
+  Widget _enmarcar(Widget hijo) {
+    if (enVitrina) {
+      hijo = Container(
+        width: width,
+        height: height,
+        color: Colors.white,
+        padding: const EdgeInsets.all(6),
+        child: hijo,
+      );
+    }
+    if (borderRadius == null) return hijo;
+    return ClipRRect(borderRadius: borderRadius!, child: hijo);
   }
 
   Widget _buildNetwork() {
@@ -60,7 +76,7 @@ class AppImage extends StatelessWidget {
       url,
       width: width,
       height: height,
-      fit: fit,
+      fit: _fit,
       loadingBuilder: (context, child, progress) {
         if (progress == null) return child;
         return _buildPlaceholder(loading: true);

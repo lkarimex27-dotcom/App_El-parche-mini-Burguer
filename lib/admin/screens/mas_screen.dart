@@ -195,13 +195,20 @@ class _ModuloCard extends StatelessWidget {
                 child: Icon(modulo.icono, color: AppColors.mostaza, size: 24),
               ),
               const SizedBox(height: 8),
-              Text(
-                modulo.label,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.body(
-                    size: 11, weight: FontWeight.w700, color: AppColors.carbon),
+              // Flexible: los nombres de dos líneas ("Fichas técnicas",
+              // "Roles y permisos", "Proveedores", "Devoluciones") no caben
+              // en la celda de un celular angosto y la desbordaban.
+              Flexible(
+                child: Text(
+                  modulo.label,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.body(
+                      size: 11,
+                      weight: FontWeight.w700,
+                      color: AppColors.carbon),
+                ),
               ),
             ],
           ),

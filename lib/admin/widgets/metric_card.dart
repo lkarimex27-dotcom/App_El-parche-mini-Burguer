@@ -56,13 +56,15 @@ class MetricCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
+            // Más contenido que antes: cuatro cifras grandes juntas en la
+            // primera pantalla del panel cansan más de lo que informan.
             child: Text(valor,
                 maxLines: 1,
-                style: AppTextStyles.heading(size: 26, color: color)),
+                style: AppTextStyles.heading(size: 19, color: color)),
           ),
           if (detalle != null) ...[
             const SizedBox(height: 2),

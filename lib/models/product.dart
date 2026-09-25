@@ -788,7 +788,7 @@ const List<Product> demoProducts = [
     id: 'gaseosa_pequena',
     name: 'Gaseosa pequeña',
     category: 'Bebidas',
-    imageAsset: 'assets/images/menu/gaseosa_pequena.jpg',
+    imageAsset: 'assets/images/manzana pequeña.jpg',
     imageUrl: '',
     price: 2600,
     tamano: 'Pequeña',
@@ -822,7 +822,7 @@ const List<Product> demoProducts = [
     id: 'gaseosa_flexi_400',
     name: 'Gaseosa Flexi 400 ml',
     category: 'Bebidas',
-    imageAsset: 'assets/images/menu/gaseosa_flexi_400.jpg',
+    imageAsset: 'assets/images/coca cola 400 ml.jpg',
     imageUrl: '',
     price: 4000,
     tamano: '400 ml',
@@ -882,7 +882,7 @@ const List<Product> demoProducts = [
     id: 'coca_cola_1_5',
     name: 'Coca-Cola 1.5 L',
     category: 'Bebidas',
-    imageAsset: 'assets/images/menu/coca_cola_1_5.jpg',
+    imageAsset: 'assets/images/coca cola 1.5.jpg',
     imageUrl: '',
     price: 7500,
     marca: 'Coca-Cola',
@@ -901,32 +901,6 @@ const List<Product> demoProducts = [
     marca: 'Hit',
     tamano: '1 L',
     description: 'Un litro de jugo Hit, si prefieres algo con fruta.',
-    permiteSalsas: false,
-    permiteAdiciones: false,
-  ),
-  Product(
-    id: 'econolitro_postobon',
-    name: 'Econolitro Postobón',
-    category: 'Bebidas',
-    imageAsset: 'assets/images/econolitro postobon.jpg',
-    imageUrl: '',
-    price: 4500,
-    marca: 'Postobón',
-    tamano: 'Econolitro',
-    description: 'El econolitro de Postobón: rinde y es el más económico.',
-    permiteSalsas: false,
-    permiteAdiciones: false,
-  ),
-  Product(
-    id: 'econolitro_coca_cola',
-    name: 'Econolitro Coca-Cola',
-    category: 'Bebidas',
-    imageAsset: 'assets/images/econolitro coca cola.jpg',
-    imageUrl: '',
-    price: 6000,
-    marca: 'Coca-Cola',
-    tamano: 'Econolitro',
-    description: 'Econolitro de Coca-Cola, el que alcanza para repetir.',
     permiteSalsas: false,
     permiteAdiciones: false,
   ),
@@ -980,6 +954,10 @@ class PresentacionBebida {
   final Product producto;
   final String tamano;
 
+  /// De qué marca es esta fila. Hace falta para la foto: el producto del
+  /// menú agrupa varias marcas, así que su foto puede ser de otra.
+  final String marca;
+
   /// Los sabores de esta marca en este tamaño. Vacía si el producto no da
   /// a elegir (una Coca-Cola 1.5 L es lo que es).
   final List<String> sabores;
@@ -989,6 +967,7 @@ class PresentacionBebida {
   const PresentacionBebida({
     required this.producto,
     required this.tamano,
+    required this.marca,
     required this.precio,
     this.sabores = const [],
   });
@@ -1001,16 +980,52 @@ class PresentacionBebida {
     final elegido = sabor ?? (sabores.isEmpty ? null : sabores.first);
     return elegido == null ? const {} : {'Sabor': elegido};
   }
+
+  /// La foto de esta botella. Primero la del sabor exacto en este tamaño,
+  /// para que al cambiar de sabor cambie la botella. Si ese sabor todavía
+  /// no tiene foto, la de la marca — nunca la del producto, que agrupa
+  /// varias marcas y mostraría una Coca-Cola dentro de Postobón.
+  String fotoDe(String? sabor) =>
+      fotoDeBebida(tamano: tamano, sabor: sabor) ??
+      fotoDeMarca(marca) ??
+      producto.imageAsset;
+}
+
+/// Fotos de una botella concreta: este sabor, en este tamaño. Se busca por
+/// "tamaño|sabor" porque una Manzana de 2 L y una de 1.5 L no son la misma
+/// botella.
+const Map<String, String> _fotoPorTamanoYSabor = {
+  'Pequeña|Manzana': 'assets/images/manzana pequeña.jpg',
+  'Pequeña|Coca-Cola': 'assets/images/coca cola pequeña.jpg',
+  '400 ml|Coca-Cola': 'assets/images/coca cola 400 ml.jpg',
+  '1.5 L|Manzana': 'assets/images/manzana 1.5.jpg',
+  '1.5 L|Uva': 'assets/images/uva 1.5.jpg',
+  '1.5 L|Pepsi': 'assets/images/pepsi 1.5.jpg',
+  '1.5 L|Colombiana': 'assets/images/colombiana 1.5.jpg',
+  '1.5 L|Naranjada': 'assets/images/anaranjada 1.5.jpg',
+  '2 L|Manzana': 'assets/images/Manzana 2L.jpeg',
+  '2 L|Colombiana': 'assets/images/colombiana 2L.jpeg',
+  '2 L|Pepsi': 'assets/images/pepsi 2L.jpeg',
+  '2 L|Cuatro': 'assets/images/Quatro 2L.jpeg',
+};
+
+/// La foto de la botella exacta, o null si todavía no hay una.
+String? fotoDeBebida({required String tamano, String? sabor}) {
+  if (sabor == null) return null;
+  return _fotoPorTamanoYSabor['$tamano|$sabor'];
 }
 
 /// La foto de cada marca. Es propia de la marca y no del producto, porque
 /// un mismo producto del menú ("Gaseosa Postobón 1.5 L") trae sabores de
 /// varias marcas: si se tomara su foto, Pepsi saldría con la botella de
 /// Postobón.
+/// La foto con la que se representa cada marca.
+String? fotoDeMarca(String marca) => _fotoPorMarca[marca];
+
 const Map<String, String> _fotoPorMarca = {
-  'Coca-Cola': 'assets/images/menu/coca_cola_1_5.jpg',
+  'Coca-Cola': 'assets/images/coca cola 1.5.jpg',
   'Postobón': 'assets/images/gaseosa postobon 1.5.jpg',
-  'Pepsi': 'assets/images/menu/pepsi.jpg',
+  'Pepsi': 'assets/images/pepsi 1.5.jpg',
   'Hit': 'assets/images/hit litro.jpg',
   'Mr Tea': 'assets/images/mr tea.jpg',
 };
@@ -1046,6 +1061,7 @@ List<MarcaBebida> bebidasPorMarca() {
       porMarca.putIfAbsent(marca, () => []).add(PresentacionBebida(
             producto: bebida,
             tamano: bebida.tamano,
+            marca: marca,
             precio: bebida.price,
           ));
       continue;
@@ -1066,6 +1082,7 @@ List<MarcaBebida> bebidasPorMarca() {
       porMarca.putIfAbsent(marca, () => []).add(PresentacionBebida(
             producto: bebida,
             tamano: bebida.tamano,
+            marca: marca,
             sabores: suyos.map((s) => s.nombre).toList(),
             // En este menú todos los sabores de un tamaño valen igual; si
             // algún día no, manda el más barato y el resto se ve al elegir.
