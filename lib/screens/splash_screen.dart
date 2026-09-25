@@ -111,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen>
   static const double _tLogoDentro = 0.62;
   static const double _tLogoArriba = 0.80;
 
-  /// Proporción real de assets/images/logo mini Burguer.jpeg (647 × 386). NO es
+  /// Proporción real de assets/images/logo mini Burguer.png (647 × 386). NO es
   /// cuadrado: de aquí sale el alto, y con él el centro del polvo.
   static const double _proporcionLogo = 386 / 647;
 

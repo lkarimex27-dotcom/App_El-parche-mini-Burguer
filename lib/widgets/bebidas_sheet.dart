@@ -219,6 +219,8 @@ class _HojaTamanosState extends State<_HojaTamanos> {
           final mostrarSabor =
               !p.pideSabor && sabor != null && sabor != marca.nombre;
 
+          final foto = p.fotoDe(sabor);
+
           return Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -226,70 +228,67 @@ class _HojaTamanosState extends State<_HojaTamanos> {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: AppColors.borde),
             ),
-            child: Row(
+            // Columna y no una sola fila: los sabores van debajo, a todo lo
+            // ancho. Metidos en la fila no cabían y la desbordaban.
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppImage(
-                  // La botella de este sabor y este tamaño si la hay; si no,
-                  // la de la marca. Nunca la del producto del menú, que
-                  // agrupa varias marcas.
-                  p.fotoDe(sabor).isEmpty ? marca.imageAsset : p.fotoDe(sabor),
-                  placeholderIcon: Icons.local_drink,
-                  width: 62,
-                  height: 62,
-                  // Las botellas son mucho más altas que anchas: recortadas
-                  // se vería solo el centro, sin tapa ni base.
-                  enVitrina: true,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        p.tamano.isEmpty ? p.producto.name : p.tamano,
-                        style: AppTextStyles.heading(size: 13),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (mostrarSabor) ...[
-                        const SizedBox(height: 2),
-                        Text(sabor,
-                            style: AppTextStyles.body(
-                                size: 11, color: AppColors.muted),
+                Row(
+                  children: [
+                    AppImage(
+                      // La botella de este sabor y este tamaño si la hay; si
+                      // no, la de la marca. Nunca la del producto del menú,
+                      // que agrupa varias marcas.
+                      foto.isEmpty ? marca.imageAsset : foto,
+                      placeholderIcon: Icons.local_drink,
+                      width: 62,
+                      height: 62,
+                      // Las botellas son mucho más altas que anchas:
+                      // recortadas se vería solo el centro, sin tapa ni base.
+                      enVitrina: true,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            p.tamano.isEmpty ? p.producto.name : p.tamano,
+                            style: AppTextStyles.heading(size: 13),
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis),
-                      ],
-                      const SizedBox(height: 2),
-                      Text(formatoPesos(p.precio),
-                          style: AppTextStyles.heading(
-                              size: 12.5, color: AppColors.verde)),
-                      // Cuando el tamaño tiene varios sabores, se escoge
-                      // aquí mismo en vez de repetir la fila por sabor.
-                      if (p.pideSabor) ...[
-                        const SizedBox(height: 6),
-                        _SelectorSabor(
-                          sabores: p.sabores,
-                          elegido: sabor ?? p.sabores.first,
-                          onElegir: (nuevo) =>
-                              setState(() => _sabor[p.tamano] = nuevo),
-                        ),
-                      ],
-                    ],
-                  ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          if (mostrarSabor) ...[
+                            const SizedBox(height: 2),
+                            Text(sabor,
+                                style: AppTextStyles.body(
+                                    size: 11, color: AppColors.muted),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis),
+                          ],
+                          const SizedBox(height: 2),
+                          Text(formatoPesos(p.precio),
+                              style: AppTextStyles.heading(
+                                  size: 12.5, color: AppColors.verde)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    _BotonAgregar(onTap: () => _agregar(context, p)),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () => _agregar(context, p),
-                  style: TextButton.styleFrom(
-                    backgroundColor: AppColors.mostaza,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100)),
+                // Cuando el tamaño tiene varios sabores, se escoge aquí
+                // mismo en vez de repetir la fila por cada sabor.
+                if (p.pideSabor) ...[
+                  const SizedBox(height: 10),
+                  _SelectorSabor(
+                    sabores: p.sabores,
+                    elegido: sabor ?? p.sabores.first,
+                    onElegir: (nuevo) =>
+                        setState(() => _sabor[p.tamano] = nuevo),
                   ),
-                  child: Text('Agregar',
-                      style: AppTextStyles.heading(
-                          size: 11.5, color: Colors.white)),
-                ),
+                ],
               ],
             ),
           );
@@ -301,6 +300,38 @@ class _HojaTamanosState extends State<_HojaTamanos> {
 
 /// El seleccionador de sabor: un menú pequeño dentro de la fila del tamaño.
 /// Se usa solo cuando esa marca tiene más de un sabor en ese tamaño.
+/// El botón redondo de agregar, como el de las apps de domicilios. Ocupa
+/// mucho menos que uno con texto, que es lo que desbordaba la fila en los
+/// celulares angostos.
+class _BotonAgregar extends StatelessWidget {
+  final VoidCallback onTap;
+  const _BotonAgregar({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: 'Agregar al carrito',
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(100),
+        child: Container(
+          width: 38,
+          height: 38,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+            color: AppColors.mostaza,
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.add_rounded, color: Colors.white, size: 22),
+        ),
+      ),
+    );
+  }
+}
+
+/// Los sabores de un tamaño, como fichas que se envuelven solas. Antes era
+/// un desplegable, pero no cabía al lado del botón y desbordaba la fila; en
+/// fichas se ve de una cuáles hay y cuál está elegido.
 class _SelectorSabor extends StatelessWidget {
   final List<String> sabores;
   final String elegido;
@@ -314,31 +345,37 @@ class _SelectorSabor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-      decoration: BoxDecoration(
-        color: AppColors.crema,
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: AppColors.borde),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: elegido,
-          isDense: true,
-          borderRadius: BorderRadius.circular(12),
-          icon: const Icon(Icons.expand_more_rounded,
-              size: 18, color: AppColors.mostaza),
-          style: AppTextStyles.body(size: 11.5, weight: FontWeight.w600),
-          dropdownColor: Colors.white,
-          items: [
-            for (final sabor in sabores)
-              DropdownMenuItem(value: sabor, child: Text(sabor)),
-          ],
-          onChanged: (nuevo) {
-            if (nuevo != null) onElegir(nuevo);
-          },
-        ),
-      ),
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: [
+        for (final sabor in sabores)
+          GestureDetector(
+            onTap: () => onElegir(sabor),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color:
+                    sabor == elegido ? AppColors.mostaza : AppColors.crema,
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(
+                  color:
+                      sabor == elegido ? AppColors.mostaza : AppColors.borde,
+                ),
+              ),
+              child: Text(
+                sabor,
+                style: AppTextStyles.body(
+                  size: 11.5,
+                  weight: FontWeight.w600,
+                  color: sabor == elegido ? Colors.white : AppColors.carbon,
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -207,21 +207,21 @@ void main() {
     await tester.pumpAndSettle();
 
     // Dentro de la marca salen los tamaños, y el de 400 ml tiene varios
-    // sabores, así que trae su seleccionador en vez de repetir la fila.
+    // sabores, así que trae sus fichas en vez de repetir la fila.
     expect(find.text('400 ml'), findsOneWidget);
-    expect(find.byType(DropdownButton<String>), findsWidgets);
 
-    // Se cambia el sabor y se agrega esa fila.
-    final fila = find
-        .ancestor(of: find.text('400 ml'), matching: find.byType(Row))
-        .last;
+    // La tarjeta de esa presentación: "Cuatro" también está en la de 2 L,
+    // así que hay que quedarse dentro de la del 400 ml.
+    final tarjeta = find
+        .ancestor(of: find.text('400 ml'), matching: find.byType(Container))
+        .first;
+
+    // Se escoge el sabor tocando su ficha y se agrega con el botón +.
+    await tester
+        .tap(find.descendant(of: tarjeta, matching: find.text('Cuatro')));
+    await tester.pumpAndSettle();
     await tester.tap(
-        find.descendant(of: fila, matching: find.byType(DropdownButton<String>)));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Cuatro').last);
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.descendant(of: fila, matching: find.text('Agregar')));
+        find.descendant(of: tarjeta, matching: find.byIcon(Icons.add_rounded)));
     await tester.pumpAndSettle();
 
     final bebidaEnCarrito =
@@ -238,7 +238,7 @@ void main() {
     // Coca-Cola se arma con presentaciones que estaban repartidas entre
     // varios productos del menú, y van de la más barata a la más cara.
     expect(coca.presentaciones.map((p) => p.tamano),
-        containsAll(<String>['Pequeña', '400 ml', 'Econolitro', '1.5 L']));
+        containsAll(<String>['Pequeña', '400 ml', '1.5 L']));
     expect(coca.desde, 2600);
     final precios = coca.presentaciones.map((p) => p.precio).toList();
     expect(precios, orderedEquals(List.of(precios)..sort()));

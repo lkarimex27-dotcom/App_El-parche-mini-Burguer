@@ -39,10 +39,13 @@ void main() {
     expect(sabores['gaseosa_2_litros'],
         ['Manzana', 'Colombiana', 'Pepsi', 'Cuatro']);
     // Estas se piden tal cual, sin escoger sabor.
-    for (final id in ['coca_cola_1_5', 'hit_litro', 'econolitro_postobon',
-        'econolitro_coca_cola']) {
+    for (final id in ['coca_cola_1_5', 'hit_litro']) {
       expect(sabores[id], isEmpty, reason: id);
     }
+
+    // Los econolitros salieron de la carta.
+    expect(sabores.keys, isNot(contains('econolitro_postobon')));
+    expect(sabores.keys, isNot(contains('econolitro_coca_cola')));
   });
 
   test('cada marca de bebida muestra su propia foto', () {
@@ -72,9 +75,9 @@ void main() {
     expect(litro1_5.single.sabores,
         ['Manzana', 'Uva', 'Colombiana', 'Naranjada']);
 
-    // El econolitro no tiene nada que escoger.
-    final econo =
-        postobon.presentaciones.firstWhere((p) => p.tamano == 'Econolitro');
-    expect(econo.pideSabor, isFalse);
+    // La de 2 L tambien trae varios sabores.
+    final dosLitros =
+        postobon.presentaciones.firstWhere((p) => p.tamano == '2 L');
+    expect(dosLitros.pideSabor, isTrue);
   });
 }

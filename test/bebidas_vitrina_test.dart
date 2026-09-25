@@ -8,24 +8,45 @@ import 'package:parche_mini_burger/state/app_scope.dart';
 import 'package:parche_mini_burger/widgets/app_image.dart';
 
 void main() {
-  test('cada sabor de 2 L tiene la foto de su propia botella', () {
+  test('cada sabor tiene la foto de su propia botella', () {
     // Sin esto, escoger "Pepsi" mostraría la botella de Manzana.
-    for (final sabor in ['Manzana', 'Colombiana', 'Pepsi', 'Cuatro']) {
-      final foto = fotoDeBebida(tamano: '2 L', sabor: sabor);
-      expect(foto, isNotNull, reason: '2 L $sabor sin foto');
-      expect(File(foto!).existsSync(), isTrue, reason: foto);
-    }
+    const porTamano = {
+      '2 L': ['Manzana', 'Colombiana', 'Pepsi', 'Cuatro'],
+      '1.5 L': ['Manzana', 'Uva', 'Pepsi', 'Colombiana', 'Naranjada'],
+    };
+
+    porTamano.forEach((tamano, sabores) {
+      for (final sabor in sabores) {
+        final foto = fotoDeBebida(tamano: tamano, sabor: sabor);
+        expect(foto, isNotNull, reason: '$tamano $sabor sin foto');
+        expect(File(foto!).existsSync(), isTrue, reason: foto);
+      }
+    });
   });
 
-  test('la presentación cae en la foto del producto si el sabor no tiene', () {
+  test('el 1.5 L cambia de botella según el sabor', () {
     final postobon =
         bebidasPorMarca().firstWhere((m) => m.nombre == 'Postobón');
     final litro1_5 =
         postobon.presentaciones.firstWhere((p) => p.tamano == '1.5 L');
 
-    // Todavía no hay foto de "1.5 L|Uva", así que usa la del producto.
-    expect(fotoDeBebida(tamano: '1.5 L', sabor: 'Uva'), isNull);
-    expect(litro1_5.fotoDe('Uva'), litro1_5.producto.imageAsset);
+    // Cada sabor trae su foto, y ninguna se repite con otra.
+    final vistas = <String>{};
+    for (final sabor in litro1_5.sabores) {
+      final foto = litro1_5.fotoDe(sabor);
+      expect(foto, isNot(litro1_5.producto.imageAsset), reason: sabor);
+      expect(vistas.add(foto), isTrue, reason: '$sabor repite $foto');
+    }
+  });
+
+  test('un sabor sin foto propia cae en la del producto', () {
+    final coca = bebidasPorMarca().firstWhere((m) => m.nombre == 'Coca-Cola');
+    final pequena =
+        coca.presentaciones.firstWhere((p) => p.tamano == 'Pequeña');
+
+    // Todavía no hay foto de "Pequeña|Coca-Cola".
+    expect(fotoDeBebida(tamano: 'Pequeña', sabor: 'Coca-Cola'), isNull);
+    expect(pequena.fotoDe('Coca-Cola'), pequena.producto.imageAsset);
   });
 
   testWidgets('la botella se muestra entera, no recortada', (tester) async {
