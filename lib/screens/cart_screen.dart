@@ -155,17 +155,6 @@ class _LineaCarrito extends StatelessWidget {
     }
   }
 
-  Future<void> _editarAdiciones(BuildContext context) async {
-    final nuevas = await editarExtras(
-      context: context,
-      titulo: 'Adiciones de ${linea.product.name}',
-      subtitulo: 'Agrégale lo que quieras',
-      catalogo: kAdiciones,
-      seleccionados: linea.adiciones,
-    );
-    if (nuevas != null) carrito.actualizarAdiciones(linea, nuevas);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -254,8 +243,10 @@ class _LineaCarrito extends StatelessWidget {
             ],
           ],
           // ── Personalización: solo para la comida ──
+          // Las adiciones NO están aquí: se escogen en la ficha del
+          // producto, con la foto del plato a la vista.
           if (linea.product.permiteSalsas ||
-              linea.product.permiteAdiciones) ...[
+              linea.product.tieneVariantes) ...[
             const SizedBox(height: 12),
             Text('Personaliza tu pedido',
                 style:
@@ -269,33 +260,14 @@ class _LineaCarrito extends StatelessWidget {
               ),
               const SizedBox(height: 8),
             ],
-            Row(
-              children: [
-                if (linea.product.permiteSalsas)
-                  Expanded(
-                    child: _BotonEditar(
-                      icono: Icons.water_drop_outlined,
-                      label: linea.salsas.isEmpty
-                          ? 'Salsas'
-                          : 'Salsas (${linea.salsas.length})',
-                      onTap: () => _editarSalsas(context),
-                    ),
-                  ),
-                if (linea.product.permiteSalsas &&
-                    linea.product.permiteAdiciones)
-                  const SizedBox(width: 8),
-                if (linea.product.permiteAdiciones)
-                  Expanded(
-                    child: _BotonEditar(
-                      icono: Icons.add_circle_outline,
-                      label: linea.adiciones.isEmpty
-                          ? 'Adiciones'
-                          : 'Adiciones (${linea.adiciones.length})',
-                      onTap: () => _editarAdiciones(context),
-                    ),
-                  ),
-              ],
-            ),
+            if (linea.product.permiteSalsas)
+              _BotonEditar(
+                icono: Icons.water_drop_outlined,
+                label: linea.salsas.isEmpty
+                    ? 'Salsas'
+                    : 'Salsas (${linea.salsas.length})',
+                onTap: () => _editarSalsas(context),
+              ),
           ],
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),

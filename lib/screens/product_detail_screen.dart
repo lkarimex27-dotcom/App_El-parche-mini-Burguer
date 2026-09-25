@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import '../models/extras.dart';
+import '../models/precio.dart';
 import '../models/product.dart';
 import '../state/app_scope.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/app_form_field.dart';
 import '../widgets/app_image.dart';
+import '../widgets/extras_picker.dart';
 import '../widgets/primary_button.dart';
-import '../models/precio.dart';
 
-/// Ficha del producto: lo básico y nada más — foto, nombre, precio,
-/// descripción, cantidad y agregar. Las salsas, adiciones y bebidas se
-/// escogen después, ya en el carrito.
+/// Ficha del producto: foto, nombre, precio, descripción, las adiciones que
+/// le quiera poner, cantidad y agregar. Las bebidas se escogen después, ya
+/// en el carrito.
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
   const ProductDetailScreen({super.key, required this.product});
@@ -22,7 +24,13 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   int _cantidad = 1;
 
-  int get _total => widget.product.price * _cantidad;
+  /// Las adiciones que lleva este producto. Se escogen aquí, con la foto
+  /// del plato a la vista, que es cuando dan ganas de agregarlas.
+  final Set<Extra> _adiciones = {};
+
+  int get _precioUnitario => widget.product.price + sumaExtras(_adiciones);
+
+  int get _total => _precioUnitario * _cantidad;
 
   void _agregarAlCarrito() {
     final messenger = ScaffoldMessenger.of(context);
@@ -30,8 +38,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     AppScope.carritoSinEscuchar(context).agregar(
       product: widget.product,
       // Las opciones arrancan en su valor por defecto y se cambian en el
-      // carrito, junto con las salsas y las adiciones.
+      // carrito; las salsas también se escogen allá.
       opciones: widget.product.opcionesPorDefecto,
+      adiciones: _adiciones,
       cantidad: _cantidad,
     );
 
@@ -101,6 +110,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           AppTextStyles.body(size: 13, color: AppColors.muted),
                     ),
                   ],
+                  if (producto.permiteAdiciones) ...[
+                    const SizedBox(height: 22),
+                    Text('Adiciones',
+                        style: AppTextStyles.heading(size: 13)),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Opcional. Se suman al precio.',
+                      style:
+                          AppTextStyles.body(size: 11, color: AppColors.muted),
+                    ),
+                    const SizedBox(height: 10),
+                    ExtrasWrap(
+                      catalogo: kAdiciones,
+                      seleccionados: _adiciones,
+                      onAlternar: (extra) => setState(() {
+                        _adiciones.contains(extra)
+                            ? _adiciones.remove(extra)
+                            : _adiciones.add(extra);
+                      }),
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   Row(
                     children: [
@@ -123,7 +153,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   const SizedBox(height: 10),
                   Center(
                     child: Text(
-                      'Las salsas, adiciones y bebidas las eliges en el carrito',
+                      'Las salsas y las bebidas las eliges en el carrito',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.body(
                           size: 10.5, color: AppColors.muted),

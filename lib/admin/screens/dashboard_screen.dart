@@ -95,7 +95,7 @@ class DashboardScreen extends StatelessWidget {
                   Expanded(
                     child: MetricCard(
                       etiqueta: 'Ticket promedio',
-                      valor: '\$${ticketPromedio.toString()}',
+                      valor: formatoPesos(ticketPromedio),
                       icono: Icons.account_balance_wallet_rounded,
                       color: AppColors.verde,
                       onTap: () => onAbrirModulo?.call(ModuloAdmin.ventas),
@@ -112,8 +112,7 @@ class DashboardScreen extends StatelessWidget {
                       valor:
                           '${(cumplimientoMeta * 100).clamp(0, 100).round()}%',
                       icono: Icons.flag_circle_rounded,
-                      detalle:
-                          '\$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                      detalle: formatoPesos(metaDiaria),
                       // Sin onTap: el módulo Indicadores ya no existe.
                       color: AppColors.mostaza,
                     ),
@@ -157,9 +156,12 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
+                      // Flexible y no Spacer: con cifras grandes el texto
+                      // de la derecha desbordaba la tarjeta.
                       Flexible(
                         child: Text(
-                          '\$${ventasHoy.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')} / \$${metaDiaria.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (m) => '.')}',
+                          '${formatoPesos(ventasHoy)} / '
+                          '${formatoPesos(metaDiaria)}',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.end,

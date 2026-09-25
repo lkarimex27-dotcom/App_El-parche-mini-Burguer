@@ -14,10 +14,12 @@ class AppTextStyles {
   AppTextStyles._();
 
   /// Piso: por debajo de esto no se encoge nada, para que siga legible.
-  static const double _minimo = 10;
+  static const double _minimo = 9.5;
 
-  /// Qué tanto se comprime lo que está por encima del piso.
-  static const double _compresion = 0.88;
+  /// Qué tanto se comprime lo que está por encima del piso. Bajarlo achica
+  /// la letra de toda la app; subirlo la agranda. Es la perilla para
+  /// ajustar el tamaño general sin tocar pantalla por pantalla.
+  static const double _compresion = 0.80;
 
   static double _ajustar(double size) {
     if (size <= _minimo) return size;

@@ -48,6 +48,7 @@ class AppScope extends StatefulWidget {
   static AdminRepository admin(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_AdminScope>()!.notifier!;
 
+
   static CartModel carritoSinEscuchar(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_CarritoScope>()!.notifier!;
 
@@ -62,6 +63,7 @@ class AppScope extends StatefulWidget {
 
   static AdminRepository adminSinEscuchar(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_AdminScope>()!.notifier!;
+
 
   @override
   State<AppScope> createState() => _AppScopeState();
@@ -93,9 +95,12 @@ class _AppScopeState extends State<AppScope> {
         notifier: _usuario,
         child: _PedidosScope(
           notifier: _pedidos,
-          child: _DomiciliarioScope(
-            notifier: _domiciliario,
-            child: _AdminScope(notifier: _admin, child: widget.child),
+          child: _AdminScope(
+            notifier: _admin,
+            child: _DomiciliarioScope(
+              notifier: _domiciliario,
+              child: widget.child,
+            ),
           ),
         ),
       ),

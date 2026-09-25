@@ -1003,6 +1003,18 @@ class PresentacionBebida {
   }
 }
 
+/// La foto de cada marca. Es propia de la marca y no del producto, porque
+/// un mismo producto del menú ("Gaseosa Postobón 1.5 L") trae sabores de
+/// varias marcas: si se tomara su foto, Pepsi saldría con la botella de
+/// Postobón.
+const Map<String, String> _fotoPorMarca = {
+  'Coca-Cola': 'assets/images/menu/coca_cola_1_5.jpg',
+  'Postobón': 'assets/images/gaseosa postobon 1.5.jpg',
+  'Pepsi': 'assets/images/menu/pepsi.jpg',
+  'Hit': 'assets/images/hit litro.jpg',
+  'Mr Tea': 'assets/images/mr tea.jpg',
+};
+
 /// Una marca con todas sus presentaciones, de la más barata a la más cara.
 class MarcaBebida {
   final String nombre;
@@ -1012,8 +1024,10 @@ class MarcaBebida {
 
   int get desde => presentaciones.first.precio;
 
-  /// La foto de la presentación más grande: es la que mejor muestra la marca.
-  String get imageAsset => presentaciones.last.producto.imageAsset;
+  /// La foto de la marca. Si alguna no la tiene todavía, se usa la de su
+  /// presentación más grande antes que dejar el hueco.
+  String get imageAsset =>
+      _fotoPorMarca[nombre] ?? presentaciones.last.producto.imageAsset;
 }
 
 /// Las bebidas agrupadas por marca, listas para la hoja del carrito.
