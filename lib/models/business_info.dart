@@ -4,7 +4,7 @@ class BusinessInfo {
   BusinessInfo._();
 
   /// Logo oficial del negocio (assets/images/).
-  static const String logo = 'assets/images/logo-parche.png';
+  static const String logo = 'assets/images/logo mini Burguer.jpeg';
 
   static const String nombre = 'El parche de las miniBurguer';
   static const String nombreCorto = 'El Parche';
