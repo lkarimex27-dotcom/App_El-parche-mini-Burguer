@@ -101,13 +101,17 @@ void main() {
     // …pero no pedidos, que es de repartidor/administrador.
     expect(find.text('Pedidos'), findsNothing);
 
-    // Y en "Más" tampoco le aparecen Compras ni Ventas.
+    // En "Más" están los suyos: compra, consulta el catálogo y ve ventas.
     await tester.tap(find.text('Más'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Compras'), findsNothing);
-    expect(find.text('Ventas'), findsNothing);
+    expect(find.text('Compras'), findsOneWidget);
+    expect(find.text('Ventas'), findsOneWidget);
     expect(find.text('Fichas técnicas'), findsOneWidget);
+    // Lo del administrador sigue fuera de su alcance.
+    expect(find.text('Usuarios'), findsNothing);
+    expect(find.text('Roles y permisos'), findsNothing);
+    expect(find.text('Clientes'), findsNothing);
   });
 
   test('los permisos por rol son coherentes', () {

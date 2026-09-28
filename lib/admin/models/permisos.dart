@@ -153,11 +153,35 @@ final Map<Rol, Map<ModuloAdmin, Set<Permiso>>> permisosPorRol = {
   },
   // El repartidor usa la vista de entregas, no el panel administrativo.
   Rol.repartidor: {},
+  // El empleado atiende el día a día del local: produce, mueve el
+  // inventario, compra lo que falta y registra las ventas. Consulta el
+  // catálogo pero no lo cambia: los precios y las categorías los define el
+  // administrador. Tampoco ve clientes, usuarios, roles ni devoluciones.
   Rol.empleado: {
     ModuloAdmin.dashboard: _soloVer,
+
+    // Producción y sus órdenes: las crea y las va moviendo de estado.
     ModuloAdmin.produccion: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
-    ModuloAdmin.inventario: _verYCambiarEstado,
+
+    // Inventario completo: entradas, salidas y ajustes.
+    ModuloAdmin.inventario: {
+      Permiso.ver,
+      Permiso.crear,
+      Permiso.editar,
+      Permiso.cambiarEstado,
+    },
     ModuloAdmin.fichasTecnicas: _verYCambiarEstado,
+
+    // Compras: puede hacer una cuando hace falta algo. Ve los proveedores
+    // porque sin ellos no hay a quién comprarle, pero no los toca.
+    ModuloAdmin.compras: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
+    ModuloAdmin.proveedores: _soloVer,
+
+    // El catálogo lo consulta, no lo edita.
+    ModuloAdmin.productos: _soloVer,
+    ModuloAdmin.categorias: _soloVer,
+
+    ModuloAdmin.ventas: _soloVer,
     ModuloAdmin.perfil: {
       Permiso.ver,
       Permiso.editar,
