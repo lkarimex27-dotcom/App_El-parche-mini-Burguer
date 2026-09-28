@@ -29,6 +29,7 @@ void main() {
   test('el empleado ve la operación del local y nada más', () {
     const suyos = {
       ModuloAdmin.dashboard,
+      ModuloAdmin.pedidos,
       ModuloAdmin.produccion,
       ModuloAdmin.inventario,
       ModuloAdmin.fichasTecnicas,
@@ -69,7 +70,6 @@ void main() {
 
   test('lo que no le toca al empleado', () {
     for (final modulo in [
-      ModuloAdmin.pedidos,
       ModuloAdmin.clientes,
       ModuloAdmin.usuarios,
       ModuloAdmin.roles,
@@ -105,10 +105,8 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    // Abajo quedan las suyas; Pedidos no, que es del administrador.
     expect(find.text('Producción'), findsWidgets);
     expect(find.text('Inventario'), findsWidgets);
-    expect(find.text('Pedidos'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 

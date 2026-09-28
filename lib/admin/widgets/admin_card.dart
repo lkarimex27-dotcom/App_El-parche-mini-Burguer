@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 
-/// La tarjeta base del panel: blanca, redondeada, borde sutil.
-/// Todas las secciones del admin se arman encima de esta.
+/// La tarjeta base del panel: redondeada, con borde sutil, y del color de
+/// superficie que toque segun el tema. Todas las secciones se arman encima
+/// de esta, asi que con cambiarla aqui el panel entero sigue el modo
+/// oscuro.
 class AdminCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -27,14 +29,14 @@ class AdminCard extends StatelessWidget {
     // Material y no Container: adentro van ListTile e InkWell, y sobre un
     // Container con color no se les ve ni el fondo ni el toque.
     return Material(
-      color: color ?? Colors.white,
+      color: color ?? AppColors.superficie(context),
       elevation: 1,
       shadowColor: AppColors.carbon.withAlpha(30),
       surfaceTintColor: Colors.transparent,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: borde ?? AppColors.borde),
+        side: BorderSide(color: borde ?? AppColors.linea(context)),
       ),
       child: onTap == null
           ? contenido
@@ -62,7 +64,11 @@ class TituloSeccion extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          Expanded(child: Text(titulo, style: AppTextStyles.heading(size: 19))),
+          Expanded(
+            child: Text(titulo,
+                style: AppTextStyles.heading(
+                    size: 19, color: AppColors.texto(context))),
+          ),
           if (accion != null)
             GestureDetector(
               onTap: onAccion,

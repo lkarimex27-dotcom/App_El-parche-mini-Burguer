@@ -160,6 +160,10 @@ final Map<Rol, Map<ModuloAdmin, Set<Permiso>>> permisosPorRol = {
   Rol.empleado: {
     ModuloAdmin.dashboard: _soloVer,
 
+    // Los pedidos son su tarea: los ve y los va marcando (en preparación,
+    // listo). No los crea ni los aprueba, eso es del administrador.
+    ModuloAdmin.pedidos: {Permiso.ver, Permiso.cambiarEstado},
+
     // Producción y sus órdenes: las crea y las va moviendo de estado.
     ModuloAdmin.produccion: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
 

@@ -17,16 +17,21 @@ class AppHeader extends StatelessWidget {
   /// vuelve a su panel. En el resto de los casos va en null y no se dibuja.
   final VoidCallback? onVolver;
 
+  /// El botón de la luna, para pasar a modo oscuro.
+  final bool mostrarTema;
+
   const AppHeader({
     super.key,
     this.onPerfil,
     this.mostrarPerfil = true,
     this.onVolver,
+    this.mostrarTema = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final usuario = AppScope.usuario(context);
+    final tema = AppScope.tema(context);
 
     return Container(
       color: Colors.white,
@@ -47,6 +52,12 @@ class AppHeader extends StatelessWidget {
                 child: AppLogo(height: 40, mostrarNombre: false),
               ),
             ),
+            if (mostrarTema)
+              IconButton(
+                tooltip: tema.descripcion,
+                onPressed: tema.alternar,
+                icon: Icon(tema.icono, color: AppColors.mostaza, size: 22),
+              ),
             if (mostrarPerfil) ...[
               const SizedBox(width: 12),
               Tooltip(

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import '../domiciliario/models/domiciliario_model.dart';
 import 'cart_model.dart';
 import 'orders_model.dart';
+import 'tema_model.dart';
 import 'user_model.dart';
 import '../admin/data/admin_repository.dart';
 
@@ -21,6 +22,7 @@ class AppScope extends StatefulWidget {
   final OrdersModel? pedidosInicial;
   final DomiciliarioModel? domiciliarioInicial;
   final AdminRepository? adminInicial;
+  final TemaModel? temaInicial;
 
   const AppScope({
     super.key,
@@ -30,6 +32,7 @@ class AppScope extends StatefulWidget {
     this.pedidosInicial,
     this.domiciliarioInicial,
     this.adminInicial,
+    this.temaInicial,
   });
 
   static CartModel carrito(BuildContext context) =>
@@ -48,6 +51,8 @@ class AppScope extends StatefulWidget {
   static AdminRepository admin(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_AdminScope>()!.notifier!;
 
+  static TemaModel tema(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_TemaScope>()!.notifier!;
 
   static CartModel carritoSinEscuchar(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_CarritoScope>()!.notifier!;
@@ -76,6 +81,7 @@ class _AppScopeState extends State<AppScope> {
   late final DomiciliarioModel _domiciliario =
       widget.domiciliarioInicial ?? DomiciliarioModel();
   late final AdminRepository _admin = widget.adminInicial ?? AdminRepository();
+  late final TemaModel _tema = widget.temaInicial ?? TemaModel();
 
   @override
   void dispose() {
@@ -84,6 +90,7 @@ class _AppScopeState extends State<AppScope> {
     _pedidos.dispose();
     _domiciliario.dispose();
     _admin.dispose();
+    _tema.dispose();
     super.dispose();
   }
 
@@ -99,7 +106,7 @@ class _AppScopeState extends State<AppScope> {
             notifier: _admin,
             child: _DomiciliarioScope(
               notifier: _domiciliario,
-              child: widget.child,
+              child: _TemaScope(notifier: _tema, child: widget.child),
             ),
           ),
         ),
@@ -126,4 +133,8 @@ class _DomiciliarioScope extends InheritedNotifier<DomiciliarioModel> {
 
 class _AdminScope extends InheritedNotifier<AdminRepository> {
   const _AdminScope({required super.notifier, required super.child});
+}
+
+class _TemaScope extends InheritedNotifier<TemaModel> {
+  const _TemaScope({required super.notifier, required super.child});
 }

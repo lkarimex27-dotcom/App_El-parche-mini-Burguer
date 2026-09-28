@@ -98,8 +98,9 @@ void main() {
     // Sí ve producción e inventario…
     expect(find.text('Producción'), findsWidgets);
     expect(find.text('Inventario'), findsWidgets);
-    // …pero no pedidos, que es de repartidor/administrador.
-    expect(find.text('Pedidos'), findsNothing);
+    // Los pedidos también: son su tarea, los prepara. Lo que no puede es
+    // aprobarlos, y eso lo comprueba admin_pedidos_test.
+    expect(find.text('Pedidos'), findsWidgets);
 
     // En "Más" están los suyos: compra, consulta el catálogo y ve ventas.
     await tester.tap(find.text('Más'));

@@ -24,7 +24,12 @@ class AdminPedidoDetalleScreen extends StatelessWidget {
     // Escucha al modelo: al cambiar el estado, la pantalla se repinta.
     final pedidos = AppScope.pedidos(context);
     final rol = AppScope.usuario(context).rol;
+    // Avanzar el pedido (ponerlo en preparación, marcarlo listo) es del
+    // día a día y lo hace quien cocina. Aprobar o rechazar uno grande es
+    // decisión de plata, así que se pide el permiso de editar, que solo
+    // tiene el administrador.
     final puedeMover = puede(rol, ModuloAdmin.pedidos, Permiso.cambiarEstado);
+    final puedeAprobar = puede(rol, ModuloAdmin.pedidos, Permiso.editar);
 
     return Scaffold(
       backgroundColor: AppColors.crema,
@@ -74,7 +79,7 @@ class AdminPedidoDetalleScreen extends StatelessWidget {
                     style: AppTextStyles.body(size: 12, color: AppColors.muted),
                   ),
                   const SizedBox(height: 12),
-                  if (puedeMover)
+                  if (puedeAprobar)
                     Row(
                       children: [
                         Expanded(

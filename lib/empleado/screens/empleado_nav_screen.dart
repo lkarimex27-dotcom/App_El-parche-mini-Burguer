@@ -52,7 +52,7 @@ class _EmpleadoNavScreenState extends State<EmpleadoNavScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => Scaffold(
-          backgroundColor: AppColors.crema,
+          backgroundColor: AppColors.fondo(context),
           body: AdminModuleScreen(modulo: modulo, mostrarRegreso: true),
         ),
       ),
@@ -66,9 +66,9 @@ class _EmpleadoNavScreenState extends State<EmpleadoNavScreen> {
 
     // Si le quitaron los permisos no se le arma una barra vacía.
     if (visibles.isEmpty) {
-      return const Scaffold(
-        backgroundColor: AppColors.crema,
-        body: Center(
+      return Scaffold(
+        backgroundColor: AppColors.fondo(context),
+        body: const Center(
           child: AdminEmptyState(
             icono: Icons.lock_outline_rounded,
             titulo: 'Sin acceso',
@@ -87,7 +87,10 @@ class _EmpleadoNavScreenState extends State<EmpleadoNavScreen> {
     return Scaffold(
       body: Column(
         children: [
-          AppHeader(onPerfil: () => _abrirModulo(visibles, ModuloAdmin.perfil)),
+          AppHeader(
+            onPerfil: () => _abrirModulo(visibles, ModuloAdmin.perfil),
+            mostrarTema: true,
+          ),
           Expanded(child: IndexedStack(index: indice, children: pantallas)),
         ],
       ),
@@ -95,7 +98,7 @@ class _EmpleadoNavScreenState extends State<EmpleadoNavScreen> {
         currentIndex: indice,
         onTap: _irA,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.superficie(context),
         selectedItemColor: AppColors.mostaza,
         unselectedItemColor: AppColors.muted,
         showUnselectedLabels: true,

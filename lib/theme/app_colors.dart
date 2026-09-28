@@ -23,4 +23,34 @@ class AppColors {
     end: Alignment.bottomRight,
     colors: [ambar, mostaza],
   );
+
+  // ─────────────────────── Colores según el tema ───────────────────────
+  //
+  // Los de arriba son fijos y siguen sirviendo donde el color no cambia
+  // (el mostaza de la marca, el rojo de un error). Estos otros preguntan
+  // si la pantalla está en claro u oscuro, para que una misma pantalla
+  // sirva en los dos modos sin escribirla dos veces.
+
+  /// El fondo de la pantalla.
+  static Color fondo(BuildContext context) =>
+      _oscuro(context) ? negroAdmin : crema;
+
+  /// El de las tarjetas y las hojas, por encima del fondo.
+  static Color superficie(BuildContext context) =>
+      _oscuro(context) ? negroAdminSuave : Colors.white;
+
+  /// El texto principal.
+  static Color texto(BuildContext context) =>
+      _oscuro(context) ? const Color(0xFFF2EFE6) : carbon;
+
+  /// El texto secundario y los rótulos.
+  static Color textoSuave(BuildContext context) =>
+      _oscuro(context) ? const Color(0xFF9E998B) : muted;
+
+  /// Las líneas y los bordes.
+  static Color linea(BuildContext context) =>
+      _oscuro(context) ? const Color(0xFF2C3038) : borde;
+
+  static bool _oscuro(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark;
 }
