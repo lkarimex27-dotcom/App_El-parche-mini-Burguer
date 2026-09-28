@@ -50,7 +50,9 @@ void main() {
 
     // Bajando aparece el resto, sin que nada se desborde.
     for (final seccion in const [
-      'Ventas por día',
+      // La sección ya no se llama "Ventas por día": ahora el corte de
+      // tiempo se escoge con el filtro de 7 días / mes / año.
+      'Ventas',
       'Accesos rápidos',
       'Productos más vendidos',
       'Pedidos recientes',

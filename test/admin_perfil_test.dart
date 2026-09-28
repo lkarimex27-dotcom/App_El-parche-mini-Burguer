@@ -82,12 +82,24 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    // Los largos se parten en dos líneas, no se recortan con puntos.
+    // Nada se recorta con puntos suspensivos.
     for (final nombre in ['Fichas técnicas', 'Roles y permisos',
-        'Proveedores', 'Devoluciones']) {
+        'Proveedores', 'Devoluciones', 'Categorías']) {
       final texto = tester.widget<Text>(find.text(nombre));
       expect(texto.overflow, isNot(TextOverflow.ellipsis), reason: nombre);
-      expect(texto.maxLines, 2, reason: nombre);
+    }
+
+    // Los de dos palabras se parten por el espacio, en dos líneas.
+    for (final nombre in ['Fichas técnicas', 'Roles y permisos']) {
+      expect(tester.getSize(find.text(nombre)).height, greaterThan(20),
+          reason: nombre);
+    }
+
+    // Los de una palabra no se parten: "Devoluciones" quedaba como
+    // "Devolucione" con una "s" sola debajo.
+    for (final nombre in ['Proveedores', 'Devoluciones', 'Categorías']) {
+      expect(tester.getSize(find.text(nombre)).height, lessThan(20),
+          reason: '$nombre se está partiendo en dos líneas');
     }
     expect(tester.takeException(), isNull);
   });

@@ -47,11 +47,25 @@ class _AdminNavScreenState extends State<AdminNavScreen> {
     }
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => Scaffold(
-          backgroundColor: AppColors.crema,
-          body: AdminModuleScreen(
-            modulo: modulo,
-            mostrarRegreso: true,
+        builder: (contextoRuta) => Scaffold(
+          backgroundColor: AppColors.fondo(context),
+          // Con el encabezado el módulo no arranca pegado al borde de
+          // arriba, y desde adentro se sigue llegando al perfil.
+          body: Column(
+            children: [
+              AppHeader(
+                onPerfil: () {
+                  Navigator.of(contextoRuta).pop();
+                  _abrirModulo(visibles, ModuloAdmin.perfil);
+                },
+              ),
+              Expanded(
+                child: AdminModuleScreen(
+                  modulo: modulo,
+                  mostrarRegreso: true,
+                ),
+              ),
+            ],
           ),
         ),
       ),

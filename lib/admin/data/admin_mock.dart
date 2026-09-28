@@ -29,6 +29,95 @@ int get ventasHoy => ventasPorDia.last;
 
 int get ventasSemana => ventasPorDia.fold(0, (t, v) => t + v);
 
+/// Ventas por semana del mes, de la 1 a la 4.
+const List<int> ventasPorSemana = [2380000, 2650000, 2410000, 3160000];
+
+const List<String> semanasDelMes = ['S1', 'S2', 'S3', 'S4'];
+
+/// Ventas de cada mes del año.
+const List<int> ventasPorMes = [
+  8200000,
+  7600000,
+  9100000,
+  8800000,
+  9600000,
+  10200000,
+  9400000,
+  10800000,
+  11500000,
+  10100000,
+  11900000,
+  13400000,
+];
+
+const List<String> mesesDelAno = [
+  'E',
+  'F',
+  'M',
+  'A',
+  'M',
+  'J',
+  'J',
+  'A',
+  'S',
+  'O',
+  'N',
+  'D',
+];
+
+/// Los tres cortes de tiempo de la gráfica del dashboard.
+enum PeriodoVentas { semana, mes, ano }
+
+extension PeriodoVentasUi on PeriodoVentas {
+  String get label {
+    switch (this) {
+      case PeriodoVentas.semana:
+        return '7 días';
+      case PeriodoVentas.mes:
+        return 'Mes';
+      case PeriodoVentas.ano:
+        return 'Año';
+    }
+  }
+
+  List<int> get valores {
+    switch (this) {
+      case PeriodoVentas.semana:
+        return ventasPorDia;
+      case PeriodoVentas.mes:
+        return ventasPorSemana;
+      case PeriodoVentas.ano:
+        return ventasPorMes;
+    }
+  }
+
+  List<String> get etiquetas {
+    switch (this) {
+      case PeriodoVentas.semana:
+        return diasSemana;
+      case PeriodoVentas.mes:
+        return semanasDelMes;
+      case PeriodoVentas.ano:
+        return mesesDelAno;
+    }
+  }
+
+  /// Lo que suma el período, para ponerlo junto a la gráfica.
+  int get total => valores.fold(0, (t, v) => t + v);
+
+  /// De qué habla cada barra.
+  String get detalle {
+    switch (this) {
+      case PeriodoVentas.semana:
+        return 'Cada barra es un día';
+      case PeriodoVentas.mes:
+        return 'Cada barra es una semana';
+      case PeriodoVentas.ano:
+        return 'Cada barra es un mes';
+    }
+  }
+}
+
 // ──────────────────────────── Inventario ───────────────────────────
 
 /// Insumos bajo el mínimo. En la etapa de Inventario esto sale del

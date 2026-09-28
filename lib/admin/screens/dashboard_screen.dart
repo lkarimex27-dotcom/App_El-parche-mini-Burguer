@@ -191,21 +191,8 @@ class DashboardScreen extends StatelessWidget {
           ),
           const SizedBox(height: 22),
 
-          // ── Ventas por día ──
-          const Aparicion(
-            orden: 4,
-            child: Column(
-              children: [
-                TituloSeccion(titulo: 'Ventas por día'),
-                AdminCard(
-                  child: VentasChart(
-                    valores: ventasPorDia,
-                    etiquetas: diasSemana,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // ── Ventas ──
+          const Aparicion(orden: 4, child: _Ventas()),
           const SizedBox(height: 22),
 
           // ── Accesos rápidos ──
@@ -490,6 +477,119 @@ class _FilaPedido extends StatelessWidget {
           Text(formatoPesos(pedido.total),
               style: AppTextStyles.heading(size: 14, color: AppColors.verde)),
         ],
+      ),
+    );
+  }
+}
+
+/// Las ventas con su corte de tiempo: 7 días, mes o año. El total de arriba
+/// y las barras de abajo se recalculan con lo que se escoja.
+class _Ventas extends StatefulWidget {
+  const _Ventas();
+
+  @override
+  State<_Ventas> createState() => _VentasState();
+}
+
+class _VentasState extends State<_Ventas> {
+  PeriodoVentas _periodo = PeriodoVentas.semana;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const TituloSeccion(titulo: 'Ventas'),
+        AdminCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Tres cortes caben en cualquier pantalla, así que van en un
+              // Wrap y no en un riel: un scroll horizontal aquí dentro
+              // pelearía con el de la pantalla.
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final p in PeriodoVentas.values)
+                    _Corte(
+                      label: p.label,
+                      activo: p == _periodo,
+                      onTap: () => setState(() => _periodo = p),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Total del período',
+                            style: AppTextStyles.body(
+                                size: 11,
+                                color: AppColors.textoSuave(context))),
+                        const SizedBox(height: 2),
+                        Text(formatoPesos(_periodo.total),
+                            style: AppTextStyles.heading(
+                                size: 18, color: AppColors.verde)),
+                      ],
+                    ),
+                  ),
+                  Text(_periodo.detalle,
+                      style: AppTextStyles.body(
+                          size: 10.5, color: AppColors.textoSuave(context))),
+                ],
+              ),
+              const SizedBox(height: 14),
+              VentasChart(
+                valores: _periodo.valores,
+                etiquetas: _periodo.etiquetas,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Uno de los tres cortes de tiempo.
+class _Corte extends StatelessWidget {
+  final String label;
+  final bool activo;
+  final VoidCallback onTap;
+
+  const _Corte({
+    required this.label,
+    required this.activo,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          color: activo ? AppColors.mostaza : AppColors.fondo(context),
+          borderRadius: BorderRadius.circular(100),
+          border: Border.all(
+            color: activo ? AppColors.mostaza : AppColors.linea(context),
+          ),
+        ),
+        child: Text(
+          label,
+          style: AppTextStyles.body(
+            size: 11.5,
+            weight: FontWeight.w600,
+            color: activo ? Colors.white : AppColors.texto(context),
+          ),
+        ),
       ),
     );
   }

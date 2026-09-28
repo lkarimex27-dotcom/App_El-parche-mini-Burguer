@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 
-/// Gráfica de barras de las ventas de la semana. Hecha con widgets, sin
-/// paquete de charts: son 7 barras y no vale la pena una dependencia.
+/// Gráfica de barras de las ventas. Hecha con widgets, sin paquete de
+/// charts: son pocas barras y no vale la pena una dependencia.
+///
+/// La última barra va resaltada porque es el período en curso: hoy, esta
+/// semana o este mes, según el corte que se esté mirando.
 class VentasChart extends StatelessWidget {
   final List<int> valores;
   final List<String> etiquetas;
@@ -39,10 +42,12 @@ class VentasChart extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    '${(valores[i] / 1000).round()}k',
+                    _abreviado(valores[i]),
                     style: AppTextStyles.body(
-                      size: 10,
-                      color: esHoy ? AppColors.carbon : AppColors.muted,
+                      size: 9.5,
+                      color: esHoy
+                          ? AppColors.texto(context)
+                          : AppColors.textoSuave(context),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -65,8 +70,10 @@ class VentasChart extends StatelessWidget {
                   Text(
                     etiquetas.length > i ? etiquetas[i] : '',
                     style: AppTextStyles.heading(
-                      size: 11,
-                      color: esHoy ? AppColors.carbon : AppColors.muted,
+                      size: 10.5,
+                      color: esHoy
+                          ? AppColors.texto(context)
+                          : AppColors.textoSuave(context),
                     ),
                   ),
                 ],
@@ -77,4 +84,15 @@ class VentasChart extends StatelessWidget {
       ),
     );
   }
+}
+
+/// El valor encima de cada barra, corto para que quepa: "420k" en la vista
+/// de días, "1,2M" cuando son meses y las cifras se vuelven millones.
+String _abreviado(int valor) {
+  if (valor >= 1000000) {
+    final millones = valor / 1000000;
+    return '${millones.toStringAsFixed(millones >= 10 ? 0 : 1)}M'
+        .replaceAll('.', ',');
+  }
+  return '${(valor / 1000).round()}k';
 }

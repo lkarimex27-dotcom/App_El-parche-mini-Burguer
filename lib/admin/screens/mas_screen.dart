@@ -197,24 +197,45 @@ class _ModuloCard extends StatelessWidget {
                 child: Icon(modulo.icono, color: AppColors.mostaza, size: 22),
               ),
               const SizedBox(height: 8),
-              // El nombre entero, en dos líneas si hace falta. Antes se
-              // cortaba con puntos suspensivos porque la celda no daba el
-              // alto para la segunda línea.
-              Flexible(
-                child: Text(
-                  modulo.label,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  style: AppTextStyles.body(
-                      size: 10.5,
-                      weight: FontWeight.w700,
-                      color: AppColors.texto(context)),
-                ),
-              ),
+              Flexible(child: _Nombre(label: modulo.label)),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// El nombre debajo del círculo.
+///
+/// Los de dos palabras ("Fichas técnicas", "Roles y permisos") se parten
+/// por el espacio, que es donde se lee bien. Los de una sola palabra no se
+/// parten nunca: "Devoluciones" quedaba como "Devolucione" y una "s" sola
+/// debajo. Si no cabe, se ve un punto más pequeño.
+class _Nombre extends StatelessWidget {
+  final String label;
+  const _Nombre({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    final estilo = AppTextStyles.body(
+      size: 10.5,
+      weight: FontWeight.w700,
+      color: AppColors.texto(context),
+    );
+
+    if (label.contains(' ')) {
+      return Text(
+        label,
+        textAlign: TextAlign.center,
+        maxLines: 2,
+        style: estilo,
+      );
+    }
+
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(label, maxLines: 1, style: estilo),
     );
   }
 }
