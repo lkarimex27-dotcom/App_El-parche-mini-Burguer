@@ -3,6 +3,7 @@ import '../admin/screens/admin_nav_screen.dart';
 import '../domiciliario/screens/domiciliario_nav_screen.dart';
 import '../empleado/screens/empleado_nav_screen.dart';
 import '../models/business_info.dart';
+import '../models/claves_panel.dart';
 import '../models/rol.dart';
 import '../state/app_scope.dart';
 import '../theme/app_colors.dart';
@@ -46,8 +47,23 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    AppScope.usuarioSinEscuchar(context)
-        .iniciarSesionConCorreo(_emailController.text);
+    final usuario = AppScope.usuarioSinEscuchar(context);
+    usuario.iniciarSesionConCorreo(_emailController.text);
+
+    // Los paneles piden su clave. Si no cuadra se cierra la sesión: entrar
+    // como cliente "porque la clave falló" confundiría a quien se equivocó
+    // de tecla.
+    if (pideClave(usuario.rol) &&
+        !claveCorrecta(usuario.rol, _passwordController.text)) {
+      final panel = usuario.rol.label;
+      usuario.cerrarSesion();
+      avisarCamposIncompletos(
+        context,
+        'Contraseña incorrecta para el panel de $panel.',
+      );
+      return;
+    }
+
     _abrirApp();
   }
 

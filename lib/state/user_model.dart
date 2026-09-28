@@ -127,6 +127,10 @@ class UserModel extends ChangeNotifier {
     if (nombre.isEmpty && this.email.isNotEmpty) {
       nombre = _nombreDesdeCorreo(this.email);
     }
+    // Entrar con Google o Apple es de cliente. A los paneles se entra con
+    // correo y su clave: si aquí se dejara el rol anterior, quien ya hubiera
+    // entrado al panel volvería a él sin que le pidan nada.
+    rol = Rol.cliente;
     notifyListeners();
   }
 
