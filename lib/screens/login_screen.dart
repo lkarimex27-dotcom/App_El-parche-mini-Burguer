@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../admin/screens/admin_nav_screen.dart';
 import '../domiciliario/screens/domiciliario_nav_screen.dart';
+import '../empleado/screens/empleado_nav_screen.dart';
 import '../models/business_info.dart';
 import '../models/rol.dart';
 import '../state/app_scope.dart';
@@ -62,20 +63,24 @@ class _LoginScreenState extends State<LoginScreen> {
     _abrirApp();
   }
 
-  /// Según el rol: el cliente va a la app de siempre, el resto al panel.
+  /// Cada rol a lo suyo: el repartidor a sus entregas, el empleado a su
+  /// panel de operación, el administrador al panel completo y el cliente a
+  /// la app de siempre.
   void _abrirApp() {
     final rol = AppScope.usuarioSinEscuchar(context).rol;
+
+    final Widget destino;
     if (rol.esDomiciliario) {
-      Navigator.of(context).pushReplacement(
-        rutaConFundido(const DomiciliarioNavScreen()),
-      );
-      return;
+      destino = const DomiciliarioNavScreen();
+    } else if (rol.esEmpleado) {
+      destino = const EmpleadoNavScreen();
+    } else if (rol.esDelPanel) {
+      destino = const AdminNavScreen();
+    } else {
+      destino = const MainNavScreen();
     }
-    Navigator.of(context).pushReplacement(
-      rutaConFundido(
-        rol.esDelPanel ? const AdminNavScreen() : const MainNavScreen(),
-      ),
-    );
+
+    Navigator.of(context).pushReplacement(rutaConFundido(destino));
   }
 
   @override

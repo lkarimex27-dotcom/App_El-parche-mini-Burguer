@@ -36,6 +36,10 @@ extension RolUi on Rol {
   /// Se conserva el nombre de la extensión porque la vista de domiciliario ya
   /// existed; ahora ese rol se muestra como Repartidor.
   bool get esDomiciliario => this == Rol.repartidor;
+
+  /// El empleado entra al panel, pero al suyo: mismas tablas que el
+  /// administrador y un inicio distinto, sin las cifras del negocio.
+  bool get esEmpleado => this == Rol.empleado;
 }
 
 /// Busca un rol por su nombre guardado (útil cuando llegue del backend).
