@@ -142,6 +142,8 @@ void main() {
     expect(find.text('Distribuciones La 30'), findsOneWidget);
     await tester.tap(find.byTooltip('Crear'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Nuevo'), findsOneWidget);
+    // El botón de arriba también dice "Nuevo", así que se busca el título
+    // del formulario que acaba de abrirse.
+    expect(find.text('Nuevo Proveedores'), findsOneWidget);
   });
 }

@@ -176,16 +176,10 @@ final Map<Rol, Map<ModuloAdmin, Set<Permiso>>> permisosPorRol = {
     },
     ModuloAdmin.fichasTecnicas: _verYCambiarEstado,
 
-    // Compras: puede hacer una cuando hace falta algo. Ve los proveedores
-    // porque sin ellos no hay a quién comprarle, pero no los toca.
-    ModuloAdmin.compras: {Permiso.ver, Permiso.crear, Permiso.cambiarEstado},
-    ModuloAdmin.proveedores: _soloVer,
-
     // El catálogo lo consulta, no lo edita.
     ModuloAdmin.productos: _soloVer,
     ModuloAdmin.categorias: _soloVer,
 
-    ModuloAdmin.ventas: _soloVer,
     ModuloAdmin.perfil: {
       Permiso.ver,
       Permiso.editar,

@@ -33,11 +33,8 @@ void main() {
       ModuloAdmin.produccion,
       ModuloAdmin.inventario,
       ModuloAdmin.fichasTecnicas,
-      ModuloAdmin.compras,
-      ModuloAdmin.proveedores,
       ModuloAdmin.productos,
       ModuloAdmin.categorias,
-      ModuloAdmin.ventas,
       ModuloAdmin.perfil,
     };
 
@@ -47,14 +44,13 @@ void main() {
     }
   });
 
-  test('el empleado produce, mueve inventario y compra', () {
+  test('el empleado produce y mueve inventario', () {
     expect(puede(Rol.empleado, ModuloAdmin.produccion, Permiso.crear), isTrue);
     expect(
         puede(Rol.empleado, ModuloAdmin.produccion, Permiso.cambiarEstado),
         isTrue);
     expect(puede(Rol.empleado, ModuloAdmin.inventario, Permiso.crear), isTrue);
     expect(puede(Rol.empleado, ModuloAdmin.inventario, Permiso.editar), isTrue);
-    expect(puede(Rol.empleado, ModuloAdmin.compras, Permiso.crear), isTrue);
   });
 
   test('el catálogo lo consulta, no lo cambia', () {
@@ -63,13 +59,13 @@ void main() {
       expect(puede(Rol.empleado, modulo, Permiso.crear), isFalse);
       expect(puede(Rol.empleado, modulo, Permiso.editar), isFalse);
     }
-    // Los proveedores los ve para poder comprar, pero no los toca.
-    expect(puede(Rol.empleado, ModuloAdmin.proveedores, Permiso.editar),
-        isFalse);
   });
 
   test('lo que no le toca al empleado', () {
     for (final modulo in [
+      ModuloAdmin.compras,
+      ModuloAdmin.proveedores,
+      ModuloAdmin.ventas,
       ModuloAdmin.clientes,
       ModuloAdmin.usuarios,
       ModuloAdmin.roles,
@@ -122,10 +118,15 @@ void main() {
     await tester.tap(find.text('Más'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Compras'), findsOneWidget);
+    // El catálogo, que consulta.
     expect(find.text('Productos'), findsOneWidget);
     expect(find.text('Categorías'), findsOneWidget);
-    expect(find.text('Ventas'), findsOneWidget);
+    expect(find.text('Fichas técnicas'), findsOneWidget);
+
+    // Lo que no le toca: ni la plata ni la administración.
+    expect(find.text('Compras'), findsNothing);
+    expect(find.text('Proveedores'), findsNothing);
+    expect(find.text('Ventas'), findsNothing);
     expect(find.text('Usuarios'), findsNothing);
     expect(find.text('Roles y permisos'), findsNothing);
   });

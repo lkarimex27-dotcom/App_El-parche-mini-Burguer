@@ -161,14 +161,14 @@ class InicioEmpleadoScreen extends StatelessWidget {
                   onTap: () => onAbrirModulo?.call(ModuloAdmin.inventario),
                 ),
                 _Acceso(
-                  icono: Icons.local_shipping_outlined,
-                  label: 'Registrar compra',
-                  onTap: () => onAbrirModulo?.call(ModuloAdmin.compras),
-                ),
-                _Acceso(
                   icono: Icons.menu_book_outlined,
                   label: 'Fichas técnicas',
                   onTap: () => onAbrirModulo?.call(ModuloAdmin.fichasTecnicas),
+                ),
+                _Acceso(
+                  icono: Icons.lunch_dining_outlined,
+                  label: 'Productos',
+                  onTap: () => onAbrirModulo?.call(ModuloAdmin.productos),
                 ),
               ],
             ),
@@ -282,14 +282,16 @@ class _Alertas extends StatelessWidget {
                         size: 11.5, color: AppColors.texto(context)),
                   ),
                 ),
+                // Lleva a Inventario y no a Compras: comprar es del
+                // administrador; lo del empleado es avisar y descargar.
                 TextButton(
-                  onPressed: () => onAbrirModulo?.call(ModuloAdmin.compras),
+                  onPressed: () => onAbrirModulo?.call(ModuloAdmin.inventario),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: Text('Comprar',
+                  child: Text('Ver',
                       style: AppTextStyles.heading(
                           size: 11, color: AppColors.mostaza)),
                 ),

@@ -153,8 +153,10 @@ class _ModuloGrid extends StatelessWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.86,
+        crossAxisSpacing: 10,
+        // Más alto que ancho: los nombres de dos líneas ("Fichas técnicas",
+        // "Roles y permisos") necesitan sitio para verse enteros.
+        childAspectRatio: 0.74,
       ),
       itemBuilder: (context, index) {
         final modulo = modulos[index];
@@ -186,28 +188,27 @@ class _ModuloCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 56,
-                height: 56,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: AppColors.superficie(context),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(modulo.icono, color: AppColors.mostaza, size: 24),
+                child: Icon(modulo.icono, color: AppColors.mostaza, size: 22),
               ),
               const SizedBox(height: 8),
-              // Flexible: los nombres de dos líneas ("Fichas técnicas",
-              // "Roles y permisos", "Proveedores", "Devoluciones") no caben
-              // en la celda de un celular angosto y la desbordaban.
+              // El nombre entero, en dos líneas si hace falta. Antes se
+              // cortaba con puntos suspensivos porque la celda no daba el
+              // alto para la segunda línea.
               Flexible(
                 child: Text(
                   modulo.label,
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.body(
-                      size: 11,
+                      size: 10.5,
                       weight: FontWeight.w700,
-                      color: AppColors.carbon),
+                      color: AppColors.texto(context)),
                 ),
               ),
             ],

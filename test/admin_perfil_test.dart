@@ -58,6 +58,40 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('los nombres de los módulos se ven completos, sin cortar',
+      (tester) async {
+    final vista = TestWidgetsFlutterBinding.ensureInitialized()
+        .platformDispatcher
+        .views
+        .first;
+    vista.physicalSize = const Size(320, 2200);
+    vista.devicePixelRatio = 1.0;
+    addTearDown(() {
+      vista.resetPhysicalSize();
+      vista.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(AppScope(
+      adminInicial: AdminRepository(),
+      usuarioInicial: UserModel(nombre: 'Ana', rol: Rol.administrador),
+      child: MaterialApp(
+        home: Scaffold(
+          body: MasScreen(rol: Rol.administrador, onAbrirModulo: (_) {}),
+        ),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    // Los largos se parten en dos líneas, no se recortan con puntos.
+    for (final nombre in ['Fichas técnicas', 'Roles y permisos',
+        'Proveedores', 'Devoluciones']) {
+      final texto = tester.widget<Text>(find.text(nombre));
+      expect(texto.overflow, isNot(TextOverflow.ellipsis), reason: nombre);
+      expect(texto.maxLines, 2, reason: nombre);
+    }
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('las cifras del dashboard no gritan', (tester) async {
     await tester.pumpWidget(panel());
     await tester.pump();

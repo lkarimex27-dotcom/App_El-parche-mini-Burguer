@@ -102,14 +102,16 @@ void main() {
     // aprobarlos, y eso lo comprueba admin_pedidos_test.
     expect(find.text('Pedidos'), findsWidgets);
 
-    // En "Más" están los suyos: compra, consulta el catálogo y ve ventas.
+    // En "Más" solo el catálogo, que consulta.
     await tester.tap(find.text('Más'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Compras'), findsOneWidget);
-    expect(find.text('Ventas'), findsOneWidget);
     expect(find.text('Fichas técnicas'), findsOneWidget);
-    // Lo del administrador sigue fuera de su alcance.
+    expect(find.text('Productos'), findsOneWidget);
+    // Nada de plata ni de administración.
+    expect(find.text('Compras'), findsNothing);
+    expect(find.text('Proveedores'), findsNothing);
+    expect(find.text('Ventas'), findsNothing);
     expect(find.text('Usuarios'), findsNothing);
     expect(find.text('Roles y permisos'), findsNothing);
     expect(find.text('Clientes'), findsNothing);

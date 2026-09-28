@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../models/precio.dart';
 import '../../models/product.dart';
 import '../../state/app_scope.dart';
 import '../../theme/app_colors.dart';
@@ -41,37 +42,83 @@ class _AdminModuleScreenState extends State<AdminModuleScreen> {
         puede(AppScope.usuario(context).rol, widget.modulo, Permiso.crear);
 
     return Container(
-      color: AppColors.crema,
+      color: AppColors.fondo(context),
       child: Column(
         children: [
           Container(
-            color: Colors.white,
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+            decoration: BoxDecoration(
+              color: AppColors.superficie(context),
+              border: Border(
+                bottom: BorderSide(color: AppColors.linea(context)),
+              ),
+            ),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    if (widget.mostrarRegreso)
+                    if (widget.mostrarRegreso) ...[
                       IconButton(
                         tooltip: 'Volver',
                         onPressed: () => Navigator.of(context).pop(),
                         icon: const Icon(Icons.arrow_back_rounded),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        color: AppColors.texto(context),
                       ),
-                    Icon(widget.modulo.icono, color: AppColors.mostaza),
+                      const SizedBox(width: 12),
+                    ],
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: AppColors.mostaza.withValues(alpha: 0.14),
+                        borderRadius: BorderRadius.circular(11),
+                      ),
+                      child: Icon(widget.modulo.icono,
+                          color: AppColors.mostaza, size: 20),
+                    ),
                     const SizedBox(width: 10),
+                    // El título y cuántos hay, uno debajo del otro: el
+                    // número suelto a la derecha no decía de qué era.
                     Expanded(
-                        child: Text(widget.modulo.label,
-                            style: AppTextStyles.heading(size: 22))),
-                    if (puedeCrear)
-                      IconButton(
-                        tooltip: 'Crear',
-                        onPressed: () => _nuevo(context),
-                        icon: const Icon(Icons.add_circle_outline),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(widget.modulo.label,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.heading(
+                                  size: 17, color: AppColors.texto(context))),
+                          Text(
+                            registros.length == 1
+                                ? '1 registro'
+                                : '${registros.length} registros',
+                            style: AppTextStyles.body(
+                                size: 11,
+                                color: AppColors.textoSuave(context)),
+                          ),
+                        ],
                       ),
-                    Text('${registros.length}',
-                        style: AppTextStyles.body(
-                            size: 12, color: AppColors.muted)),
+                    ),
+                    if (puedeCrear)
+                      Tooltip(
+                        message: 'Crear',
+                        child: FilledButton.icon(
+                          onPressed: () => _nuevo(context),
+                          icon: const Icon(Icons.add_rounded, size: 18),
+                          label: Text('Nuevo',
+                              style: AppTextStyles.heading(
+                                  size: 11.5, color: Colors.white)),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.mostaza,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -593,26 +640,26 @@ class _RegistroCard extends StatelessWidget {
         children: [
           Row(children: [
             Expanded(
-                child: Text(registro.titulo,
-                    style: AppTextStyles.heading(size: 14))),
+              child: Text(registro.titulo,
+                  style: AppTextStyles.heading(
+                      size: 13.5, color: AppColors.texto(context))),
+            ),
+            const SizedBox(width: 8),
             _Estado(texto: registro.estado),
-            const SizedBox(width: 4),
-            IconButton(
-                tooltip: 'Más información',
-                onPressed: onDetalle,
-                icon: const Icon(Icons.visibility_outlined, size: 19)),
           ]),
-          const SizedBox(height: 7),
+          const SizedBox(height: 6),
           Text(registro.detalle,
-              style: AppTextStyles.body(size: 12, color: AppColors.muted)),
+              style: AppTextStyles.body(
+                  size: 11.5, color: AppColors.textoSuave(context))),
           if (registro.valor != null) ...[
-            const SizedBox(height: 6),
-            Text('\$${registro.valor!.toStringAsFixed(0)} COP',
-                style:
-                    AppTextStyles.heading(size: 13, color: AppColors.tomate)),
+            const SizedBox(height: 8),
+            // Con punto de miles y en verde, como el resto de la app: antes
+            // salía "$68000 COP" y en el rojo de los errores.
+            Text(formatoPesos(registro.valor!.round()),
+                style: AppTextStyles.heading(size: 14, color: AppColors.verde)),
           ],
           if (puedeEstado || puedeAnular || puedeEliminar) ...[
-            const Divider(height: 22),
+            Divider(height: 22, color: AppColors.linea(context)),
             Wrap(
               spacing: 8,
               runSpacing: 8,
